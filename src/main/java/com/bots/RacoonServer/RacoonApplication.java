@@ -9,13 +9,16 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class RacoonApplication {
 
 	public static void main(String[] args) {
-		if (args.length < 1) {
-			System.out.println("Please enter JDA token as the first argument.");
+		if (args.length < 2) {
+			System.out.println(
+					"Please enter JDA token and a jasypt password, ex.:\n" +
+					"java -jar bot.jar <JDA TOKEN> <JASYPT PASSWORD>"
+			);
 			return;
 		}
 
 		ConfigurableApplicationContext applicationContext =  SpringApplication.run(RacoonApplication.class, args);
-		if (!applicationContext.getBean(JdaManager.class).initialise(args[0]))
+		if (!applicationContext.getBean(JdaManager.class).initialise(args[0], applicationContext))
 			applicationContext.close();
 	}
 

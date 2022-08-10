@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.security.auth.login.LoginException;
@@ -16,8 +16,7 @@ import javax.security.auth.login.LoginException;
 public class JdaManager {
     private JDA jda;
 
-    public boolean initialise(String token) {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+    public boolean initialise(String token, ApplicationContext context) {
         Logger logger = context.getBean(Logger.class);
 
         try {
