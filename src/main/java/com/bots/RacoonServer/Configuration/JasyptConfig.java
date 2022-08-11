@@ -1,10 +1,7 @@
 package com.bots.RacoonServer.Configuration;
 
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 //@Configuration
 public class JasyptConfig {
