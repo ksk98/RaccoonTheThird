@@ -1,17 +1,17 @@
-package com.bots;
+package com.bots.RacoonServer.Configuration;
 
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
-@Component
+//@Configuration
 public class JasyptConfig {
     private final String password;
     private final StandardPBEStringEncryptor encryptor;
 
-    @Autowired
+//    @Autowired
     public JasyptConfig(ApplicationArguments arguments) {
         this.password = arguments.getNonOptionArgs().get(1);
         this.encryptor = new StandardPBEStringEncryptor();
@@ -19,7 +19,7 @@ public class JasyptConfig {
         this.encryptor.setPassword(password);
     }
 
-    @Bean
+//    @Bean
     public StandardPBEStringEncryptor getEncryptor() {
         return encryptor;
     }

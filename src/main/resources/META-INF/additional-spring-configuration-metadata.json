@@ -4,5 +4,10 @@
       "name": "encrypted.jdbcpassword",
       "type": "java.lang.String",
       "description": "Description for encrypted.jdbcpassword."
-  }
-] }
+    },
+    {
+      "name": "jda.token",
+      "type": "java.lang.String",
+      "description": "Description for jda.token."
+    }
+  ] }
