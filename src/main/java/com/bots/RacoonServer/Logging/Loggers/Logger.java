@@ -4,6 +4,9 @@ import com.bots.RacoonServer.Logging.Log;
 
 import java.awt.*;
 
+/***
+ * Displays program logs.
+ */
 public interface Logger {
     Color COLOR_DEFAULT = Color.BLACK;
     Color COLOR_ERROR = new Color(252, 31, 31);
