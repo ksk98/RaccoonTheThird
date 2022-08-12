@@ -19,9 +19,9 @@ public class JdaManager {
 
     public JdaManager(ApplicationContext context, Environment environment) {
         Logger logger = context.getBean(Logger.class);
-
         try {
             jda = JDABuilder.createDefault(environment.getProperty("jda.token"))
+                    .enableIntents(GatewayIntent.MESSAGE_CONTENT)
                     .setChunkingFilter(ChunkingFilter.ALL)
                     .setMemberCachePolicy(MemberCachePolicy.ALL)
                     .enableIntents(GatewayIntent.GUILD_MEMBERS)

@@ -1,6 +1,6 @@
 package com.bots.RacoonServer.Logging;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import com.bots.RacoonServer.SpringContext;
 
 import java.awt.*;
 
@@ -10,8 +10,7 @@ public class Log {
     private final Color color;
 
     public Log(String message, Color color) {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-        this.caller = context.getBean(CallerAcquirement.class).getClassName();
+        this.caller = SpringContext.getBean(CallerAcquirement.class).getClassName();
         this.message = message;
         this.color = color;
     }

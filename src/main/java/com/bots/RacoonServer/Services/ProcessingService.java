@@ -1,8 +1,8 @@
 package com.bots.RacoonServer.Services;
 
 import com.bots.RacoonServer.Config;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +13,19 @@ import java.util.regex.Pattern;
 
 @Service
 public class ProcessingService {
-    public void processMessage(MessageReceivedEvent event) {
+    private final CommandService commandService;
 
+    public ProcessingService(CommandService commandService) {
+        this.commandService = commandService;
     }
 
-    public void processInteraction(SlashCommandInteraction event) {
+    public void processMessage(MessageReceivedEvent event) {
+        Pair<String, List<String>> commandAndArguments = getCommandAndArgumentsFrom(event.getMessage().getContentRaw());
+        commandService.executeCommand(commandAndArguments.getFirst(), event, commandAndArguments.getSecond());
+    }
 
+    public void processInteraction(SlashCommandInteractionEvent event) {
+        commandService.executeCommand(event);
     }
 
     public static Pair<String, List<String>> getCommandAndArgumentsFrom(String message) {
