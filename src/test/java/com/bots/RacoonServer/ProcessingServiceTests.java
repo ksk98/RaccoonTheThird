@@ -38,4 +38,14 @@ public class ProcessingServiceTests {
         assertEquals("1", pair.getFirst());
         assertEquals(1, pair.getSecond().size());
     }
+
+    @Test
+    public void commandAndArgumentsSeparationRegexNoCommand() {
+        Pair<String, List<String>> pair = ProcessingService.getCommandAndArgumentsFrom(
+                "Witam! Nie ma tutaj komend. Za to są $ dolary!"
+        );
+
+        assertEquals("", pair.getFirst());
+        assertEquals(0, pair.getSecond().size());
+    }
 }
