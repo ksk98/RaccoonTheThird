@@ -10,7 +10,8 @@ import org.springframework.lang.NonNull;
 import java.util.List;
 
 public abstract class CommandBase implements Command {
-    protected final String keyword, description;
+    protected final String keyword;
+    protected String description;
     protected final boolean supportsTextCalls, supportsInteractionCalls;
     protected boolean deleteCallMessage;
 
