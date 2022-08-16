@@ -95,7 +95,7 @@ public class CommandService {
         if (!command.isTextCommand())
             return;
 
-        // If the message contains only the command call, delete it
+        // If the message contains only the command call, delete it (unless specified otherwise by the command)
         // Works only outside private conversation and if enabled in config
         if (Config.deleteMessagesContainingOnlyValidCommandCall &&
                 !event.isFromType(ChannelType.PRIVATE) &&
