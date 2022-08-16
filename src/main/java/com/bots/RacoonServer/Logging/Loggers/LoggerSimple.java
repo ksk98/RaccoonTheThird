@@ -17,11 +17,11 @@ public class LoggerSimple extends LoggerBase {
 
     @Override
     public void logSuccess(String message) {
-        super.logSuccess(">SUCCESS<" + message);
+        super.logSuccess(">SUCCESS< " + message);
     }
 
     @Override
     public void logInfo(String message) {
-        super.logInfo(">INFO<" + message);
+        super.logInfo(">INFO< " + message);
     }
 }
