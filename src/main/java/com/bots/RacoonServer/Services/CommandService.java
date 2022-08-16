@@ -99,6 +99,7 @@ public class CommandService {
         // Works only outside private conversation and if enabled in config
         if (Config.deleteMessagesContainingOnlyValidCommandCall &&
                 !event.isFromType(ChannelType.PRIVATE) &&
+                command.deleteMessageAfterUse() &&
                 event.getMessage().getContentRaw().replaceAll("\\s+", "").length() == keyword.length() + 1) {
             try {
                 event.getMessage().delete().queue();

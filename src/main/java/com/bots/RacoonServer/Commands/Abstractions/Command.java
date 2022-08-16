@@ -47,4 +47,9 @@ public interface Command extends Serializable {
      * @return true if command should be callable via a slash command interaction
      */
     boolean isSlashCommand();
+
+    /***
+     * @return true if text command call message should be deleted
+     */
+    boolean deleteMessageAfterUse();
 }

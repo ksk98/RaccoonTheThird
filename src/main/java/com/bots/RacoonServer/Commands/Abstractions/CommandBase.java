@@ -12,13 +12,15 @@ import java.util.List;
 public abstract class CommandBase implements Command {
     protected final String keyword, description;
     protected final boolean supportsTextCalls, supportsInteractionCalls;
+    protected boolean deleteCallMessage;
 
-    public CommandBase(String keyword, String description, boolean supportsTextCalls,
-                       boolean supportsInteractionCalls) {
+    public CommandBase(String keyword, String description,
+                       boolean supportsTextCalls, boolean supportsInteractionCalls) {
         this.keyword = keyword.toLowerCase();
         this.description = description;
         this.supportsTextCalls = supportsTextCalls;
         this.supportsInteractionCalls = supportsInteractionCalls;
+        this.deleteCallMessage = true;
     }
 
     @Override
@@ -58,5 +60,10 @@ public abstract class CommandBase implements Command {
     @Override
     public final boolean isSlashCommand() {
         return supportsInteractionCalls;
+    }
+
+    @Override
+    public boolean deleteMessageAfterUse() {
+        return deleteCallMessage;
     }
 }
