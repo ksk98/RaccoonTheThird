@@ -50,12 +50,16 @@ public class CommandService {
     public void loadGlobalSlashCommands() {
         boolean updateRequired = false;
         for (String keyword: commands.keySet()) {
+            Command command = commands.get(keyword);
+            if (!command.isSlashCommand())
+                continue;
+
             try {
                 if (!checksumRepository.existsByKeyword(keyword)) {
-                    checksumRepository.save(new CommandChecksum(commands.get(keyword)));
+                    checksumRepository.save(new CommandChecksum(command));
                     updateRequired = true;
                     break;
-                } else if (!checksumRepository.getChecksumForKeyword(keyword).checksumEqualsTo(commands.get(keyword))) {
+                } else if (!checksumRepository.getChecksumForKeyword(keyword).checksumEqualsTo(command)) {
                     updateRequired = true;
                     break;
                 }
@@ -81,7 +85,23 @@ public class CommandService {
             return;
         }
 
-        commands.get(keyword).execute(event, arguments);
+        Command command = commands.get(keyword);
+        if (!command.isTextCommand())
+            return;
+
+        // If the message contains only the command call, delete it
+        // Works only outside private conversation and if enabled in config
+        if (Config.deleteMessagesContainingOnlyValidCommandCall &&
+                !event.isFromType(ChannelType.PRIVATE) &&
+                event.getMessage().getContentRaw().replaceAll("\\s+", "").length() == keyword.length() + 1) {
+            try {
+                event.getMessage().delete().queue();
+            } catch (InsufficientPermissionException e) {
+                logger.logInfo("Could not delete command call message because of insufficient permissions.");
+            }
+        }
+
+        command.execute(event, arguments);
     }
 
     public void executeCommand(SlashCommandInteractionEvent event) {

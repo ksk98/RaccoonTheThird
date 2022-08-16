@@ -24,7 +24,7 @@ public interface Command extends Serializable {
 
 
     /***
-     * @return command data to be used in publishing slash commands, null if slash command is not supported.
+     * @return command data to be used in publishing slash commands, null if slash command is not supported
      */
     CommandData getCommandData();
 
@@ -39,7 +39,12 @@ public interface Command extends Serializable {
     String getDescription();
 
     /***
-     * @return version number used in global slash command integrity validation
+     * @return true if command should be callable from a text message via keyword
      */
-    int getVersion();
+    boolean isTextCommand();
+
+    /***
+     * @return true if command should be callable via a slash command interaction
+     */
+    boolean isSlashCommand();
 }
