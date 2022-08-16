@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Random;
 
-public class CommandDecide extends CommandBase {
+public class Command8Ball extends CommandBase {
     private final String[] options = new String[] {
             "It is certain.", "It is decidedly so.", "Without a doubt.", "Yes definitely.", "You may rely on it.",
             "As I see it, yes.", "Most likely.", "Outlook good.", "Yes.", "Signs point to yes.",
@@ -17,8 +17,8 @@ public class CommandDecide extends CommandBase {
             "Outlook not so good.", "Very doubtful."
     };
 
-    public CommandDecide() {
-        super("decide", "Simulates a magic 8-ball styled decision making.", true, true);
+    public Command8Ball() {
+        super("8ball", "Simulates a magic 8-ball styled decision making.", true, true);
     }
 
     private String decide() {

@@ -1,7 +1,7 @@
 package com.bots.RacoonServer.Services;
 
 import com.bots.RacoonServer.Commands.Abstractions.Command;
-import com.bots.RacoonServer.Commands.CommandDecide;
+import com.bots.RacoonServer.Commands.Command8Ball;
 import com.bots.RacoonServer.Commands.CommandHelp;
 import com.bots.RacoonServer.Config;
 import com.bots.RacoonServer.Events.Publishers.CommandListUpdatedEventPublisher;
@@ -50,7 +50,7 @@ public class CommandService {
 
         // Add commands here
         addCommand(new CommandHelp());
-        addCommand(new CommandDecide());
+        addCommand(new Command8Ball());
     }
 
     public void loadGlobalSlashCommands() {
