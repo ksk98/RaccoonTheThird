@@ -9,17 +9,15 @@ import org.springframework.stereotype.Component;
 /***
  * Used by POJO's to reference spring application context.
  */
-@Component("springcontext")
+@Component("spring_context")
 public class SpringContext implements ApplicationContextAware {
     private static ApplicationContext context;
 
     /**
-     * Returns the Spring managed bean instance of the given class type if it exists.
-     * Returns null otherwise.
-     * @param beanClass
-     * @return
+     * @param beanClass requested class
+     * @return spring managed bean instance of given class or null if doesn't exist
      */
-    public static <T extends Object> T getBean(Class<T> beanClass) {
+    public static <T> T getBean(Class<T> beanClass) {
         return context.getBean(beanClass);
     }
 

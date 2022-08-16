@@ -2,11 +2,13 @@ package com.bots.RacoonServer.Commands.Abstractions;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.springframework.lang.NonNull;
 
+import java.io.Serializable;
 import java.util.List;
 
-public interface Command {
+public interface Command extends Serializable {
     /***
      * Execute the command in response to a call present in a received message.
      * @param event message event in which the call was made
@@ -20,6 +22,12 @@ public interface Command {
      */
     void execute(@NonNull SlashCommandInteractionEvent event);
 
+
+    /***
+     * @return command data to be used in publishing slash commands, null if slash command is not supported.
+     */
+    CommandData getCommandData();
+
     /***
      * @return a keyword used to call the command
      */
@@ -29,4 +37,9 @@ public interface Command {
      * @return description of the command
      */
     String getDescription();
+
+    /***
+     * @return version number used in global slash command integrity validation
+     */
+    int getVersion();
 }
