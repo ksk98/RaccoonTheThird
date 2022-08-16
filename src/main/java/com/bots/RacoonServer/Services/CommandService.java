@@ -8,6 +8,7 @@ import com.bots.RacoonServer.Events.Publishers.CommandListUpdatedEventPublisher;
 import com.bots.RacoonServer.Logging.Loggers.Logger;
 import com.bots.RacoonServer.Persistence.CommandChecksum;
 import com.bots.RacoonServer.Persistence.CommandChecksumRepository;
+import com.bots.RacoonServer.Utility.Tools;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -64,10 +65,15 @@ public class CommandService {
                 if (!checksumRepository.existsByKeyword(keyword)) {
                     checksumRepository.save(new CommandChecksum(command));
                     updateRequired = true;
-                    break;
-                } else if (!checksumRepository.getChecksumForKeyword(keyword).checksumEqualsTo(command)) {
-                    updateRequired = true;
-                    break;
+                } else {
+                    CommandChecksum commandChecksum = checksumRepository.getChecksumForKeyword(keyword);
+                    String currentChecksum = Tools.getChecksumForObject(command);
+
+                    if (!commandChecksum.getChecksum().equals(currentChecksum)) {
+                        commandChecksum.setChecksum(currentChecksum);
+                        checksumRepository.save(commandChecksum);
+                        updateRequired = true;
+                    }
                 }
             } catch (IOException | NoSuchAlgorithmException e) {
                 logger.logInfo("Could not verify slash command integrity, commands will not be updated.");
@@ -82,6 +88,7 @@ public class CommandService {
         List<CommandData> commandData = new ArrayList<>(commands.size());
         commands.values().forEach(command -> commandData.add(command.getCommandData()));
 
+        logger.logInfo("Global slash command update has been called.");
         jda.updateCommands().addCommands(commandData).queue();
     }
 
@@ -108,7 +115,11 @@ public class CommandService {
             }
         }
 
-        command.execute(event, arguments);
+        try {
+            command.execute(event, arguments);
+        } catch (UnsupportedOperationException e) {
+            logger.logInfo("Attempted to use call command " + keyword + " as text command, but this action is unsupported.");
+        }
     }
 
     public void executeCommand(SlashCommandInteractionEvent event) {
@@ -119,7 +130,11 @@ public class CommandService {
             return;
         }
 
-        commands.get(keyword).execute(event);
+        try {
+            commands.get(keyword).execute(event);
+        } catch (UnsupportedOperationException e) {
+            logger.logInfo("Attempted to use call command " + keyword + " as slash command, but this action is unsupported.");
+        }
     }
 
     /**
@@ -128,8 +143,17 @@ public class CommandService {
     public List<String[]> getCommandDescriptions() {
         // Lazy loading
         if (commandDescriptions.isEmpty()) {
-            for (String key: commands.keySet())
-                commandDescriptions.add(new String[] {key, commands.get(key).getDescription()});
+            for (String key: commands.keySet()) {
+                Command currentCommand = commands.get(key);
+                StringBuilder description = new StringBuilder(currentCommand.getDescription());
+
+                if (currentCommand.isTextCommand() && !currentCommand.isSlashCommand())
+                    description.append(" [TEXT ONLY]");
+                else if (!currentCommand.isTextCommand() && currentCommand.isSlashCommand())
+                    description.append(" [SLASH ONLY");
+
+                commandDescriptions.add(new String[]{key, description.toString()});
+            }
             commandListUpdatedEventPublisher.notifySubscribers();
         }
 
