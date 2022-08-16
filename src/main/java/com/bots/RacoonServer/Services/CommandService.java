@@ -1,14 +1,18 @@
 package com.bots.RacoonServer.Services;
 
 import com.bots.RacoonServer.Commands.Abstractions.Command;
+import com.bots.RacoonServer.Commands.CommandDecide;
 import com.bots.RacoonServer.Commands.CommandHelp;
+import com.bots.RacoonServer.Config;
 import com.bots.RacoonServer.Events.Publishers.CommandListUpdatedEventPublisher;
 import com.bots.RacoonServer.Logging.Loggers.Logger;
 import com.bots.RacoonServer.Persistence.CommandChecksum;
 import com.bots.RacoonServer.Persistence.CommandChecksumRepository;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
@@ -44,7 +48,9 @@ public class CommandService {
         this.commands.clear();
         this.commandDescriptions.clear();
 
+        // Add commands here
         addCommand(new CommandHelp());
+        addCommand(new CommandDecide());
     }
 
     public void loadGlobalSlashCommands() {
@@ -105,7 +111,7 @@ public class CommandService {
     }
 
     public void executeCommand(SlashCommandInteractionEvent event) {
-        String keyword = event.getName();
+        String keyword = event.getName().toLowerCase();
 
         if (!commands.containsKey(keyword)) {
             logger.logInfo("Attempted to use unknown slash command(" + keyword + ")");
