@@ -21,7 +21,10 @@ public class ProcessingService {
 
     public void processMessage(MessageReceivedEvent event) {
         Pair<String, List<String>> commandAndArguments = getCommandAndArgumentsFrom(event.getMessage().getContentRaw());
-        commandService.executeCommand(commandAndArguments.getFirst(), event, commandAndArguments.getSecond());
+        if (commandAndArguments.getFirst().equals(""))
+            return;
+
+        commandService.executeCommand(commandAndArguments.getFirst().toLowerCase(), event, commandAndArguments.getSecond());
     }
 
     public void processInteraction(SlashCommandInteractionEvent event) {
