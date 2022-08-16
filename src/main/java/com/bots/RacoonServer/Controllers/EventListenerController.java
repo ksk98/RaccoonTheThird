@@ -23,6 +23,9 @@ public class EventListenerController {
 
     @SubscribeEvent
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+        if (event.getAuthor().isBot())
+            return;
+
         processingService.processMessage(event);
         // TODO: log message logs
     }
