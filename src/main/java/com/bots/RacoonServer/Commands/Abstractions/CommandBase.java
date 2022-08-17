@@ -4,7 +4,6 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.internal.interactions.CommandDataImpl;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
@@ -25,7 +24,7 @@ public abstract class CommandBase implements Command {
     }
 
     @Override
-    public void execute(@NonNull MessageReceivedEvent event, @NotNull List<String> arguments) {
+    public void execute(@NonNull MessageReceivedEvent event, @NonNull List<String> arguments) {
         throw new UnsupportedOperationException(
                 "MessageReceivedEvent not supported for command " + getClass().getSimpleName()
         );
@@ -64,7 +63,7 @@ public abstract class CommandBase implements Command {
     }
 
     @Override
-    public boolean deleteMessageAfterUse() {
+    public final boolean deleteMessageAfterUse() {
         return deleteCallMessage;
     }
 }
