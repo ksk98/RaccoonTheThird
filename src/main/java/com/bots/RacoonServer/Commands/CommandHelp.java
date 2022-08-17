@@ -7,7 +7,6 @@ import com.bots.RacoonServer.Services.CommandService;
 import com.bots.RacoonServer.SpringContext;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
@@ -44,7 +43,7 @@ public class CommandHelp extends CommandBase implements CommandListUpdatedEventL
     }
 
     @Override
-    public void execute(@NotNull SlashCommandInteractionEvent event) {
+    public void execute(@NonNull SlashCommandInteractionEvent event) {
         event.getInteraction().reply(getOutput()).setEphemeral(true).queue();
     }
 
