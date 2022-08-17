@@ -4,7 +4,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.internal.interactions.CommandDataImpl;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -24,14 +24,14 @@ public abstract class CommandBase implements Command {
     }
 
     @Override
-    public void execute(@NonNull MessageReceivedEvent event, @NonNull List<String> arguments) {
+    public void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
         throw new UnsupportedOperationException(
                 "MessageReceivedEvent not supported for command " + getClass().getSimpleName()
         );
     }
 
     @Override
-    public void execute(@NonNull SlashCommandInteractionEvent event) {
+    public void execute(@NotNull SlashCommandInteractionEvent event) {
         throw new UnsupportedOperationException(
                 "SlashCommandInteractionEvent not supported for command " + getClass().getSimpleName()
         );

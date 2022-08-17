@@ -7,7 +7,7 @@ import com.bots.RacoonServer.Services.CommandService;
 import com.bots.RacoonServer.SpringContext;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -38,12 +38,12 @@ public class CommandHelp extends CommandBase implements CommandListUpdatedEventL
     }
 
     @Override
-    public void execute(@NonNull MessageReceivedEvent event, @NonNull List<String> arguments) {
+    public void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
         event.getAuthor().openPrivateChannel().flatMap(channel -> channel.sendMessage(getOutput())).queue();
     }
 
     @Override
-    public void execute(@NonNull SlashCommandInteractionEvent event) {
+    public void execute(@NotNull SlashCommandInteractionEvent event) {
         event.getInteraction().reply(getOutput()).setEphemeral(true).queue();
     }
 

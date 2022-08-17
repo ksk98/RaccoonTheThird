@@ -3,7 +3,7 @@ package com.bots.RacoonServer.Commands;
 import com.bots.RacoonServer.Commands.Abstractions.CommandBase;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Random;
@@ -27,12 +27,12 @@ public class Command8Ball extends CommandBase {
     }
 
     @Override
-    public void execute(@NonNull MessageReceivedEvent event, @NonNull List<String> arguments) {
+    public void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
         event.getChannel().sendMessage(decide()).queue();
     }
 
     @Override
-    public void execute(@NonNull SlashCommandInteractionEvent event) {
+    public void execute(@NotNull SlashCommandInteractionEvent event) {
         event.getInteraction().reply(decide()).queue();
     }
 }
