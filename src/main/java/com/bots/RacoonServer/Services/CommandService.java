@@ -4,6 +4,7 @@ import com.bots.RacoonServer.Commands.Abstractions.Command;
 import com.bots.RacoonServer.Commands.Command8Ball;
 import com.bots.RacoonServer.Commands.CommandDecide;
 import com.bots.RacoonServer.Commands.CommandHelp;
+import com.bots.RacoonServer.Commands.MineSweeper.CommandMinesweeper;
 import com.bots.RacoonServer.Config;
 import com.bots.RacoonServer.Events.Publishers.CommandListUpdatedEventPublisher;
 import com.bots.RacoonServer.Logging.Loggers.Logger;
@@ -54,6 +55,7 @@ public class CommandService {
         addCommand(new CommandHelp());
         addCommand(new Command8Ball());
         addCommand(new CommandDecide());
+        addCommand(new CommandMinesweeper());
     }
 
     public void loadGlobalSlashCommands() {
