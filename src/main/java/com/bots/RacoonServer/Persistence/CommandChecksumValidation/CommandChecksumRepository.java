@@ -1,4 +1,4 @@
-package com.bots.RacoonServer.Persistence;
+package com.bots.RacoonServer.Persistence.CommandChecksumValidation;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

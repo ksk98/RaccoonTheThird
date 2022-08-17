@@ -1,4 +1,4 @@
-package com.bots.RacoonServer.Persistence;
+package com.bots.RacoonServer.Persistence.CommandChecksumValidation;
 
 import com.bots.RacoonServer.Commands.Abstractions.Command;
 import com.bots.RacoonServer.Utility.Tools;

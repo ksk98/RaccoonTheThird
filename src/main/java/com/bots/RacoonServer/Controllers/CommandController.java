@@ -1,24 +1,18 @@
 package com.bots.RacoonServer.Controllers;
 
-import com.bots.RacoonServer.JdaManager;
 import com.bots.RacoonServer.Services.ProcessingService;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.AnnotatedEventManager;
 import net.dv8tion.jda.api.hooks.SubscribeEvent;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EventListenerController {
+public class CommandController {
     private final ProcessingService processingService;
-    private final AnnotatedEventManager annotatedEventManager;
 
-    public EventListenerController(ProcessingService processingService, JdaManager jdaManager) {
+    public CommandController(ProcessingService processingService) {
         this.processingService = processingService;
-        this.annotatedEventManager = new AnnotatedEventManager();
-        this.annotatedEventManager.register(this);
-        jdaManager.getJda().setEventManager(annotatedEventManager);
     }
 
     @SubscribeEvent
