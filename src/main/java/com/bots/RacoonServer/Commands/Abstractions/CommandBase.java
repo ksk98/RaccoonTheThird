@@ -23,6 +23,14 @@ public abstract class CommandBase implements Command {
         this.deleteCallMessage = true;
     }
 
+    public void respondPrivatelyTo(@NotNull MessageReceivedEvent event, String message) {
+        event.getAuthor().openPrivateChannel().flatMap(channel -> channel.sendMessage(message)).queue();
+    }
+
+    public void respondPrivatelyTo(@NotNull SlashCommandInteractionEvent event, String message) {
+        event.getInteraction().reply(message).setEphemeral(true).queue();
+    }
+
     @Override
     public void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
         throw new UnsupportedOperationException(

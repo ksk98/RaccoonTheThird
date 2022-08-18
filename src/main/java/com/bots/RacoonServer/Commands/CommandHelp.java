@@ -39,12 +39,12 @@ public class CommandHelp extends CommandBase implements CommandListUpdatedEventL
 
     @Override
     public void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
-        event.getAuthor().openPrivateChannel().flatMap(channel -> channel.sendMessage(getOutput())).queue();
+        respondPrivatelyTo(event, getOutput());
     }
 
     @Override
     public void execute(@NotNull SlashCommandInteractionEvent event) {
-        event.getInteraction().reply(getOutput()).setEphemeral(true).queue();
+        respondPrivatelyTo(event, getOutput());
     }
 
     @Override

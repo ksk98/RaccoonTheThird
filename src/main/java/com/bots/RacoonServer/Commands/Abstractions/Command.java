@@ -22,7 +22,6 @@ public interface Command extends Serializable {
      */
     void execute(@NotNull SlashCommandInteractionEvent event);
 
-
     /***
      * @return command data to be used in publishing slash commands, null if slash command is not supported
      */
