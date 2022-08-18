@@ -12,7 +12,7 @@ public class UserScore {
     private String userId;
     private String serverId;
 
-    private int points;
+    private int points = 0;
 
     public UserScore() {
 
