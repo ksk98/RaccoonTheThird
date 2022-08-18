@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class CommandScore extends CommandBase {
-    private final UpvoteCountingService upvoteCountingService;
+    private transient final UpvoteCountingService upvoteCountingService;
 
     public CommandScore() {
         super("score", "Displays your amount of points collected in this server.", true, true);
