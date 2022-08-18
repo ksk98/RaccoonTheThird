@@ -10,10 +10,10 @@ public interface UserScoreRepository extends JpaRepository<UserScore, Long> {
     @Query("SELECT CASE WHEN COUNT(u) > 0 THEN TRUE ELSE FALSE END FROM UserScore u WHERE u.userId = :userId AND u.serverId = :serverId")
     boolean existsByUserAndServerId(@Param("userId") String userId, @Param("serverId") String serverId);
 
-    @Query("SELECT UserScore FROM UserScore u WHERE u.userId = :userId AND u.serverId = :serverId")
+    @Query("SELECT u FROM UserScore u WHERE u.userId = :userId AND u.serverId = :serverId")
     UserScore getUserScoresForUserAndServerId(@Param("userId") String userId, @Param("serverId") String serverId);
 
-    @Query("SELECT UserScore FROM UserScore u WHERE u.userId = :userId")
+    @Query("SELECT u FROM UserScore u WHERE u.userId = :userId")
     List<UserScore> getUserScoresForUser(@Param("userId") String userId);
 
     @Query("UPDATE UserScore u SET u.points = u.points + :points WHERE u.userId = :userId AND u.serverId = :serverId")
