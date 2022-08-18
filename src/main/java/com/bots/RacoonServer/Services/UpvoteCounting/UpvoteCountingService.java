@@ -48,7 +48,11 @@ public class UpvoteCountingService {
     }
 
     public int getPointsFor(String userId, String serverId) {
-        return userScoreRepository.getUserScoresForUserAndServerId(userId, serverId).getPoints();
+        try {
+            return Objects.requireNonNull(userScoreRepository.getUserScoresForUserAndServerId(userId, serverId)).getPoints();
+        } catch (NullPointerException e) {
+            return 0;
+        }
     }
 
     public String getPrintedListOfScoresForAllServers(String userId) {
@@ -75,7 +79,11 @@ public class UpvoteCountingService {
             userScoreListCache.put(userId, new UserScoreListCacheEntry(userId, scoresProcessed));
         }
 
-        return userScoreListCache.get(userId).getListTextRepresentation();
+        String out = userScoreListCache.get(userId).getListTextRepresentation();
+        if (out.equals(""))
+            return "No score has been recorded for the user so far.";
+
+        return out;
     }
 
     public void updatePoints(@NotNull GenericMessageReactionEvent event) {
