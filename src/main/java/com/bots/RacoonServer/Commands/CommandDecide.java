@@ -12,7 +12,7 @@ public class CommandDecide extends CommandBase {
     public CommandDecide() {
         super("decide", "", true, false);
         this.description = "Pick between given options. Example: \n\t" +
-                Config._commandPrefixes[0] + getKeyword() + " option \"second option\" 'third option'";
+                Config.commandPrefixes[0] + getKeyword() + " option \"second option\" 'third option'";
         this.deleteCallMessage = false;
     }
 
