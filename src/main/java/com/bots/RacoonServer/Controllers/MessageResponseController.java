@@ -8,10 +8,10 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CommandController {
+public class MessageResponseController {
     private final ProcessingService processingService;
 
-    public CommandController(ProcessingService processingService) {
+    public MessageResponseController(ProcessingService processingService) {
         this.processingService = processingService;
     }
 
