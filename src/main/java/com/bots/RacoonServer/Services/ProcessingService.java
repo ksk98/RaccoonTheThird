@@ -32,7 +32,7 @@ public class ProcessingService {
     }
 
     public static Pair<String, List<String>> getCommandAndArgumentsFrom(String message) {
-        String prefixes = String.valueOf(Config._commandPrefixes);
+        String prefixes = String.valueOf(Config.commandPrefixes);
 
         String fromCommandOnwardRegex = "([" + prefixes + "][^\\s" + prefixes + "]+).*";
         String separateWordsRegex = "(\"[^\"]*\"|'[^']*'|\\S+)";
