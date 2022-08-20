@@ -1,6 +1,6 @@
 package com.bots.RacoonServer.Configuration;
 
-import com.bots.RacoonServer.Controllers.MessageResponseController;
+import com.bots.RacoonServer.Controllers.MessageAndInteractionResponseController;
 import com.bots.RacoonServer.Controllers.UpvoteController;
 import com.bots.RacoonServer.JdaManager;
 import net.dv8tion.jda.api.hooks.AnnotatedEventManager;
@@ -12,7 +12,7 @@ public class EventManagerConfig {
     private final AnnotatedEventManager eventManager;
 
     public EventManagerConfig(JdaManager jdaManager,
-                              MessageResponseController commandController, UpvoteController upvoteController) {
+                              MessageAndInteractionResponseController commandController, UpvoteController upvoteController) {
         this.eventManager = new AnnotatedEventManager();
         this.eventManager.register(commandController);
         this.eventManager.register(upvoteController);
