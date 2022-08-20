@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class CommandMinesweeper extends CommandBase {
-    private final String BOMB_COUNT_OPTION_NAME = "bomb count";
+    private final String BOMB_COUNT_OPTION_NAME = "bomb_count";
 
     // Although printing the game in an embed looks a lot nicer
     // fields are smaller and therefore harder to click on.
