@@ -91,7 +91,7 @@ public class UpvoteCountingService {
             return;
 
         Message message = event.retrieveMessage().complete();
-        if (message.getTimeCreated().toEpochSecond() + postActivityInSeconds >= OffsetDateTime.now().toEpochSecond())
+        if (message.getTimeCreated().toEpochSecond() + postActivityInSeconds < OffsetDateTime.now().toEpochSecond())
             return;
 
         User user = event.retrieveUser().complete();
