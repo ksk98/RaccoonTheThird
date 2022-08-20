@@ -15,7 +15,4 @@ public interface UserScoreRepository extends JpaRepository<UserScore, Long> {
 
     @Query("SELECT u FROM UserScore u WHERE u.userId = :userId")
     List<UserScore> getUserScoresForUser(@Param("userId") String userId);
-
-    @Query("UPDATE UserScore u SET u.points = u.points + :points WHERE u.userId = :userId AND u.serverId = :serverId")
-    void alterPointsFor(@Param("userId") String userId, @Param("serverId") String serverId, @Param("points") int points);
 }

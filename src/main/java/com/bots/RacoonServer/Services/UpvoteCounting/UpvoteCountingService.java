@@ -95,7 +95,7 @@ public class UpvoteCountingService {
             return;
 
         User user = event.retrieveUser().complete();
-        if (user.isBot())
+        if (user.isBot() || user.getId().equals(message.getAuthor().getId()))
             return;
 
         if (event instanceof MessageReactionAddEvent)
@@ -116,10 +116,8 @@ public class UpvoteCountingService {
         if (!userScoreRepository.existsByUserAndServerId(user.getId(), serverId))
             userScoreRepository.save(new UserScore(user.getId(), serverId));
 
-        userScoreRepository.alterPointsFor(
-                user.getId(),
-                serverId,
-                reactionToPoints.get(emoji) * modifier
-        );
+        UserScore userScore = userScoreRepository.getUserScoresForUserAndServerId(user.getId(), serverId);
+        userScore.alterPointsBy(reactionToPoints.get(emoji) * modifier);
+        userScoreRepository.save(userScore);
     }
 }

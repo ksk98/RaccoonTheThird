@@ -23,6 +23,10 @@ public class UserScore {
         this.serverId = serverId;
     }
 
+    public void alterPointsBy(int points) {
+        this.points += points;
+    }
+
     public Long getId() {
         return id;
     }

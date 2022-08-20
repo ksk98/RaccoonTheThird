@@ -23,7 +23,8 @@ public class CommandScore extends CommandBase {
     @Override
     public void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
         if (event.getChannelType().equals(ChannelType.PRIVATE)) {
-            respondPrivatelyTo(event, upvoteCountingService.getPrintedListOfScoresForAllServers(event.getAuthor().getId()));
+            respondPrivatelyTo(event, "Your current scores are: \n" +
+                    upvoteCountingService.getPrintedListOfScoresForAllServers(event.getAuthor().getId()));
             return;
         }
 
@@ -38,7 +39,8 @@ public class CommandScore extends CommandBase {
     @Override
     public void execute(@NotNull SlashCommandInteractionEvent event) {
         if (event.getGuild() == null) {
-            respondPrivatelyTo(event, upvoteCountingService.getPrintedListOfScoresForAllServers(event.getUser().getId()));
+            respondPrivatelyTo(event, "Your current scores are: \n" +
+                    upvoteCountingService.getPrintedListOfScoresForAllServers(event.getUser().getId()));
             return;
         }
 
