@@ -20,6 +20,8 @@ dependencies {
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot:3.0.4'
 	// Discord wrapper
 	implementation 'net.dv8tion:JDA:5.0.0-alpha.17'
+	// Window form code generation plugin
+	implementation 'com.intellij:forms_rt:7.0.3'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
