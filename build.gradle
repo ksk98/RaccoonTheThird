@@ -22,6 +22,8 @@ dependencies {
 	implementation 'net.dv8tion:JDA:5.0.0-alpha.17'
 	// Window form code generation plugin
 	implementation 'com.intellij:forms_rt:7.0.3'
+	// JSON parsing
+	implementation 'org.json:json:20220320'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
