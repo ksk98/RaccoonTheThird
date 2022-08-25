@@ -1,6 +1,6 @@
-package com.bots.RacoonServer.Logging.Loggers;
+package com.bots.RacoonGeneral.Logging.Loggers;
 
-import com.bots.RacoonServer.Logging.Log;
+import com.bots.RacoonGeneral.Logging.Log;
 
 import java.awt.*;
 

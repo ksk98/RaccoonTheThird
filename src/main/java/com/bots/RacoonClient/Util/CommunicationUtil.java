@@ -1,4 +1,4 @@
-package com.bots.RacoonClient;
+package com.bots.RacoonClient.Util;
 
 import org.json.JSONObject;
 

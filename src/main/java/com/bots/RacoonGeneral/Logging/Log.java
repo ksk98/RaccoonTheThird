@@ -1,10 +1,12 @@
-package com.bots.RacoonServer.Logging;
+package com.bots.RacoonGeneral.Logging;
 
 import com.bots.RacoonServer.SpringContext;
+import org.json.JSONObject;
 
 import java.awt.*;
+import java.io.Serializable;
 
-public class Log {
+public class Log implements Serializable {
     private final String caller;
     private final String message;
     private final Color color;
