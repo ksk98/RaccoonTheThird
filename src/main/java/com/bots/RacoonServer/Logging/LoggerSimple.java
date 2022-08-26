@@ -1,6 +1,7 @@
-package com.bots.RacoonServer.Logging.Loggers;
+package com.bots.RacoonServer.Logging;
 
-import com.bots.RacoonServer.Logging.Log;
+import com.bots.RacoonShared.Logging.Loggers.LoggerBase;
+import com.bots.RacoonShared.Logging.Log;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -8,7 +8,7 @@ import com.bots.RacoonServer.Commands.CommandScore;
 import com.bots.RacoonServer.Commands.MineSweeper.CommandMinesweeper;
 import com.bots.RacoonServer.Config;
 import com.bots.RacoonServer.Events.Publishers.CommandListUpdatedEventPublisher;
-import com.bots.RacoonServer.Logging.Loggers.Logger;
+import com.bots.RacoonShared.Logging.Loggers.Logger;
 import com.bots.RacoonServer.Persistence.CommandChecksumValidation.CommandChecksum;
 import com.bots.RacoonServer.Persistence.CommandChecksumValidation.CommandChecksumRepository;
 import com.bots.RacoonServer.Utility.Tools;
