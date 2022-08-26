@@ -1,7 +1,7 @@
 package com.bots.RacoonServer.Services.UpvoteCounting;
 
 import com.bots.RacoonServer.Config;
-import com.bots.RacoonGeneral.Logging.Loggers.Logger;
+import com.bots.RacoonShared.Logging.Loggers.Logger;
 import com.bots.RacoonServer.Persistence.UpvotePersistence.UserScore;
 import com.bots.RacoonServer.Persistence.UpvotePersistence.UserScoreRepository;
 import kotlin.Pair;
