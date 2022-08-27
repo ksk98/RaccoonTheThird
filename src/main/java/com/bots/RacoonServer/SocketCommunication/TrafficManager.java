@@ -14,7 +14,7 @@ public class TrafficManager implements Runnable {
     private boolean running = false;
     private final Logger logger;
 
-    private final HashMap<Integer, SocketConnection> subscribers;
+    private final HashMap<Integer, SocketConnection> connections;
     private int nextSubscriberId = 0;
 
     private final Map<Integer, Pair<SocketConnection, SocketCommunicationOperation>> individualOperations;
@@ -26,7 +26,7 @@ public class TrafficManager implements Runnable {
 
     public TrafficManager(Logger logger, IncomingDataTrafficHandler trafficHandlerChain) {
         this.logger = logger;
-        this.subscribers = new HashMap<>();
+        this.connections = new HashMap<>();
         this.individualOperations = new HashMap<>();
         this.broadcasts = new LinkedList<>();
         this.individualOperationIdQueue = new LinkedList<>();
@@ -64,16 +64,16 @@ public class TrafficManager implements Runnable {
     }
 
     public int addSubscriber(SocketConnection connection) {
-        subscribers.put(nextSubscriberId, connection);
+        connections.put(nextSubscriberId, connection);
         nextSubscriberId += 1;
 
         return nextSubscriberId - 1;
     }
 
     public void removeSubscriber(int id) {
-        subscribers.remove(id);
+        connections.remove(id);
 
-        if (subscribers.isEmpty())
+        if (connections.isEmpty())
             nextSubscriberId = 0;
     }
 
@@ -95,9 +95,10 @@ public class TrafficManager implements Runnable {
                     }
                 }
 
-                for (SocketConnection connection: subscribers.values()) {
+                for (SocketConnection connection: connections.values()) {
                     if (connection.in.available() > 0) {
                         JSONObject incomingData = new JSONObject(CommunicationUtil.readUntilEndFrom(connection.in));
+                        incomingData.append("connection_id", connection.in.id);
                         if (incomingData.has("operation_id")) {
                             finaliseOperationForResponse(incomingData);
                         } else if (incomingData.has("operation")) {
@@ -112,7 +113,7 @@ public class TrafficManager implements Runnable {
                 if (!broadcasts.isEmpty()) {
                     SocketCommunicationOperation message = broadcasts.poll();
 
-                    for (SocketConnection connection: subscribers.values()) {
+                    for (SocketConnection connection: connections.values()) {
                         CommunicationUtil.sendTo(connection.out, message.getRequest());
                     }
                 }
