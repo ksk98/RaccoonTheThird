@@ -1,6 +1,5 @@
-package com.bots.RacoonServer.Events.Publishers;
+package com.bots.RacoonServer.Events.CommandListUpdated;
 
-import com.bots.RacoonServer.Events.CommandListUpdatedEventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
@@ -8,7 +7,7 @@ import java.util.List;
 
 @Component
 public class CommandListUpdatedEventPublisher {
-    private List<CommandListUpdatedEventListener> subscribers;
+    private final List<CommandListUpdatedEventListener> subscribers;
 
     public CommandListUpdatedEventPublisher() {
         subscribers = new LinkedList<>();

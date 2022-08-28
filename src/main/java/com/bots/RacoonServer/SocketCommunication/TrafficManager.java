@@ -7,10 +7,11 @@ import com.bots.RacoonShared.SocketCommunication.SocketCommunicationOperation;
 import org.json.JSONObject;
 import org.springframework.data.util.Pair;
 
+import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.util.*;
 
-public class TrafficManager implements Runnable {
+public class TrafficManager extends Thread {
     private boolean running = false;
     private final Logger logger;
 
@@ -59,18 +60,22 @@ public class TrafficManager implements Runnable {
         broadcasts.add(operation);
     }
 
-    public void stop() {
+    public void stopRunning() {
         this.running = false;
     }
 
-    public int addSubscriber(SocketConnection connection) {
-        connections.put(nextSubscriberId, connection);
+    public SocketConnection getConnection(int id) {
+        return connections.get(id);
+    }
+
+    public int addConnection(SSLSocket socket) throws IOException {
+        connections.put(nextSubscriberId, new SocketConnection(socket, nextSubscriberId));
         nextSubscriberId += 1;
 
         return nextSubscriberId - 1;
     }
 
-    public void removeSubscriber(int id) {
+    public void removeConnection(int id) {
         connections.remove(id);
 
         if (connections.isEmpty())
@@ -107,19 +112,23 @@ public class TrafficManager implements Runnable {
                             logger.logInfo("Data was received from socket stream but could not be handled.");
                         }
                     }
-
                 }
 
                 if (!broadcasts.isEmpty()) {
                     SocketCommunicationOperation message = broadcasts.poll();
 
                     for (SocketConnection connection: connections.values()) {
-                        CommunicationUtil.sendTo(connection.out, message.getRequest());
+                        if (connection.isAuthenticated())
+                            CommunicationUtil.sendTo(connection.out, message.getRequest());
                     }
                 }
             } catch (IOException e) {
                 logger.logError(e.getMessage());
             }
         }
+    }
+
+    public boolean isRunning() {
+        return running;
     }
 }

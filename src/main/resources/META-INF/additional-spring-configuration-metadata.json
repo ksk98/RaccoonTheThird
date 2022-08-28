@@ -3,11 +3,31 @@
     {
       "name": "encrypted.jdbcpassword",
       "type": "java.lang.String",
-      "description": "Description for encrypted.jdbcpassword."
+      "description": "Password used to encrypt properties."
     },
     {
       "name": "jda.token",
       "type": "java.lang.String",
-      "description": "Description for jda.token."
+      "description": "Token used to authenticate the bot."
+    },
+    {
+      "name": "ssl.keystore_path",
+      "type": "java.lang.String",
+      "description": "Path to keystore used in SSL socket connection."
+    },
+    {
+      "name": "ssl.keystore_password",
+      "type": "java.lang.String",
+      "description": "Password used to access keystore file content."
+    },
+    {
+      "name": "client.username",
+      "type": "java.lang.String",
+      "description": "Username used to connect to the bot with a client app."
+    },
+    {
+      "name": "client.password",
+      "type": "java.lang.String",
+      "description": "Password used to connect to the bot with a client app."
     }
   ] }
