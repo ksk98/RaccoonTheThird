@@ -1,7 +1,7 @@
 package com.bots.RacoonServer.SocketCommunication.IncomingDataHandlers;
 
-import com.bots.RacoonShared.Events.IncomingDataEvents.BaseIncomingDataTrafficHandler;
-import com.bots.RacoonShared.Events.IncomingDataEvents.IncomingDataTrafficHandler;
+import com.bots.RacoonShared.IncomingDataHandlers.BaseIncomingDataTrafficHandler;
+import com.bots.RacoonShared.IncomingDataHandlers.IncomingDataTrafficHandler;
 import com.bots.RacoonShared.Logging.Loggers.Logger;
 import com.bots.RacoonShared.Util.SerializationUtil;
 import net.dv8tion.jda.api.JDA;

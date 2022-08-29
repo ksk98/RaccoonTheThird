@@ -1,8 +1,8 @@
 package com.bots.RacoonServer.SocketCommunication.IncomingDataHandlers;
 
 import com.bots.RacoonServer.SocketCommunication.TrafficManager;
-import com.bots.RacoonShared.Events.IncomingDataEvents.BaseIncomingDataTrafficHandler;
-import com.bots.RacoonShared.Events.IncomingDataEvents.IncomingDataTrafficHandler;
+import com.bots.RacoonShared.IncomingDataHandlers.BaseIncomingDataTrafficHandler;
+import com.bots.RacoonShared.IncomingDataHandlers.IncomingDataTrafficHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 

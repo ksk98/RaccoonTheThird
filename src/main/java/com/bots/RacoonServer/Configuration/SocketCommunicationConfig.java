@@ -7,7 +7,7 @@ import com.bots.RacoonServer.JdaManager;
 import com.bots.RacoonServer.SocketCommunication.ServerSocketManager;
 import com.bots.RacoonServer.SocketCommunication.TrafficManager;
 import com.bots.RacoonServer.SpringContext;
-import com.bots.RacoonShared.Events.IncomingDataEvents.IncomingDataTrafficHandler;
+import com.bots.RacoonShared.IncomingDataHandlers.IncomingDataTrafficHandler;
 import com.bots.RacoonShared.Logging.Loggers.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
