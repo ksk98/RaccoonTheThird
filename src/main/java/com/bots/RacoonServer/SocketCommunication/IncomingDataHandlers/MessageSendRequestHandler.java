@@ -25,17 +25,17 @@ public class MessageSendRequestHandler extends BaseIncomingDataTrafficHandler {
     }
 
     @Override
-    public void handle(JSONObject response) {
+    public void handle(JSONObject data) {
         boolean operationIsSendMessage = false;
 
         try {
-            operationIsSendMessage = response.getString("operation").equals("send_message");
+            operationIsSendMessage = data.getString("operation").equals("send_message");
         } catch (JSONException ignored) {}
 
         try {
             if (operationIsSendMessage) {
-                Message message = (Message) SerializationUtil.fromString(response.getString("message"));
-                Guild guild = jda.getGuildById(response.getString("guild_id"));
+                Message message = (Message) SerializationUtil.fromString(data.getString("message"));
+                Guild guild = jda.getGuildById(data.getString("guild_id"));
                 TextChannel channel = Objects.requireNonNull(guild).getTextChannelById("channel_id");
                 Objects.requireNonNull(channel).sendMessage(message).queue();
 
@@ -45,6 +45,6 @@ public class MessageSendRequestHandler extends BaseIncomingDataTrafficHandler {
             logger.logError(e.getMessage());
         }
 
-        super.handle(response);
+        super.handle(data);
     }
 }

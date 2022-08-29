@@ -20,11 +20,14 @@ public class AuthenticationRequestHandler extends BaseIncomingDataTrafficHandler
     }
 
     @Override
-    public void handle(JSONObject response) {
+    public void handle(JSONObject data) {
         try {
-            if (response.get("operation").equals("login")) {
-                String username = response.getString("username");
-                String password = response.getString("password");
+            if (data.get("operation").equals("login")) {
+                String username = data.getString("username");
+                String password = data.getString("password");
+
+                if (validateCredentials.test(username, password)) {
+                    trafficManager.getConnection(data.getInt("connection_id")).setAuthenticated(true);
 
                 if (validateCredentials.test(username, password))
                     trafficManager.getConnection(response.getInt("connection_id")).setAuthenticated(true);
@@ -33,6 +36,6 @@ public class AuthenticationRequestHandler extends BaseIncomingDataTrafficHandler
             }
         } catch (JSONException ignored) {}
 
-        super.handle(response);
+        super.handle(data);
     }
 }

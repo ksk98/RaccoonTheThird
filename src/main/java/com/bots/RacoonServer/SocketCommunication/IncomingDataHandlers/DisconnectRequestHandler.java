@@ -15,14 +15,14 @@ public class DisconnectRequestHandler extends BaseIncomingDataTrafficHandler {
     }
 
     @Override
-    public void handle(JSONObject response) {
+    public void handle(JSONObject data) {
         try {
-            if (response.get("operation").equals("disconnect")) {
-                trafficManager.removeConnection(response.getInt("connection_id"));
+            if (data.get("operation").equals("disconnect")) {
+                trafficManager.removeConnection(data.getInt("connection_id"));
                 return;
             }
         } catch (JSONException ignored) {}
 
-        super.handle(response);
+        super.handle(data);
     }
 }
