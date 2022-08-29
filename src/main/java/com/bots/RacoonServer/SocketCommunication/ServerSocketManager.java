@@ -1,5 +1,6 @@
 package com.bots.RacoonServer.SocketCommunication;
 
+import com.bots.RacoonServer.Config;
 import com.bots.RacoonShared.Logging.Loggers.Logger;
 import org.springframework.core.env.Environment;
 
@@ -11,7 +12,7 @@ import java.security.KeyStore;
 import java.util.Objects;
 
 public class ServerSocketManager extends Thread {
-    private final static int port = 3435;
+    private final int port;
     private final String keystorePath, keystorePassword;
     private boolean running = false;
 
@@ -19,6 +20,8 @@ public class ServerSocketManager extends Thread {
     private final Logger logger;
 
     public ServerSocketManager(Environment environment, Logger logger, TrafficManager trafficManager) {
+        String portFromProperties = environment.getProperty("serversocket.port");
+        this.port = portFromProperties == null ? Config.defaultPort : Integer.parseInt(portFromProperties);
         this.keystorePath = environment.getProperty("ssl.keystore_path");
         this.keystorePassword = environment.getProperty("ssl.keystore_password");
         this.trafficManager = trafficManager;

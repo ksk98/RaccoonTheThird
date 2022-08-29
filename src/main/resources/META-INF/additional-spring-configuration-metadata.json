@@ -29,5 +29,10 @@
       "name": "client.password",
       "type": "java.lang.String",
       "description": "Password used to connect to the bot with a client app."
+    },
+    {
+      "name": "serversocket.port",
+      "type": "java.lang.String",
+      "description": "Port on which server listens for client connections."
     }
   ] }
