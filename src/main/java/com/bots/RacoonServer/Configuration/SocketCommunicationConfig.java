@@ -1,8 +1,8 @@
 package com.bots.RacoonServer.Configuration;
 
-import com.bots.RacoonServer.Events.IncomingData.AuthenticationRequestHandler;
-import com.bots.RacoonServer.Events.IncomingData.DisconnectRequestHandler;
-import com.bots.RacoonServer.Events.IncomingData.MessageSendRequestHandler;
+import com.bots.RacoonServer.SocketCommunication.IncomingDataHandlers.AuthenticationRequestHandler;
+import com.bots.RacoonServer.SocketCommunication.IncomingDataHandlers.DisconnectRequestHandler;
+import com.bots.RacoonServer.SocketCommunication.IncomingDataHandlers.MessageSendRequestHandler;
 import com.bots.RacoonServer.JdaManager;
 import com.bots.RacoonServer.SocketCommunication.ServerSocketManager;
 import com.bots.RacoonServer.SocketCommunication.TrafficManager;
