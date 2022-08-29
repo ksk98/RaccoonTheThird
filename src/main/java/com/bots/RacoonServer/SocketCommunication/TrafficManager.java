@@ -1,6 +1,6 @@
 package com.bots.RacoonServer.SocketCommunication;
 
-import com.bots.RacoonShared.Events.IncomingDataEvents.IncomingDataTrafficHandler;
+import com.bots.RacoonShared.IncomingDataHandlers.IncomingDataTrafficHandler;
 import com.bots.RacoonShared.Logging.Loggers.Logger;
 import com.bots.RacoonShared.SocketCommunication.CommunicationUtil;
 import com.bots.RacoonShared.SocketCommunication.SocketCommunicationOperation;
@@ -43,7 +43,7 @@ public class TrafficManager extends Thread {
     private void finaliseOperationForResponse(JSONObject response) {
         int id = response.getInt("operation_id");
         SocketCommunicationOperation operation = individualOperations.remove(id).getSecond();
-        operation.getOnResponse().accept(response);
+        operation.getOnResponseReceived().accept(response);
 
         if (individualOperations.isEmpty())
             individualOperationNextId = 0;
@@ -95,7 +95,7 @@ public class TrafficManager extends Thread {
                     CommunicationUtil.sendTo(individualOperation.getFirst().out, request);
 
                     if (individualOperation.getFirst().out.checkError()) {
-                        individualOperations.get(idToSend).getSecond().getOnError().accept("PrintWriter failed to send request: " + request);
+                        individualOperations.get(idToSend).getSecond().getOnErrorEncountered().accept("PrintWriter failed to send request: " + request);
                         removeOperation(idToSend);
                     }
                 }
