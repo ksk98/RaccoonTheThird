@@ -1,4 +1,4 @@
-package com.bots.RacoonServer.Events.IncomingData;
+package com.bots.RacoonServer.SocketCommunication.IncomingDataHandlers;
 
 import com.bots.RacoonShared.Events.IncomingDataEvents.BaseIncomingDataTrafficHandler;
 import com.bots.RacoonShared.Events.IncomingDataEvents.IncomingDataTrafficHandler;
