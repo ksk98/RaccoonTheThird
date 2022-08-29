@@ -34,13 +34,13 @@ public class ServerSocketManager extends Thread {
             SSLContext ctx;
             KeyManagerFactory kmf;
             KeyStore ks;
-            char[] passphrase = "passphrase".toCharArray();
+            char[] passphrase = keystorePassword.toCharArray();
 
             ctx = SSLContext.getInstance("TLS");
             kmf = KeyManagerFactory.getInstance("SunX509");
             ks = KeyStore.getInstance("JKS");
 
-            ks.load(new FileInputStream(keystorePath), keystorePassword.toCharArray());
+            ks.load(new FileInputStream(keystorePath), passphrase);
             kmf.init(ks, passphrase);
             ctx.init(kmf.getKeyManagers(), null, null);
 
