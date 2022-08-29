@@ -29,8 +29,27 @@ public class AuthenticationRequestHandler extends BaseIncomingDataTrafficHandler
                 if (validateCredentials.test(username, password)) {
                     trafficManager.getConnection(data.getInt("connection_id")).setAuthenticated(true);
 
-                if (validateCredentials.test(username, password))
-                    trafficManager.getConnection(response.getInt("connection_id")).setAuthenticated(true);
+                    SocketCommunicationOperationBuilder builder =
+                            new SocketCommunicationOperationBuilder()
+                                    .setData(new JSONObject().append("response_code", 204));
+
+                    trafficManager.queueOperation(
+                            trafficManager.getConnection(data.getInt("connection_id")),
+                            builder.build()
+                    );
+                } else {
+                    SocketCommunicationOperationBuilder builder =
+                            new SocketCommunicationOperationBuilder()
+                                    .setData(new JSONObject()
+                                            .append("response_code", 401)
+                                            .append("message", "Bad credentials.")
+                                    );
+
+                    trafficManager.queueOperation(
+                            trafficManager.getConnection(data.getInt("connection_id")),
+                            builder.build()
+                    );
+                }
 
                 return;
             }
