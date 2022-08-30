@@ -9,6 +9,7 @@ import org.springframework.data.util.Pair;
 
 import javax.net.ssl.SSLSocket;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.*;
 
 public class TrafficManager extends Thread {
@@ -37,11 +38,12 @@ public class TrafficManager extends Thread {
 
     public void queueOperation(SocketConnection connection, SocketCommunicationOperation operation) {
         individualOperations.put(individualOperationNextId, Pair.of(connection, operation));
+        individualOperationIdQueue.add(individualOperationNextId);
         individualOperationNextId += 1;
     }
 
     private void finaliseOperationForResponse(JSONObject response) {
-        int id = response.getInt("operation_id");
+        int id = response.getInt("server_operation_id");
         SocketCommunicationOperation operation = individualOperations.remove(id).getSecond();
         operation.getOnResponseReceived().accept(response);
 
@@ -82,48 +84,87 @@ public class TrafficManager extends Thread {
             nextSubscriberId = 0;
     }
 
+    public void removeConnectionForSocket(SSLSocket socket) {
+        for (Integer connectionId: connections.keySet()) {
+            if (connections.get(connectionId).socket.equals(socket)) {
+                removeConnection(connectionId);
+                return;
+            }
+        }
+    }
+
     @Override
     public void run() {
         running = true;
 
         while (running) {
-            try {
-                if (!individualOperationIdQueue.isEmpty()) {
-                    Integer idToSend = individualOperationIdQueue.poll();
-                    Pair<SocketConnection, SocketCommunicationOperation> individualOperation = individualOperations.get(idToSend);
-                    JSONObject request = individualOperation.getSecond().getRequest().append("operation_id", idToSend);
+            if (!individualOperationIdQueue.isEmpty()) {
+                Integer idToSend = individualOperationIdQueue.poll();
+                Pair<SocketConnection, SocketCommunicationOperation> individualOperation = individualOperations.get(idToSend);
+                JSONObject request = individualOperation.getSecond().getRequest().append("server_operation_id", idToSend);
+
+                boolean aborted = false;
+                try {
                     CommunicationUtil.sendTo(individualOperation.getFirst().out, request);
+                } catch (IOException e) {
+                    individualOperation.getSecond().getOnErrorEncountered().accept(e.toString());
+                    removeOperation(idToSend);
+                    aborted = true;
+                }
+
+                if (!aborted) {
+                    if (!individualOperation.getSecond().waitForResponse())
+                        removeOperation(idToSend);
 
                     if (individualOperation.getFirst().out.checkError()) {
                         individualOperations.get(idToSend).getSecond().getOnErrorEncountered().accept("PrintWriter failed to send request: " + request);
                         removeOperation(idToSend);
                     }
                 }
+            }
+
+            try {
+                for (SocketConnection connection : connections.values()) {
+                    if (connection.isExpired()) {
+                        logger.logInfo("Removed expired client connection.");
+                        removeConnection(connection.getId());
+                        break;
+                    }
+
+                    JSONObject incomingData;
+                    try {
+                        incomingData = new JSONObject(CommunicationUtil.readUntilEndFrom(connection.in));
+                    } catch (SocketTimeoutException ignored) {
+                        continue;
+                    } catch (IOException e) {
+                        logger.logError(e.toString());
+                        continue;
+                    }
+
+                    incomingData.append("connection_id", connection.in.id);
+                    if (incomingData.has("server_operation_id")) {
+                        finaliseOperationForResponse(incomingData);
+                    } else if (incomingData.has("operation")) {
+                        trafficHandlerChain.handle(incomingData);
+                    } else {
+                        logger.logInfo("Data was received from socket stream but could not be handled.");
+                    }
+                }
+            } catch (ConcurrentModificationException ignored) {}
+
+            if (!broadcasts.isEmpty()) {
+                SocketCommunicationOperation message = broadcasts.poll();
 
                 for (SocketConnection connection: connections.values()) {
-                    if (connection.in.available() > 0) {
-                        JSONObject incomingData = new JSONObject(CommunicationUtil.readUntilEndFrom(connection.in));
-                        incomingData.append("connection_id", connection.in.id);
-                        if (incomingData.has("operation_id")) {
-                            finaliseOperationForResponse(incomingData);
-                        } else if (incomingData.has("operation")) {
-                            trafficHandlerChain.handle(incomingData);
-                        } else {
-                            logger.logInfo("Data was received from socket stream but could not be handled.");
+                    if (connection.isAuthenticated()) {
+                        try {
+                            CommunicationUtil.sendTo(connection.out, message.getRequest());
+                        } catch (IOException e) {
+                            logger.logError(e.toString());
+//                            continue;
                         }
                     }
                 }
-
-                if (!broadcasts.isEmpty()) {
-                    SocketCommunicationOperation message = broadcasts.poll();
-
-                    for (SocketConnection connection: connections.values()) {
-                        if (connection.isAuthenticated())
-                            CommunicationUtil.sendTo(connection.out, message.getRequest());
-                    }
-                }
-            } catch (IOException e) {
-                logger.logError(e.getMessage());
             }
         }
     }

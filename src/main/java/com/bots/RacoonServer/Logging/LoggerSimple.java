@@ -6,6 +6,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class LoggerSimple extends LoggerBase {
+    public LoggerSimple() {
+        super(1);
+    }
+
     @Override
     public void log(Log log) {
         System.out.println(log.toString());

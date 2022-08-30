@@ -22,7 +22,7 @@ public class AuthenticationRequestHandler extends BaseIncomingDataTrafficHandler
     @Override
     public void handle(JSONObject data) {
         try {
-            if (data.get("operation").equals("login")) {
+            if (data.getString("operation").equals("login")) {
                 String username = data.getString("username");
                 String password = data.getString("password");
 

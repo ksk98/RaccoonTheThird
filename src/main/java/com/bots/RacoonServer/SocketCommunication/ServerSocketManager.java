@@ -2,6 +2,8 @@ package com.bots.RacoonServer.SocketCommunication;
 
 import com.bots.RacoonServer.Config;
 import com.bots.RacoonShared.Logging.Loggers.Logger;
+import com.bots.RacoonShared.SocketCommunication.SocketCommunicationOperationBuilder;
+import org.json.JSONObject;
 import org.springframework.core.env.Environment;
 
 import javax.net.ServerSocketFactory;
@@ -19,6 +21,8 @@ public class ServerSocketManager extends Thread {
     private final TrafficManager trafficManager;
     private final Logger logger;
 
+    private SSLServerSocket socket = null;
+
     public ServerSocketManager(Environment environment, Logger logger, TrafficManager trafficManager) {
         String portFromProperties = environment.getProperty("serversocket.port");
         this.port = portFromProperties == null ? Config.defaultPort : Integer.parseInt(portFromProperties);
@@ -31,14 +35,10 @@ public class ServerSocketManager extends Thread {
     private ServerSocketFactory getServerSocketFactory() {
         SSLServerSocketFactory ssf;
         try {
-            SSLContext ctx;
-            KeyManagerFactory kmf;
-            KeyStore ks;
+            SSLContext ctx = SSLContext.getInstance("TLS");;
+            KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");;
+            KeyStore ks = KeyStore.getInstance("JKS");;
             char[] passphrase = keystorePassword.toCharArray();
-
-            ctx = SSLContext.getInstance("TLS");
-            kmf = KeyManagerFactory.getInstance("SunX509");
-            ks = KeyStore.getInstance("JKS");
 
             ks.load(new FileInputStream(keystorePath), passphrase);
             kmf.init(ks, passphrase);
@@ -55,22 +55,49 @@ public class ServerSocketManager extends Thread {
 
     public void stopRunning() {
         running = false;
+        if (socket != null) {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                logger.logError(e.getMessage());
+            }
+        }
+        socket = null;
     }
 
     @Override
     public void run() {
         running = true;
+        try {
+            socket = (SSLServerSocket) Objects.requireNonNull(getServerSocketFactory()).createServerSocket(port);
+        } catch (IOException e) {
+            logger.logError(e.getMessage());
+            stopRunning();
+        }
 
         while(running) {
+            SSLSocket clientSocket = null;
             try {
-                SSLServerSocket socket = (SSLServerSocket) Objects.requireNonNull(getServerSocketFactory()).createServerSocket(port);
-
-                trafficManager.addConnection((SSLSocket) socket.accept());
+                clientSocket = (SSLSocket) socket.accept();
+                clientSocket.setSoTimeout(Config.clientSocketSOTimeoutMS);
                 if (!trafficManager.isRunning())
                     trafficManager.start();
 
+                // Respond with anything so that the handshake will complete
+                SocketCommunicationOperationBuilder builder = new SocketCommunicationOperationBuilder()
+                        .setWaitForResponse(false);
+                trafficManager.queueOperation(trafficManager.getConnection(trafficManager.addConnection(clientSocket)), builder.build());
+
             } catch (IOException e) {
                 logger.logError(e.getMessage());
+                try {
+                    if (clientSocket != null)
+                        trafficManager.removeConnectionForSocket(clientSocket);
+                    socket.close();
+
+                } catch (IOException ex) {
+                    logger.logError(e.getMessage());
+                }
             } catch (NullPointerException e) {
                 logger.logError(e.getMessage());
                 stopRunning();
