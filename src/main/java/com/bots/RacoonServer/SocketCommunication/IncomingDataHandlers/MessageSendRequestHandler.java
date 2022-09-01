@@ -42,7 +42,10 @@ public class MessageSendRequestHandler extends BaseIncomingDataTrafficHandler {
                 return;
             }
         } catch (JSONException | ClassNotFoundException | IOException | NullPointerException e) {
-            logger.logError(e.getMessage());
+            logger.logError(
+                    getClass().getName(),
+                    e.toString()
+            );
         }
 
         super.handle(data);

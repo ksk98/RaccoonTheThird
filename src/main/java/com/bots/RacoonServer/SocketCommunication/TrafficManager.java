@@ -1,5 +1,6 @@
 package com.bots.RacoonServer.SocketCommunication;
 
+import com.bots.RacoonShared.IncomingDataHandlers.BaseIncomingDataTrafficHandler;
 import com.bots.RacoonShared.IncomingDataHandlers.IncomingDataTrafficHandler;
 import com.bots.RacoonShared.Logging.Loggers.Logger;
 import com.bots.RacoonShared.SocketCommunication.CommunicationUtil;
@@ -24,16 +25,16 @@ public class TrafficManager extends Thread {
     private final Queue<Integer> individualOperationIdQueue;
     private int individualOperationNextId;
 
-    private final IncomingDataTrafficHandler trafficHandlerChain;
+    private IncomingDataTrafficHandler trafficHandlerChain;
 
-    public TrafficManager(Logger logger, IncomingDataTrafficHandler trafficHandlerChain) {
+    public TrafficManager(Logger logger) {
         this.logger = logger;
         this.connections = new HashMap<>();
         this.individualOperations = new HashMap<>();
         this.broadcasts = new LinkedList<>();
         this.individualOperationIdQueue = new LinkedList<>();
         this.individualOperationNextId = 0;
-        this.trafficHandlerChain = trafficHandlerChain;
+        this.trafficHandlerChain = new BaseIncomingDataTrafficHandler(null){};
     }
 
     public void queueOperation(SocketConnection connection, SocketCommunicationOperation operation) {
@@ -78,7 +79,16 @@ public class TrafficManager extends Thread {
     }
 
     public void removeConnection(int id) {
-        connections.remove(id);
+        SocketConnection connection = connections.remove(id);
+
+        try {
+            connection.socket.close();
+        } catch (IOException e) {
+            logger.logError(
+                    getClass().getName(),
+                    "Could not close socket for removed connection. (" + e + ")"
+            );
+        }
 
         if (connections.isEmpty())
             nextSubscriberId = 0;
@@ -101,7 +111,7 @@ public class TrafficManager extends Thread {
             if (!individualOperationIdQueue.isEmpty()) {
                 Integer idToSend = individualOperationIdQueue.poll();
                 Pair<SocketConnection, SocketCommunicationOperation> individualOperation = individualOperations.get(idToSend);
-                JSONObject request = individualOperation.getSecond().getRequest().append("server_operation_id", idToSend);
+                JSONObject request = individualOperation.getSecond().getRequest().put("server_operation_id", idToSend);
 
                 boolean aborted = false;
                 try {
@@ -126,7 +136,10 @@ public class TrafficManager extends Thread {
             try {
                 for (SocketConnection connection : connections.values()) {
                     if (connection.isExpired()) {
-                        logger.logInfo("Removed expired client connection.");
+                        logger.logInfo(
+                                getClass().getName(),
+                                "Removed expired client connection."
+                        );
                         removeConnection(connection.getId());
                         break;
                     }
@@ -137,17 +150,23 @@ public class TrafficManager extends Thread {
                     } catch (SocketTimeoutException ignored) {
                         continue;
                     } catch (IOException e) {
-                        logger.logError(e.toString());
+                        logger.logError(
+                                getClass().getName(),
+                                e.toString()
+                        );
                         continue;
                     }
 
-                    incomingData.append("connection_id", connection.in.id);
+                    incomingData.put("connection_id", connection.in.id);
                     if (incomingData.has("server_operation_id")) {
                         finaliseOperationForResponse(incomingData);
                     } else if (incomingData.has("operation")) {
                         trafficHandlerChain.handle(incomingData);
                     } else {
-                        logger.logInfo("Data was received from socket stream but could not be handled.");
+                        logger.logInfo(
+                                getClass().getName(),
+                                "Data was received from socket stream but could not be handled."
+                        );
                     }
                 }
             } catch (ConcurrentModificationException ignored) {}
@@ -160,13 +179,20 @@ public class TrafficManager extends Thread {
                         try {
                             CommunicationUtil.sendTo(connection.out, message.getRequest());
                         } catch (IOException e) {
-                            logger.logError(e.toString());
+                            logger.logError(
+                                    getClass().getName(),
+                                    e.toString()
+                            );
 //                            continue;
                         }
                     }
                 }
             }
         }
+    }
+
+    public void setTrafficHandlerChain(IncomingDataTrafficHandler trafficHandlerChain) {
+        this.trafficHandlerChain = trafficHandlerChain;
     }
 
     public boolean isRunning() {

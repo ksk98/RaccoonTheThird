@@ -47,7 +47,10 @@ public class ServerSocketManager extends Thread {
             ssf = ctx.getServerSocketFactory();
             return ssf;
         } catch (Exception e) {
-            logger.logError(e.getMessage());
+            logger.logError(
+                    getClass().getName(),
+                    e.toString()
+            );
         }
 
         return null;
@@ -59,7 +62,10 @@ public class ServerSocketManager extends Thread {
             try {
                 socket.close();
             } catch (IOException e) {
-                logger.logError(e.getMessage());
+                logger.logError(
+                        getClass().getName(),
+                        e.toString()
+                );
             }
         }
         socket = null;
@@ -71,7 +77,10 @@ public class ServerSocketManager extends Thread {
         try {
             socket = (SSLServerSocket) Objects.requireNonNull(getServerSocketFactory()).createServerSocket(port);
         } catch (IOException e) {
-            logger.logError(e.getMessage());
+            logger.logError(
+                    getClass().getName(),
+                    e.toString()
+            );
             stopRunning();
         }
 
@@ -89,17 +98,26 @@ public class ServerSocketManager extends Thread {
                 trafficManager.queueOperation(trafficManager.getConnection(trafficManager.addConnection(clientSocket)), builder.build());
 
             } catch (IOException e) {
-                logger.logError(e.getMessage());
+                logger.logError(
+                        getClass().getName(),
+                        e.toString()
+                );
                 try {
                     if (clientSocket != null)
                         trafficManager.removeConnectionForSocket(clientSocket);
                     socket.close();
 
                 } catch (IOException ex) {
-                    logger.logError(e.getMessage());
+                    logger.logError(
+                            getClass().getName(),
+                            e.toString()
+                    );
                 }
             } catch (NullPointerException e) {
-                logger.logError(e.getMessage());
+                logger.logError(
+                        getClass().getName(),
+                        e.toString()
+                );
                 stopRunning();
             }
         }

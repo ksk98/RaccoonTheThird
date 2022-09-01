@@ -27,7 +27,10 @@ public class JdaManager {
                     .enableIntents(GatewayIntent.GUILD_MEMBERS)
                     .build();
         } catch (LoginException e) {
-            logger.logError(e.toString());
+            logger.logError(
+                    getClass().getName(),
+                    e.toString()
+            );
             System.exit(1);
         }
     }

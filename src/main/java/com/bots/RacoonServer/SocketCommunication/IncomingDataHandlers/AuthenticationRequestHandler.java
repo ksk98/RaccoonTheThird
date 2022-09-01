@@ -4,7 +4,6 @@ import com.bots.RacoonServer.SocketCommunication.TrafficManager;
 import com.bots.RacoonShared.IncomingDataHandlers.BaseIncomingDataTrafficHandler;
 import com.bots.RacoonShared.IncomingDataHandlers.IncomingDataTrafficHandler;
 import com.bots.RacoonShared.SocketCommunication.SocketCommunicationOperationBuilder;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.function.BiPredicate;
@@ -21,39 +20,40 @@ public class AuthenticationRequestHandler extends BaseIncomingDataTrafficHandler
 
     @Override
     public void handle(JSONObject data) {
-        try {
-            if (data.getString("operation").equals("login")) {
-                String username = data.getString("username");
-                String password = data.getString("password");
+        if (data.has("operation") && data.getString("operation").equals("login")) {
+            String username = data.getString("username");
+            String password = data.getString("password");
 
-                if (validateCredentials.test(username, password)) {
-                    trafficManager.getConnection(data.getInt("connection_id")).setAuthenticated(true);
+            if (validateCredentials.test(username, password)) {
+                trafficManager.getConnection(data.getInt("connection_id")).setAuthenticated(true);
 
-                    SocketCommunicationOperationBuilder builder =
-                            new SocketCommunicationOperationBuilder()
-                                    .setData(new JSONObject().append("response_code", 204));
+                SocketCommunicationOperationBuilder builder =
+                        new SocketCommunicationOperationBuilder()
+                                .setData(new JSONObject()
+                                        .put("response_code", 204)
+                                        .put("client_operation_id", data.getInt("client_operation_id")));
 
-                    trafficManager.queueOperation(
-                            trafficManager.getConnection(data.getInt("connection_id")),
-                            builder.build()
-                    );
-                } else {
-                    SocketCommunicationOperationBuilder builder =
-                            new SocketCommunicationOperationBuilder()
-                                    .setData(new JSONObject()
-                                            .append("response_code", 401)
-                                            .append("message", "Bad credentials.")
-                                    );
+                trafficManager.queueOperation(
+                        trafficManager.getConnection(data.getInt("connection_id")),
+                        builder.build()
+                );
+            } else {
+                SocketCommunicationOperationBuilder builder =
+                        new SocketCommunicationOperationBuilder()
+                                .setData(new JSONObject()
+                                        .put("response_code", 401)
+                                        .put("message", "Bad credentials.")
+                                        .put("client_operation_id", data.getInt("client_operation_id"))
+                                );
 
-                    trafficManager.queueOperation(
-                            trafficManager.getConnection(data.getInt("connection_id")),
-                            builder.build()
-                    );
-                }
-
-                return;
+                trafficManager.queueOperation(
+                        trafficManager.getConnection(data.getInt("connection_id")),
+                        builder.build()
+                );
             }
-        } catch (JSONException ignored) {}
+
+            return;
+        }
 
         super.handle(data);
     }

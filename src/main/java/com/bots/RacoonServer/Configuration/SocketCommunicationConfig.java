@@ -28,7 +28,8 @@ public class SocketCommunicationConfig {
         this.validAuthenticationCredentials = new HashMap<>();
         this.validAuthenticationCredentials.put(environment.getProperty("client.username"), environment.getProperty("client.password"));
 
-        this.trafficManager = new TrafficManager(logger, getTrafficHandlerChain());
+        this.trafficManager = new TrafficManager(logger);
+        this.trafficManager.setTrafficHandlerChain(getTrafficHandlerChain());
 
         this.socketManager = new ServerSocketManager(environment, logger, trafficManager);
         this.socketManager.start();
