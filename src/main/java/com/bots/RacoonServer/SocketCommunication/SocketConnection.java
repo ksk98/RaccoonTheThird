@@ -27,8 +27,6 @@ public class SocketConnection {
     }
 
     public boolean isExpired() {
-        long now = OffsetDateTime.now().toEpochSecond();
-        long expiredOn = establishmentTimestamp + Config.connectionExpireTimeForUnauthorizedConnectionsSeconds;
         return (!authenticated && OffsetDateTime.now().toEpochSecond() > establishmentTimestamp + Config.connectionExpireTimeForUnauthorizedConnectionsSeconds);
     }
 
