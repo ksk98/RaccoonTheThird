@@ -12,7 +12,8 @@ public class AuthenticationRequestHandler extends BaseIncomingDataTrafficHandler
     private final TrafficManager trafficManager;
     private final BiPredicate<String, String> validateCredentials;
 
-    public AuthenticationRequestHandler(IncomingDataTrafficHandler next, TrafficManager trafficManager, BiPredicate<String, String> validateCredentials) {
+    public AuthenticationRequestHandler(IncomingDataTrafficHandler next, TrafficManager trafficManager,
+                                        BiPredicate<String, String> validateCredentials) {
         super(next);
         this.trafficManager = trafficManager;
         this.validateCredentials = validateCredentials;

@@ -91,6 +91,11 @@ public class ServerSocketManager extends Thread {
                 clientSocket.setSoTimeout(Config.clientSocketSOTimeoutMS);
                 if (!trafficManager.isRunning())
                     trafficManager.start();
+                else {
+                    synchronized (trafficManager) {
+                        trafficManager.notify();
+                    }
+                }
 
                 // Respond with anything so that the handshake will complete
                 SocketCommunicationOperationBuilder builder = new SocketCommunicationOperationBuilder()

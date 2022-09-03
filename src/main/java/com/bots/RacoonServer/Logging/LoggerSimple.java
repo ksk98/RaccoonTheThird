@@ -1,16 +1,19 @@
 package com.bots.RacoonServer.Logging;
 
-import com.bots.RacoonShared.Logging.Loggers.LoggerBase;
+import com.bots.RacoonShared.Logging.Exceptions.LogException;
 import com.bots.RacoonShared.Logging.Log;
 
+import java.util.function.BiConsumer;
 
-public class LoggerSimple extends LoggerBase {
-    public LoggerSimple() {
-        super();
+
+public class LoggerSimple extends FallbackOverrideableLogger {
+
+    protected LoggerSimple(BiConsumer<Log, String> fallbackConsumer) {
+        super(fallbackConsumer);
     }
 
     @Override
-    public void log(Log log) {
+    protected void displayLog(Log log) {
         System.out.println(log.toString());
     }
 

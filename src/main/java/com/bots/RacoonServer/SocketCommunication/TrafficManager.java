@@ -1,5 +1,6 @@
 package com.bots.RacoonServer.SocketCommunication;
 
+import com.bots.RacoonServer.Events.OnCreate.GenericOnCreatePublisher;
 import com.bots.RacoonShared.IncomingDataHandlers.BaseIncomingDataTrafficHandler;
 import com.bots.RacoonShared.IncomingDataHandlers.IncomingDataTrafficHandler;
 import com.bots.RacoonShared.Logging.Loggers.Logger;
@@ -13,7 +14,7 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.*;
 
-public class TrafficManager extends Thread {
+public class TrafficManager extends Thread implements OutboundTrafficManager {
     private boolean running = false;
     private final Logger logger;
 
@@ -27,7 +28,7 @@ public class TrafficManager extends Thread {
 
     private IncomingDataTrafficHandler trafficHandlerChain;
 
-    public TrafficManager(Logger logger) {
+    public TrafficManager(GenericOnCreatePublisher<TrafficManager> trafficManagerOnCreatePublisher, Logger logger) {
         this.logger = logger;
         this.connections = new HashMap<>();
         this.individualOperations = new HashMap<>();
@@ -35,6 +36,8 @@ public class TrafficManager extends Thread {
         this.individualOperationIdQueue = new LinkedList<>();
         this.individualOperationNextId = 0;
         this.trafficHandlerChain = new BaseIncomingDataTrafficHandler(null){};
+
+        trafficManagerOnCreatePublisher.notifySubscribers(this);
     }
 
     public void queueOperation(SocketConnection connection, SocketCommunicationOperation operation) {
@@ -108,6 +111,10 @@ public class TrafficManager extends Thread {
         running = true;
 
         while (running) {
+            Random random = new Random();
+            if (random.nextInt(100) == 1)
+                logger.logSuccess("eloelo", "pomelo");
+
             if (!individualOperationIdQueue.isEmpty()) {
                 Integer idToSend = individualOperationIdQueue.poll();
                 Pair<SocketConnection, SocketCommunicationOperation> individualOperation = individualOperations.get(idToSend);
@@ -135,7 +142,7 @@ public class TrafficManager extends Thread {
 
             try {
                 for (SocketConnection connection : connections.values()) {
-                    if (connection.isExpired()) {
+                    if (connection.isExpiredOrClosed()) {
                         logger.logInfo(
                                 getClass().getName(),
                                 "Removed expired client connection."
@@ -183,9 +190,19 @@ public class TrafficManager extends Thread {
                                     getClass().getName(),
                                     e.toString()
                             );
-//                            continue;
+                            continue;
                         }
                     }
+                }
+            }
+
+            if (connections.isEmpty()) {
+                try {
+                    synchronized (this) {
+                        wait();
+                    }
+                } catch (InterruptedException ignored) {
+                    logger.logInfo(getClass().getName(), " wait interrupted.");
                 }
             }
         }

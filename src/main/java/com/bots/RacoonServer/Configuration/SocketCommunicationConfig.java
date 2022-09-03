@@ -1,5 +1,6 @@
 package com.bots.RacoonServer.Configuration;
 
+import com.bots.RacoonServer.Events.OnCreate.GenericOnCreatePublisher;
 import com.bots.RacoonServer.SocketCommunication.IncomingDataHandlers.AuthenticationRequestHandler;
 import com.bots.RacoonServer.SocketCommunication.IncomingDataHandlers.DisconnectRequestHandler;
 import com.bots.RacoonServer.SocketCommunication.IncomingDataHandlers.MessageSendRequestHandler;
@@ -23,12 +24,13 @@ public class SocketCommunicationConfig {
     private final Map<String, String> validAuthenticationCredentials;
     private final Logger logger;
 
-    public SocketCommunicationConfig(Environment environment, Logger logger) {
+    public SocketCommunicationConfig(Environment environment, Logger logger,
+                                     GenericOnCreatePublisher<TrafficManager> trafficManagerOnCreatePublisher) {
         this.logger = logger;
         this.validAuthenticationCredentials = new HashMap<>();
         this.validAuthenticationCredentials.put(environment.getProperty("client.username"), environment.getProperty("client.password"));
 
-        this.trafficManager = new TrafficManager(logger);
+        this.trafficManager = new TrafficManager(trafficManagerOnCreatePublisher, logger);
         this.trafficManager.setTrafficHandlerChain(getTrafficHandlerChain());
 
         this.socketManager = new ServerSocketManager(environment, logger, trafficManager);

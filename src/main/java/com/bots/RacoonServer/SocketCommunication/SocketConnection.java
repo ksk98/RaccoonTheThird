@@ -26,8 +26,8 @@ public class SocketConnection {
         return in.id;
     }
 
-    public boolean isExpired() {
-        return (!authenticated && OffsetDateTime.now().toEpochSecond() > establishmentTimestamp + Config.connectionExpireTimeForUnauthorizedConnectionsSeconds);
+    public boolean isExpiredOrClosed() {
+        return socket.isClosed() || isExpired();
     }
 
     public boolean isAuthenticated() {
@@ -36,5 +36,10 @@ public class SocketConnection {
 
     public void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
+    }
+
+    private boolean isExpired() {
+        return (!authenticated &&
+                OffsetDateTime.now().toEpochSecond() > establishmentTimestamp + Config.connectionExpireTimeForUnauthorizedConnectionsSeconds);
     }
 }
