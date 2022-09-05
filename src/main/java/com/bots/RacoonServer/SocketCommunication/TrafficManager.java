@@ -111,10 +111,6 @@ public class TrafficManager extends Thread implements OutboundTrafficManager {
         running = true;
 
         while (running) {
-            Random random = new Random();
-            if (random.nextInt(100) == 1)
-                logger.logSuccess("eloelo", "pomelo");
-
             if (!individualOperationIdQueue.isEmpty()) {
                 Integer idToSend = individualOperationIdQueue.poll();
                 Pair<SocketConnection, SocketCommunicationOperation> individualOperation = individualOperations.get(idToSend);
@@ -190,7 +186,6 @@ public class TrafficManager extends Thread implements OutboundTrafficManager {
                                     getClass().getName(),
                                     e.toString()
                             );
-                            continue;
                         }
                     }
                 }
