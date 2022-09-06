@@ -1,7 +1,6 @@
 package com.bots.RacoonServer.SocketCommunication.IncomingDataHandlers;
 
 import com.bots.RacoonShared.IncomingDataHandlers.BaseIncomingDataTrafficHandler;
-import com.bots.RacoonShared.IncomingDataHandlers.IncomingDataTrafficHandler;
 import com.bots.RacoonShared.Logging.Loggers.Logger;
 import com.bots.RacoonShared.Util.SerializationUtil;
 import net.dv8tion.jda.api.JDA;
@@ -18,8 +17,7 @@ public class MessageSendRequestHandler extends BaseIncomingDataTrafficHandler {
     private final JDA jda;
     private final Logger logger;
 
-    public MessageSendRequestHandler(IncomingDataTrafficHandler next, JDA jda, Logger logger) {
-        super(next);
+    public MessageSendRequestHandler(JDA jda, Logger logger) {
         this.jda = jda;
         this.logger = logger;
     }

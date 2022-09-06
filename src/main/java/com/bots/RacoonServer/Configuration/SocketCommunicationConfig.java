@@ -5,11 +5,13 @@ import com.bots.RacoonServer.SocketCommunication.IncomingDataHandlers.Authentica
 import com.bots.RacoonServer.SocketCommunication.IncomingDataHandlers.DisconnectRequestHandler;
 import com.bots.RacoonServer.SocketCommunication.IncomingDataHandlers.MessageSendRequestHandler;
 import com.bots.RacoonServer.JdaManager;
+import com.bots.RacoonServer.SocketCommunication.IncomingDataHandlers.ServerChannelRequestHandler;
 import com.bots.RacoonServer.SocketCommunication.ServerSocketManager;
 import com.bots.RacoonServer.SocketCommunication.TrafficManager;
 import com.bots.RacoonServer.SpringContext;
 import com.bots.RacoonShared.IncomingDataHandlers.IncomingDataTrafficHandler;
 import com.bots.RacoonShared.Logging.Loggers.Logger;
+import net.dv8tion.jda.api.JDA;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -23,10 +25,12 @@ public class SocketCommunicationConfig {
     private final TrafficManager trafficManager;
     private final Map<String, String> validAuthenticationCredentials;
     private final Logger logger;
+    private final JDA jda;
 
     public SocketCommunicationConfig(Environment environment, Logger logger,
-                                     GenericOnCreatePublisher<TrafficManager> trafficManagerOnCreatePublisher) {
+                                     GenericOnCreatePublisher<TrafficManager> trafficManagerOnCreatePublisher, JDA jda) {
         this.logger = logger;
+        this.jda = jda;
         this.validAuthenticationCredentials = new HashMap<>();
         this.validAuthenticationCredentials.put(environment.getProperty("client.username"), environment.getProperty("client.password"));
 
@@ -46,11 +50,11 @@ public class SocketCommunicationConfig {
     }
 
     private IncomingDataTrafficHandler getTrafficHandlerChain() {
-        IncomingDataTrafficHandler h1 = new DisconnectRequestHandler(null, trafficManager);
-        IncomingDataTrafficHandler h2 = new AuthenticationRequestHandler(h1, trafficManager, this::validateAuthenticationCredentials);
-        IncomingDataTrafficHandler h3 = new MessageSendRequestHandler(h2, SpringContext.getBean(JdaManager.class).getJda(), logger);
-
-        return h3;
+        IncomingDataTrafficHandler chain = new MessageSendRequestHandler(jda, logger);
+        chain.setNext(new ServerChannelRequestHandler(jda, trafficManager, logger))
+                .setNext(new AuthenticationRequestHandler(trafficManager, this::validateAuthenticationCredentials))
+                .setNext(new DisconnectRequestHandler(trafficManager));
+        return chain;
     }
 
     @Bean

@@ -35,7 +35,7 @@ public class TrafficManager extends Thread implements OutboundTrafficManager {
         this.broadcasts = new LinkedList<>();
         this.individualOperationIdQueue = new LinkedList<>();
         this.individualOperationNextId = 0;
-        this.trafficHandlerChain = new BaseIncomingDataTrafficHandler(null){};
+        this.trafficHandlerChain = new BaseIncomingDataTrafficHandler(){};
 
         trafficManagerOnCreatePublisher.notifySubscribers(this);
     }
@@ -114,11 +114,14 @@ public class TrafficManager extends Thread implements OutboundTrafficManager {
             if (!individualOperationIdQueue.isEmpty()) {
                 Integer idToSend = individualOperationIdQueue.poll();
                 Pair<SocketConnection, SocketCommunicationOperation> individualOperation = individualOperations.get(idToSend);
-                JSONObject request = individualOperation.getSecond().getRequest().put("server_operation_id", idToSend);
+                JSONObject request = individualOperation.getSecond().getRequest();
+                if (individualOperation.getSecond().waitForResponse())
+                    request.put("server_operation_id", idToSend);
 
                 boolean aborted = false;
                 try {
                     CommunicationUtil.sendTo(individualOperation.getFirst().out, request);
+                    System.out.println("SENDING: " + request);
                 } catch (IOException e) {
                     individualOperation.getSecond().getOnErrorEncountered().accept(e.toString());
                     removeOperation(idToSend);
@@ -150,6 +153,7 @@ public class TrafficManager extends Thread implements OutboundTrafficManager {
                     JSONObject incomingData;
                     try {
                         incomingData = new JSONObject(CommunicationUtil.readUntilEndFrom(connection.in));
+                        System.out.println("RECEIVING: " + incomingData);
                     } catch (SocketTimeoutException ignored) {
                         continue;
                     } catch (IOException e) {

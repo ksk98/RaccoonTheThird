@@ -2,7 +2,6 @@ package com.bots.RacoonServer.SocketCommunication.IncomingDataHandlers;
 
 import com.bots.RacoonServer.SocketCommunication.TrafficManager;
 import com.bots.RacoonShared.IncomingDataHandlers.BaseIncomingDataTrafficHandler;
-import com.bots.RacoonShared.IncomingDataHandlers.IncomingDataTrafficHandler;
 import com.bots.RacoonShared.SocketCommunication.SocketCommunicationOperationBuilder;
 import org.json.JSONObject;
 
@@ -12,9 +11,7 @@ public class AuthenticationRequestHandler extends BaseIncomingDataTrafficHandler
     private final TrafficManager trafficManager;
     private final BiPredicate<String, String> validateCredentials;
 
-    public AuthenticationRequestHandler(IncomingDataTrafficHandler next, TrafficManager trafficManager,
-                                        BiPredicate<String, String> validateCredentials) {
-        super(next);
+    public AuthenticationRequestHandler(TrafficManager trafficManager, BiPredicate<String, String> validateCredentials) {
         this.trafficManager = trafficManager;
         this.validateCredentials = validateCredentials;
     }

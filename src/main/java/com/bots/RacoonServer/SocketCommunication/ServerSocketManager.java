@@ -99,6 +99,7 @@ public class ServerSocketManager extends Thread {
 
                 // Respond with anything so that the handshake will complete
                 SocketCommunicationOperationBuilder builder = new SocketCommunicationOperationBuilder()
+                        .setData(new JSONObject().put("operation", "sslFinished"))
                         .setWaitForResponse(false);
                 trafficManager.queueOperation(trafficManager.getConnection(trafficManager.addConnection(clientSocket)), builder.build());
 

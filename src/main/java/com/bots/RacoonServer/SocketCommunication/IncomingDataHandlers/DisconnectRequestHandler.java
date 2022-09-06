@@ -2,15 +2,13 @@ package com.bots.RacoonServer.SocketCommunication.IncomingDataHandlers;
 
 import com.bots.RacoonServer.SocketCommunication.TrafficManager;
 import com.bots.RacoonShared.IncomingDataHandlers.BaseIncomingDataTrafficHandler;
-import com.bots.RacoonShared.IncomingDataHandlers.IncomingDataTrafficHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class DisconnectRequestHandler extends BaseIncomingDataTrafficHandler {
     private final TrafficManager trafficManager;
 
-    public DisconnectRequestHandler(IncomingDataTrafficHandler next, TrafficManager trafficManager) {
-        super(next);
+    public DisconnectRequestHandler(TrafficManager trafficManager) {
         this.trafficManager = trafficManager;
     }
 
