@@ -1,51 +1,40 @@
 package com.bots.RacoonServer.SocketCommunication.IncomingDataHandlers;
 
 import com.bots.RacoonShared.IncomingDataHandlers.BaseIncomingDataTrafficHandler;
+import com.bots.RacoonShared.IncomingDataHandlers.IncomingOperationHandler;
 import com.bots.RacoonShared.Logging.Loggers.Logger;
+import com.bots.RacoonShared.SocketCommunication.SocketOperationIdentifiers;
 import com.bots.RacoonShared.Util.SerializationUtil;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Objects;
 
-public class MessageSendRequestHandler extends BaseIncomingDataTrafficHandler {
+public class MessageSendRequestHandler extends IncomingOperationHandler {
     private final JDA jda;
     private final Logger logger;
 
     public MessageSendRequestHandler(JDA jda, Logger logger) {
+        super(SocketOperationIdentifiers.SEND_MESSAGE_AS_BOT);
         this.jda = jda;
         this.logger = logger;
     }
 
     @Override
-    public void handle(JSONObject data) {
-        boolean operationIsSendMessage = false;
-
+    public void consume(JSONObject data) {
+        Message message;
         try {
-            operationIsSendMessage = data.getString("operation").equals("send_message");
-        } catch (JSONException ignored) {}
-
-        try {
-            if (operationIsSendMessage) {
-                Message message = (Message) SerializationUtil.fromString(data.getString("message"));
-                Guild guild = jda.getGuildById(data.getString("guild_id"));
-                TextChannel channel = Objects.requireNonNull(guild).getTextChannelById("channel_id");
-                Objects.requireNonNull(channel).sendMessage(message).queue();
-
-                return;
-            }
-        } catch (JSONException | ClassNotFoundException | IOException | NullPointerException e) {
-            logger.logError(
-                    getClass().getName(),
-                    e.toString()
-            );
+            message = (Message) SerializationUtil.fromString(data.getString("message"));
+        } catch (IOException | ClassNotFoundException e) {
+            logger.logError(getClass().getName(), e.toString());
+            return;
         }
-
-        super.handle(data);
+        Guild guild = jda.getGuildById(data.getString("guild_id"));
+        TextChannel channel = Objects.requireNonNull(guild).getTextChannelById("channel_id");
+        Objects.requireNonNull(channel).sendMessage(message).queue();
     }
 }

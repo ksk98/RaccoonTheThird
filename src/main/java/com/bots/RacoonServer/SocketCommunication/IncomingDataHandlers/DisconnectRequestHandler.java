@@ -1,26 +1,20 @@
 package com.bots.RacoonServer.SocketCommunication.IncomingDataHandlers;
 
 import com.bots.RacoonServer.SocketCommunication.TrafficManager;
-import com.bots.RacoonShared.IncomingDataHandlers.BaseIncomingDataTrafficHandler;
-import org.json.JSONException;
+import com.bots.RacoonShared.IncomingDataHandlers.IncomingOperationHandler;
+import com.bots.RacoonShared.SocketCommunication.SocketOperationIdentifiers;
 import org.json.JSONObject;
 
-public class DisconnectRequestHandler extends BaseIncomingDataTrafficHandler {
+public class DisconnectRequestHandler extends IncomingOperationHandler {
     private final TrafficManager trafficManager;
 
     public DisconnectRequestHandler(TrafficManager trafficManager) {
+        super(SocketOperationIdentifiers.CLIENT_DISCONNECT);
         this.trafficManager = trafficManager;
     }
 
     @Override
-    public void handle(JSONObject data) {
-        try {
-            if (data.get("operation").equals("disconnect")) {
-                trafficManager.removeConnection(data.getInt("connection_id"));
-                return;
-            }
-        } catch (JSONException ignored) {}
-
-        super.handle(data);
+    public void consume(JSONObject data) {
+        trafficManager.removeConnection(data.getInt("connection_id"));
     }
 }

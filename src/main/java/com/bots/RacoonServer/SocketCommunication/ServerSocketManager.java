@@ -3,6 +3,7 @@ package com.bots.RacoonServer.SocketCommunication;
 import com.bots.RacoonServer.Config;
 import com.bots.RacoonShared.Logging.Loggers.Logger;
 import com.bots.RacoonShared.SocketCommunication.SocketCommunicationOperationBuilder;
+import com.bots.RacoonShared.SocketCommunication.SocketOperationIdentifiers;
 import org.json.JSONObject;
 import org.springframework.core.env.Environment;
 
@@ -97,9 +98,9 @@ public class ServerSocketManager extends Thread {
                     }
                 }
 
-                // Respond with anything so that the handshake will complete
+//                 Respond with anything so that the handshake will complete
                 SocketCommunicationOperationBuilder builder = new SocketCommunicationOperationBuilder()
-                        .setData(new JSONObject().put("operation", "sslFinished"))
+                        .setData(new JSONObject().put("operation", SocketOperationIdentifiers.SSL_HANDSHAKE_COMPLETE))
                         .setWaitForResponse(false);
                 trafficManager.queueOperation(trafficManager.getConnection(trafficManager.addConnection(clientSocket)), builder.build());
 
