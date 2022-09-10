@@ -2,6 +2,7 @@ package com.bots.RacoonServer.SocketCommunication;
 
 import com.bots.RacoonShared.Logging.Log;
 import com.bots.RacoonShared.SocketCommunication.SocketCommunicationOperationBuilder;
+import com.bots.RacoonShared.SocketCommunication.SocketOperationIdentifiers;
 import com.bots.RacoonShared.Util.SerializationUtil;
 import org.json.JSONObject;
 
@@ -19,7 +20,7 @@ public class LogBroadcaster {
                 new SocketCommunicationOperationBuilder()
                         .setData(
                                 new JSONObject()
-                                        .put("operation", "log")
+                                        .put("operation", SocketOperationIdentifiers.LOG_SERVER_LOG_TO_CLIENT)
                                         .put("body", SerializationUtil.toString(log)))
                         .build()
                 );
