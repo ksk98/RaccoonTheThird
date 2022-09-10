@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class CommandCompetition extends CommandBase {
     public CommandCompetition() {
@@ -19,7 +20,7 @@ public class CommandCompetition extends CommandBase {
     @Override
     public void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
         Random random = new Random();
-        List<CompetitionContestant> contestants = arguments.stream().map(CompetitionContestant::new).toList();
+        List<CompetitionContestant> contestants = arguments.stream().map(CompetitionContestant::new).collect(Collectors.toCollection(LinkedList::new));
         Queue<CompetitionContestant> movementQueue = new LinkedList<>();
         StringBuilder story = new StringBuilder();
 
@@ -44,8 +45,10 @@ public class CommandCompetition extends CommandBase {
             }
         }
 
-        story.append(contestants.get(0).getName())
-                .append(" wins!");
+        if (contestants.size() > 0)
+            story.append(contestants.get(0).getName()).append(" wins!");
+        else
+            story.append("Nobody wins!");
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Competition");
