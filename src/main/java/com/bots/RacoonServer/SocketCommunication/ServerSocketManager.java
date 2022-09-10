@@ -48,10 +48,7 @@ public class ServerSocketManager extends Thread {
             ssf = ctx.getServerSocketFactory();
             return ssf;
         } catch (Exception e) {
-            logger.logError(
-                    getClass().getName(),
-                    e.toString()
-            );
+            logger.logError(getClass().getName(), e.toString());
         }
 
         return null;
@@ -63,10 +60,7 @@ public class ServerSocketManager extends Thread {
             try {
                 socket.close();
             } catch (IOException e) {
-                logger.logError(
-                        getClass().getName(),
-                        e.toString()
-                );
+                logger.logError(getClass().getName(), e.toString());
             }
         }
         socket = null;
@@ -75,56 +69,45 @@ public class ServerSocketManager extends Thread {
     @Override
     public void run() {
         running = true;
+
         try {
             socket = (SSLServerSocket) Objects.requireNonNull(getServerSocketFactory()).createServerSocket(port);
         } catch (IOException e) {
-            logger.logError(
-                    getClass().getName(),
-                    e.toString()
-            );
+            logger.logError(getClass().getName(), e.toString());
             stopRunning();
         }
 
-        while(running) {
+        while (running) {
             SSLSocket clientSocket = null;
             try {
                 clientSocket = (SSLSocket) socket.accept();
                 clientSocket.setSoTimeout(Config.clientSocketSOTimeoutMS);
-                if (!trafficManager.isRunning())
+
+                // Respond with anything so that the handshake will complete
+                SocketCommunicationOperationBuilder builder = new SocketCommunicationOperationBuilder()
+                        .setData(new JSONObject().put("operation", SocketOperationIdentifiers.SSL_HANDSHAKE_COMPLETE))
+                        .setWaitForResponse(false);
+                trafficManager.queueOperation(trafficManager.addConnection(clientSocket), builder.build());
+
+                if (!trafficManager.isRunning()) {
                     trafficManager.start();
-                else {
+                } else {
                     synchronized (trafficManager) {
                         trafficManager.notify();
                     }
                 }
-
-//                 Respond with anything so that the handshake will complete
-                SocketCommunicationOperationBuilder builder = new SocketCommunicationOperationBuilder()
-                        .setData(new JSONObject().put("operation", SocketOperationIdentifiers.SSL_HANDSHAKE_COMPLETE))
-                        .setWaitForResponse(false);
-                trafficManager.queueOperation(trafficManager.getConnection(trafficManager.addConnection(clientSocket)), builder.build());
-
             } catch (IOException e) {
-                logger.logError(
-                        getClass().getName(),
-                        e.toString()
-                );
+                logger.logError(getClass().getName(), e.toString());
                 try {
                     if (clientSocket != null)
                         trafficManager.removeConnectionForSocket(clientSocket);
                     socket.close();
 
                 } catch (IOException ex) {
-                    logger.logError(
-                            getClass().getName(),
-                            e.toString()
-                    );
+                    logger.logError(getClass().getName(), e.toString());
                 }
             } catch (NullPointerException e) {
-                logger.logError(
-                        getClass().getName(),
-                        e.toString()
-                );
+                logger.logError(getClass().getName(), e.toString());
                 stopRunning();
             }
         }

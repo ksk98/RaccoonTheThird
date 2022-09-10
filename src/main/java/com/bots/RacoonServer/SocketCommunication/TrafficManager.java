@@ -74,11 +74,13 @@ public class TrafficManager extends Thread implements OutboundTrafficManager {
         return connections.get(id);
     }
 
-    public int addConnection(SSLSocket socket) throws IOException {
-        connections.put(nextSubscriberId, new SocketConnection(socket, nextSubscriberId));
+    public SocketConnection addConnection(SSLSocket socket) throws IOException {
+        SocketConnection newConnection = new SocketConnection(socket, nextSubscriberId);
+
+        connections.put(nextSubscriberId, newConnection);
         nextSubscriberId += 1;
 
-        return nextSubscriberId - 1;
+        return newConnection;
     }
 
     public void removeConnection(int id) {
