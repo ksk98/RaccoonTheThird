@@ -1,8 +1,8 @@
 package com.bots.RacoonServer.Commands;
 
 import com.bots.RacoonServer.Commands.Abstractions.CommandBase;
-import com.bots.RacoonServer.Events.CommandListUpdatedEventListener;
-import com.bots.RacoonServer.Events.Publishers.CommandListUpdatedEventPublisher;
+import com.bots.RacoonServer.Events.CommandListUpdated.CommandListUpdatedEventListener;
+import com.bots.RacoonServer.Events.CommandListUpdated.CommandListUpdatedEventPublisher;
 import com.bots.RacoonServer.Services.CommandService;
 import com.bots.RacoonServer.SpringContext;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

@@ -7,7 +7,7 @@ import com.bots.RacoonServer.Commands.CommandHelp;
 import com.bots.RacoonServer.Commands.CommandScore;
 import com.bots.RacoonServer.Commands.MineSweeper.CommandMinesweeper;
 import com.bots.RacoonServer.Config;
-import com.bots.RacoonServer.Events.Publishers.CommandListUpdatedEventPublisher;
+import com.bots.RacoonServer.Events.CommandListUpdated.CommandListUpdatedEventPublisher;
 import com.bots.RacoonShared.Logging.Loggers.Logger;
 import com.bots.RacoonServer.Persistence.CommandChecksumValidation.CommandChecksum;
 import com.bots.RacoonServer.Persistence.CommandChecksumValidation.CommandChecksumRepository;
@@ -82,8 +82,14 @@ public class CommandService {
                     }
                 }
             } catch (IOException | NoSuchAlgorithmException e) {
-                logger.logInfo("Could not verify slash command integrity, commands will not be updated.");
-                logger.logError(e.toString());
+                logger.logInfo(
+                        getClass().getName(),
+                        "Could not verify slash command integrity, commands will not be updated."
+                );
+                logger.logError(
+                        getClass().getName(),
+                        e.toString()
+                );
                 return;
             }
         }
@@ -94,13 +100,19 @@ public class CommandService {
         List<CommandData> commandData = new ArrayList<>(commands.size());
         commands.values().forEach(command -> commandData.add(command.getCommandData()));
 
-        logger.logInfo("Global slash command update has been called.");
+        logger.logInfo(
+                getClass().getName(),
+                "Global slash command update has been called."
+        );
         jda.updateCommands().addCommands(commandData).queue();
     }
 
     public void executeCommand(String keyword, MessageReceivedEvent event, List<String> arguments) {
         if (!commands.containsKey(keyword)) {
-            logger.logInfo("Attempted to use unknown command(" + keyword + ")");
+            logger.logInfo(
+                    getClass().getName(),
+                    "Attempted to use unknown command(" + keyword + ")"
+            );
             return;
         }
 
@@ -117,14 +129,20 @@ public class CommandService {
             try {
                 event.getMessage().delete().queue();
             } catch (InsufficientPermissionException e) {
-                logger.logInfo("Could not delete command call message because of insufficient permissions.");
+                logger.logInfo(
+                        getClass().getName(),
+                        "Could not delete command call message because of insufficient permissions."
+                );
             }
         }
 
         try {
             command.execute(event, arguments);
         } catch (UnsupportedOperationException e) {
-            logger.logInfo("Attempted to use call command " + keyword + " as text command, but this action is unsupported.");
+            logger.logInfo(
+                    getClass().getName(),
+                    "Attempted to use call command " + keyword + " as text command, but this action is unsupported."
+            );
         }
     }
 
@@ -132,14 +150,20 @@ public class CommandService {
         String keyword = event.getName().toLowerCase();
 
         if (!commands.containsKey(keyword)) {
-            logger.logInfo("Attempted to use unknown slash command(" + keyword + ")");
+            logger.logInfo(
+                    getClass().getName(),
+                    "Attempted to use unknown slash command(" + keyword + ")"
+            );
             return;
         }
 
         try {
             commands.get(keyword).execute(event);
         } catch (UnsupportedOperationException e) {
-            logger.logInfo("Attempted to use call command " + keyword + " as slash command, but this action is unsupported.");
+            logger.logInfo(
+                    getClass().getName(),
+                    "Attempted to use call command " + keyword + " as slash command, but this action is unsupported."
+            );
         }
     }
 
