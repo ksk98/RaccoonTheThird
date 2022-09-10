@@ -5,6 +5,7 @@ import com.bots.RacoonServer.Commands.Command8Ball;
 import com.bots.RacoonServer.Commands.CommandDecide;
 import com.bots.RacoonServer.Commands.CommandHelp;
 import com.bots.RacoonServer.Commands.CommandScore;
+import com.bots.RacoonServer.Commands.Competition.CommandCompetition;
 import com.bots.RacoonServer.Commands.MineSweeper.CommandMinesweeper;
 import com.bots.RacoonServer.Config;
 import com.bots.RacoonServer.Events.Publishers.CommandListUpdatedEventPublisher;
@@ -58,6 +59,7 @@ public class CommandService {
         addCommand(new CommandDecide());
         addCommand(new CommandMinesweeper());
         addCommand(new CommandScore());
+        addCommand(new CommandCompetition());
     }
 
     public void loadGlobalSlashCommands() {
