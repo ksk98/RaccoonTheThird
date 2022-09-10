@@ -72,7 +72,10 @@ public class UpvoteCountingService {
                             score.getPoints())
                     );
                 } catch (NullPointerException e) {
-                    logger.logInfo("Could not obtain guild via JDA for id " + score.getServerId() + " while preparing score list for a user.");
+                    logger.logInfo(
+                            getClass().getName(),
+                            "Could not obtain guild via JDA for id " + score.getServerId() + " while preparing score list for a user."
+                    );
                 }
             });
 

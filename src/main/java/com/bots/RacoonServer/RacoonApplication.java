@@ -9,10 +9,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class RacoonApplication {
 
 	public static void main(String[] args) {
-		if (args.length < 2) {
+		if (args.length < 4) {
 			System.out.println(
 					"Please enter JDA token and a jasypt secret, ex.:\n" +
-					"java -jar bot.jar --jda.token=<JDA TOKEN> --jasypt.encryptor.password=<JASYPT SECRET>"
+					"java -jar bot.jar --jda.token=<JDA TOKEN> --jasypt.encryptor.password=<JASYPT SECRET> " +
+							"--ssl.keystore_path=<PATH> --ssl.keystore_password=<PASSWORD>"
 			);
 			return;
 		}
