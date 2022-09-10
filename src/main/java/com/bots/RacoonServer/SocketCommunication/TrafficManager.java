@@ -130,15 +130,8 @@ public class TrafficManager extends Thread implements OutboundTrafficManager {
                     aborted = true;
                 }
 
-                if (!aborted) {
-                    if (!individualOperation.getSecond().waitForResponse())
+                if (!aborted && !individualOperation.getSecond().waitForResponse())
                         removeOperation(idToSend);
-
-                    if (individualOperation.getFirst().out.checkError()) {
-                        individualOperations.get(idToSend).getSecond().getOnErrorEncountered().accept("PrintWriter failed to send request: " + request);
-                        removeOperation(idToSend);
-                    }
-                }
             }
 
             try {
@@ -188,10 +181,7 @@ public class TrafficManager extends Thread implements OutboundTrafficManager {
                         try {
                             CommunicationUtil.sendTo(connection.out, message.getRequest());
                         } catch (IOException e) {
-                            logger.logError(
-                                    getClass().getName(),
-                                    e.toString()
-                            );
+                            logger.logError(getClass().getName(), e.toString());
                         }
                     }
                 }

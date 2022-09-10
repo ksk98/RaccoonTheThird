@@ -3,21 +3,19 @@ package com.bots.RacoonServer.SocketCommunication;
 import com.bots.RacoonServer.Config;
 
 import javax.net.ssl.SSLSocket;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.time.OffsetDateTime;
 
 public class SocketConnection {
     public final SSLSocket socket;
-    public final PrintWriter out;
+    public final BufferedWriter out;
     public final LabeledDataInputStream in;
     public final long establishmentTimestamp;
     private boolean authenticated = false;
 
     public SocketConnection(SSLSocket socket, int id) throws IOException {
         this.socket = socket;
-        this.out = new PrintWriter(socket.getOutputStream());
+        this.out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         this.in = new LabeledDataInputStream(new DataInputStream(socket.getInputStream()), id);
         this.establishmentTimestamp = OffsetDateTime.now().toEpochSecond();
     }
