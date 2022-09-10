@@ -12,7 +12,7 @@ public abstract class CommandBase implements Command {
     protected final String keyword;
     protected String description;
     protected final boolean supportsTextCalls, supportsInteractionCalls;
-    protected boolean deleteCallMessage;
+    protected boolean deleteCallMessage, adminCommand;
 
     public CommandBase(String keyword, String description,
                        boolean supportsTextCalls, boolean supportsInteractionCalls) {
@@ -21,6 +21,7 @@ public abstract class CommandBase implements Command {
         this.supportsTextCalls = supportsTextCalls;
         this.supportsInteractionCalls = supportsInteractionCalls;
         this.deleteCallMessage = true;
+        this.adminCommand = false;
     }
 
     public void respondPrivatelyTo(@NotNull MessageReceivedEvent event, String message) {
@@ -68,6 +69,11 @@ public abstract class CommandBase implements Command {
     @Override
     public final boolean isSlashCommand() {
         return supportsInteractionCalls;
+    }
+
+    @Override
+    public final boolean isAdminCommand() {
+        return adminCommand;
     }
 
     @Override

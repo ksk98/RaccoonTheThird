@@ -3,6 +3,7 @@ package com.bots.RacoonServer.Commands;
 import com.bots.RacoonServer.Commands.Abstractions.CommandBase;
 import com.bots.RacoonServer.Config;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class CommandDecide extends CommandBase {
     }
 
     @Override
-    public void execute(@NonNull MessageReceivedEvent event, @NonNull List<String> arguments) {
+    public void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
         if (arguments.size() == 0)
             return;
 
