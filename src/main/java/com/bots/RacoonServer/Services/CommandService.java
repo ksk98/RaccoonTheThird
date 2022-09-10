@@ -11,6 +11,7 @@ import com.bots.RacoonServer.Commands.Help.CommandHelpAdmin;
 import com.bots.RacoonServer.Commands.MineSweeper.CommandMinesweeper;
 import com.bots.RacoonServer.Config;
 import com.bots.RacoonServer.Events.CommandListUpdated.CommandListUpdatedEventPublisher;
+import com.bots.RacoonServer.Exceptions.UnsupportedCommandExecutionMethod;
 import com.bots.RacoonShared.Logging.Loggers.Logger;
 import com.bots.RacoonServer.Persistence.CommandChecksumValidation.CommandChecksum;
 import com.bots.RacoonServer.Persistence.CommandChecksumValidation.CommandChecksumRepository;
@@ -151,7 +152,7 @@ public class CommandService {
 
         try {
             command.execute(event, arguments);
-        } catch (UnsupportedOperationException e) {
+        } catch (UnsupportedCommandExecutionMethod e) {
             logger.logInfo(
                     getClass().getName(),
                     "Attempted to use call command " + keyword + " as text command, but this action is unsupported."
@@ -172,7 +173,7 @@ public class CommandService {
 
         try {
             commands.get(keyword).execute(event);
-        } catch (UnsupportedOperationException e) {
+        } catch (UnsupportedCommandExecutionMethod e) {
             logger.logInfo(
                     getClass().getName(),
                     "Attempted to use call command " + keyword + " as slash command, but this action is unsupported."

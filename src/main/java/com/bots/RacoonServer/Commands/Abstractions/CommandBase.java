@@ -1,5 +1,6 @@
 package com.bots.RacoonServer.Commands.Abstractions;
 
+import com.bots.RacoonServer.Exceptions.UnsupportedCommandExecutionMethod;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -34,14 +35,14 @@ public abstract class CommandBase implements Command {
 
     @Override
     public void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
-        throw new UnsupportedOperationException(
+        throw new UnsupportedCommandExecutionMethod(
                 "MessageReceivedEvent not supported for command " + getClass().getSimpleName()
         );
     }
 
     @Override
     public void execute(@NotNull SlashCommandInteractionEvent event) {
-        throw new UnsupportedOperationException(
+        throw new UnsupportedCommandExecutionMethod(
                 "SlashCommandInteractionEvent not supported for command " + getClass().getSimpleName()
         );
     }
