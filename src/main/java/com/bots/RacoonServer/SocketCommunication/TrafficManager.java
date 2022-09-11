@@ -26,6 +26,8 @@ public class TrafficManager extends Thread implements OutboundTrafficManager {
     private final Queue<Integer> individualOperationIdQueue;
     private int individualOperationNextId;
 
+    private boolean verboseTraffic = false;
+
     private IncomingDataTrafficHandler trafficHandlerChain;
 
     public TrafficManager(GenericOnCreatePublisher<TrafficManager> trafficManagerOnCreatePublisher, Logger logger) {
@@ -123,7 +125,8 @@ public class TrafficManager extends Thread implements OutboundTrafficManager {
                 boolean aborted = false;
                 try {
                     CommunicationUtil.sendTo(individualOperation.getFirst().out, request);
-                    System.out.println("SENDING: " + request);
+                    if (verboseTraffic)
+                        System.out.println("SENDING: " + request);
                 } catch (IOException e) {
                     individualOperation.getSecond().getOnErrorEncountered().accept(e.toString());
                     removeOperation(idToSend);
@@ -148,7 +151,8 @@ public class TrafficManager extends Thread implements OutboundTrafficManager {
                     JSONObject incomingData;
                     try {
                         incomingData = new JSONObject(CommunicationUtil.readUntilEndFrom(connection.in));
-                        System.out.println("RECEIVING: " + incomingData);
+                        if (verboseTraffic)
+                            System.out.println("RECEIVING: " + incomingData);
                     } catch (SocketTimeoutException ignored) {
                         continue;
                     } catch (IOException e) {
@@ -205,5 +209,9 @@ public class TrafficManager extends Thread implements OutboundTrafficManager {
 
     public boolean isRunning() {
         return running;
+    }
+
+    public void setVerboseTraffic(boolean verboseTraffic) {
+        this.verboseTraffic = verboseTraffic;
     }
 }
