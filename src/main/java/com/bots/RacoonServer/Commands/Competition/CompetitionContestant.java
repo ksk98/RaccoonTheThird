@@ -25,4 +25,9 @@ public class CompetitionContestant {
     public boolean isDead() {
         return health == 0;
     }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

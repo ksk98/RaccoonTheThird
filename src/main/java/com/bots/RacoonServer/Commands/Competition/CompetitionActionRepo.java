@@ -10,33 +10,29 @@ public abstract class CompetitionActionRepo {
             (user, target) -> {
                 if (user.equals(target)) {
                     target.dealDamage(random.nextInt(10, 20) * -1);
-                    return target.getName() + " rests.";
+                    return "\uD83D\uDE34 " + target + " rests.\n";
                 } else {
                     target.dealDamage(random.nextInt(10, 30));
-                    return user.getName() + " punches " + target.getName() + "!" +
-                            (target.isDead() ? "\n" + target.getName() + " dies!" : "");
+                    return "\uD83D\uDCAA " + user + " punches " + target + "!\n" + giveDeathMessageIfDead(target);
                 }
             },
             (user, target) -> {
                 if (user.equals(target)) {
                     target.dealDamage(random.nextInt(10, 20));
-                    return target.getName() + " slips on a banana peel and falls!" +
-                            (target.isDead() ? "\n" + target.getName() + " dies!" : "");
+                    return "\uD83C\uDF4C " + target + " slips on a banana peel and falls!\n" + giveDeathMessageIfDead(target);
                 } else {
                     target.dealDamage(random.nextInt(5, 35));
-                    return user.getName() + " kicks " + target.getName() + "!" +
-                            (target.isDead() ? "\n" + target.getName() + " dies!" : "");
+                    return "\uD83E\uDDB5 " + user + " kicks " + target + "!\n" + giveDeathMessageIfDead(target);
                 }
             },
             (user, target) -> {
                 if (user.equals(target)) {
                     target.dealDamage(999);
-                    return target.getName() + " steps on a mine!" +
-                            (target.isDead() ? "\n" + target.getName() + " dies!" : "");
+                    return "\uD83D\uDCA5 " + target + " steps on a mine!\n" + giveDeathMessageIfDead(target);
                 } else {
                     target.dealDamage(random.nextInt(5, 10));
-                    return user.getName() + " insults " + target.getName() + "!" +
-                            (target.isDead() ? "\n" + target.getName() + " cries and runs home to mama!" : "");
+                    return "\uD83D\uDCA2 " + user + " insults " + target + "!\n" +
+                            (target.isDead() ? "\n\uD83D\uDE2D " + target + " cries and runs home to mama!\n" : "");
                 }
             },
             (user, target) -> {
@@ -48,49 +44,56 @@ public abstract class CompetitionActionRepo {
                         target.dealDamage(20);
                     // else nothing happens
 
-                    return target.getName() + " eats a mysterious fruit." +
-                            (target.isDead() ? "\n" + target.getName() + " dies!" : "");
+                    return "\uD83C\uDF4E " + target + " eats a mysterious fruit.\n" + giveDeathMessageIfDead(target);
                 } else {
                     user.dealDamage(random.nextInt(15, 25) * -1);
-                    return user.getName() + " steals food from " + target.getName() + "!";
+                    return "\uD83E\uDD9D " + user + " steals food from " + target + "!\n";
                 }
             },
             (user, target) -> {
                 if (user.equals(target)) {
                     target.dealDamage(999);
-                    return target.getName() + " has to go home because of dinner.";
+                    return "\uD83C\uDF57 " + target + " has to go home because of dinner.\n";
                 } else {
-                    user.dealDamage(999);
-                    target.dealDamage(999);
-                    return user.getName() + " decides to invite " + target.getName() + " for lunch. " +
-                            target.getName() + " agrees and they are both leaving.";
+                    int roll = random.nextInt(100);
+                    if (roll < 20) {
+                        user.dealDamage(999);
+                        target.dealDamage(999);
+                        return "\uD83C\uDF5D " + user + " decides to invite " + target + " for lunch. " +
+                                target + " agrees and they are both leaving.\n";
+                    } else {
+                        user.dealDamage(10);
+                        return "\uD83D\uDE2C " + user + " decides to invite " + target + " for lunch. " +
+                                target + " calls " + user + " a buffon!\n" + giveDeathMessageIfDead(target);
+                    }
+
                 }
             },
             (user, target) -> {
                 if (user.equals(target)) {
                     target.dealDamage(25);
-                    return target.getName() + " is old, so naturally their body starts to hurt randomly." +
-                        (target.isDead() ? "\n" + target.getName() + " dies!" : "");
+                    return "\uD83D\uDC74 " + target + " is old, so naturally their body starts to hurt randomly.\n" + giveDeathMessageIfDead(target);
                 } else {
                     target.dealDamage(random.nextInt(30, 50));
-                    return user.getName() + " scares " + target.getName() + ", giving them a heart attack." +
-                            (target.isDead() ? "\n" + target.getName() + " dies!" : "");
+                    return "\uD83D\uDE31 " + user + " scares " + target + ", giving them a heart attack.\n" + giveDeathMessageIfDead(target);
                 }
             },
             (user, target) -> {
                 if (user.equals(target)) {
                     target.dealDamage(10);
-                    return target.getName() + " has an existential crisis." +
-                            (target.isDead() ? "\n" + target.getName() + " dies!" : "");
+                    return "\uD83D\uDE1F " + target + " has an existential crisis.\n" + giveDeathMessageIfDead(target);
                 } else {
                     target.dealDamage(random.nextInt(15, 30));
-                    return user.getName() + " smacks " + target.getName() + " with a branch." +
-                            (target.isDead() ? "\n" + target.getName() + " dies!" : "");
+                    return "\uD83D\uDCA2 " + user + " smacks " + target + " with a stick!\n" + giveDeathMessageIfDead(target);
                 }
             }
     );
 
     public static CompetitionActionRunnable getRandomAction() {
         return actions.get(random.nextInt(actions.size()));
+    }
+
+    private static String giveDeathMessageIfDead(CompetitionContestant target) {
+        return (target.isDead() ? "⠀⠀⠀⠀☠️" + target + " dies!\n" : "");
     }
 }

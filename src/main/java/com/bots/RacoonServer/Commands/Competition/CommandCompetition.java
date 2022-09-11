@@ -24,29 +24,45 @@ public class CommandCompetition extends CommandBase {
         Queue<CompetitionContestant> movementQueue = new LinkedList<>();
         StringBuilder story = new StringBuilder();
 
+        story.append("⚔️Game starts with ")
+                .append(contestants.size())
+                .append(" contestants!⚔️\n\n");
+
+        int round = 1;
         while (contestants.size() > 1) {
-            if (movementQueue.isEmpty())
-                movementQueue.addAll(contestants);
+            movementQueue.addAll(contestants);
+            story.append("ROUND ").append(round).append("\n\n");
 
-            CompetitionContestant currentPlayer = movementQueue.poll();
-            CompetitionContestant targetPlayer = contestants.get(random.nextInt(contestants.size()));
+            while (movementQueue.size() > 1) {
 
-            story.append(CompetitionActionRepo.getRandomAction().perform(currentPlayer, targetPlayer))
-                    .append("\n");
+                CompetitionContestant currentPlayer = movementQueue.poll();
+                CompetitionContestant targetPlayer = contestants.get(random.nextInt(contestants.size()));
 
-            if (currentPlayer.isDead())
-                contestants.remove(currentPlayer);
-            else
-                movementQueue.add(currentPlayer);
+                story.append(CompetitionActionRepo.getRandomAction().perform(currentPlayer, targetPlayer))
+                        .append("\n");
 
-            if (targetPlayer.isDead()) {
-                contestants.remove(targetPlayer);
-                movementQueue.remove(targetPlayer);
+                boolean death = false;
+                if (currentPlayer.isDead()) {
+                    contestants.remove(currentPlayer);
+                    death = true;
+                }
+
+                if (targetPlayer.isDead()) {
+                    contestants.remove(targetPlayer);
+                    movementQueue.remove(targetPlayer);
+                    death = true;
+                }
+
+                if (death && contestants.size() > 1) {
+                    story.append(contestants.size()).append(" contestants alive!\n\n");
+                }
             }
+
+            round += 1;
         }
 
         if (contestants.size() > 0)
-            story.append(contestants.get(0).getName()).append(" wins!");
+            story.append("\uD83C\uDFC6 ").append(contestants.get(0).getName()).append(" wins! \uD83C\uDFC6");
         else
             story.append("Nobody wins!");
 
