@@ -48,6 +48,11 @@ public interface Command extends Serializable {
     boolean isSlashCommand();
 
     /***
+     * @return true if command is only available to an admin
+     */
+    boolean isAdminCommand();
+
+    /***
      * @return true if text command call message should be deleted
      */
     boolean deleteMessageAfterUse();

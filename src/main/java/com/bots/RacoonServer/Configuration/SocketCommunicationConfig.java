@@ -12,6 +12,7 @@ import com.bots.RacoonServer.SpringContext;
 import com.bots.RacoonShared.IncomingDataHandlers.IncomingDataTrafficHandler;
 import com.bots.RacoonShared.Logging.Loggers.Logger;
 import net.dv8tion.jda.api.JDA;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -36,6 +37,7 @@ public class SocketCommunicationConfig {
 
         this.trafficManager = new TrafficManager(trafficManagerOnCreatePublisher, logger);
         this.trafficManager.setTrafficHandlerChain(getTrafficHandlerChain());
+        this.trafficManager.setVerboseTraffic(environment.getProperty("traffic-manager.verbose", Boolean.class, false));
 
         this.socketManager = new ServerSocketManager(environment, logger, trafficManager);
         this.socketManager.start();

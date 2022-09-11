@@ -12,14 +12,15 @@ public class ProcessingServiceTests {
     @Test
     public void commandAndArgumentsSeparationRegexTestBetweenText() {
         Pair<String, List<String>> pair = ProcessingService.getCommandAndArgumentsFrom(
-                "hehehehehe fsef ! test $helpdecide \"kran złośliwy\" \"trociny blade suche\" 'koniczyn dwieście' kranówka"
+                "hehehehehe fsef ! test $helpdecide \"kran złośliwy\" \"trociny blade suche\" 'koniczyn dwieście' \"kranówka kranóweczka'"
         );
 
         assertEquals("helpdecide", pair.getFirst());
-        assertEquals("\"kran złośliwy\"", pair.getSecond().get(0));
-        assertEquals("\"trociny blade suche\"", pair.getSecond().get(1));
-        assertEquals("'koniczyn dwieście'", pair.getSecond().get(2));
+        assertEquals("kran złośliwy", pair.getSecond().get(0));
+        assertEquals("trociny blade suche", pair.getSecond().get(1));
+        assertEquals("koniczyn dwieście", pair.getSecond().get(2));
         assertEquals("kranówka", pair.getSecond().get(3));
+        assertEquals("kranóweczka", pair.getSecond().get(4));
     }
 
     @Test

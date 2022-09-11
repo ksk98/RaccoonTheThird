@@ -1,5 +1,6 @@
 package com.bots.RacoonServer.Commands.Abstractions;
 
+import com.bots.RacoonServer.Exceptions.UnsupportedCommandExecutionMethod;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -12,7 +13,7 @@ public abstract class CommandBase implements Command {
     protected final String keyword;
     protected String description;
     protected final boolean supportsTextCalls, supportsInteractionCalls;
-    protected boolean deleteCallMessage;
+    protected boolean deleteCallMessage, adminCommand;
 
     public CommandBase(String keyword, String description,
                        boolean supportsTextCalls, boolean supportsInteractionCalls) {
@@ -21,6 +22,7 @@ public abstract class CommandBase implements Command {
         this.supportsTextCalls = supportsTextCalls;
         this.supportsInteractionCalls = supportsInteractionCalls;
         this.deleteCallMessage = true;
+        this.adminCommand = false;
     }
 
     public void respondPrivatelyTo(@NotNull MessageReceivedEvent event, String message) {
@@ -33,14 +35,14 @@ public abstract class CommandBase implements Command {
 
     @Override
     public void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
-        throw new UnsupportedOperationException(
+        throw new UnsupportedCommandExecutionMethod(
                 "MessageReceivedEvent not supported for command " + getClass().getSimpleName()
         );
     }
 
     @Override
     public void execute(@NotNull SlashCommandInteractionEvent event) {
-        throw new UnsupportedOperationException(
+        throw new UnsupportedCommandExecutionMethod(
                 "SlashCommandInteractionEvent not supported for command " + getClass().getSimpleName()
         );
     }
@@ -68,6 +70,11 @@ public abstract class CommandBase implements Command {
     @Override
     public final boolean isSlashCommand() {
         return supportsInteractionCalls;
+    }
+
+    @Override
+    public final boolean isAdminCommand() {
+        return adminCommand;
     }
 
     @Override

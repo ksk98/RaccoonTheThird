@@ -3,17 +3,23 @@ package com.bots.RacoonServer.Services;
 import com.bots.RacoonServer.Commands.Abstractions.Command;
 import com.bots.RacoonServer.Commands.Command8Ball;
 import com.bots.RacoonServer.Commands.CommandDecide;
-import com.bots.RacoonServer.Commands.CommandHelp;
+import com.bots.RacoonServer.Commands.CommandForceCommandUpdate;
+import com.bots.RacoonServer.Commands.Help.CommandHelp;
 import com.bots.RacoonServer.Commands.CommandScore;
+import com.bots.RacoonServer.Commands.Competition.CommandCompetition;
+import com.bots.RacoonServer.Commands.Help.CommandHelpAdmin;
 import com.bots.RacoonServer.Commands.MineSweeper.CommandMinesweeper;
 import com.bots.RacoonServer.Config;
 import com.bots.RacoonServer.Events.CommandListUpdated.CommandListUpdatedEventPublisher;
+import com.bots.RacoonServer.Exceptions.UnsupportedCommandExecutionMethod;
 import com.bots.RacoonShared.Logging.Loggers.Logger;
 import com.bots.RacoonServer.Persistence.CommandChecksumValidation.CommandChecksum;
 import com.bots.RacoonServer.Persistence.CommandChecksumValidation.CommandChecksumRepository;
 import com.bots.RacoonServer.Utility.Tools;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.ApplicationInfo;
 import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
@@ -31,7 +37,7 @@ import java.util.*;
 public class CommandService {
     private final Logger logger;
     private final Map<String, Command> commands;
-    private final List<String[]> commandDescriptions;
+    private final List<String[]> commandDescriptions, adminCommandDescriptions;
     private final CommandListUpdatedEventPublisher commandListUpdatedEventPublisher;
     private final CommandChecksumRepository checksumRepository;
     private final JDA jda;
@@ -43,6 +49,7 @@ public class CommandService {
         this.jda = jda;
         this.commands = new HashMap<>();
         this.commandDescriptions = new LinkedList<>();
+        this.adminCommandDescriptions = new LinkedList<>();
         this.commandListUpdatedEventPublisher = commandListUpdatedEventPublisher;
         this.loadCommands();
         this.loadGlobalSlashCommands();
@@ -54,10 +61,13 @@ public class CommandService {
 
         // Add commands here
         addCommand(new CommandHelp());
+        addCommand(new CommandHelpAdmin());
         addCommand(new Command8Ball());
         addCommand(new CommandDecide());
         addCommand(new CommandMinesweeper());
         addCommand(new CommandScore());
+        addCommand(new CommandCompetition());
+        addCommand(new CommandForceCommandUpdate());
     }
 
     public void loadGlobalSlashCommands() {
@@ -97,6 +107,10 @@ public class CommandService {
         if (!updateRequired)
             return;
 
+        syncSlashCommands();
+    }
+
+    public void syncSlashCommands() {
         List<CommandData> commandData = new ArrayList<>(commands.size());
         commands.values().forEach(command -> commandData.add(command.getCommandData()));
 
@@ -138,7 +152,7 @@ public class CommandService {
 
         try {
             command.execute(event, arguments);
-        } catch (UnsupportedOperationException e) {
+        } catch (UnsupportedCommandExecutionMethod e) {
             logger.logInfo(
                     getClass().getName(),
                     "Attempted to use call command " + keyword + " as text command, but this action is unsupported."
@@ -159,7 +173,7 @@ public class CommandService {
 
         try {
             commands.get(keyword).execute(event);
-        } catch (UnsupportedOperationException e) {
+        } catch (UnsupportedCommandExecutionMethod e) {
             logger.logInfo(
                     getClass().getName(),
                     "Attempted to use call command " + keyword + " as slash command, but this action is unsupported."
@@ -175,12 +189,38 @@ public class CommandService {
         if (commandDescriptions.isEmpty()) {
             for (String key: commands.keySet()) {
                 Command currentCommand = commands.get(key);
+                if (currentCommand.isAdminCommand())
+                    continue;
+
                 StringBuilder description = new StringBuilder(currentCommand.getDescription());
 
                 if (currentCommand.isTextCommand() && !currentCommand.isSlashCommand())
                     description.append(" [TEXT ONLY]");
                 else if (!currentCommand.isTextCommand() && currentCommand.isSlashCommand())
-                    description.append(" [SLASH ONLY");
+                    description.append(" [SLASH ONLY]");
+
+                commandDescriptions.add(new String[]{key, description.toString()});
+            }
+            commandListUpdatedEventPublisher.notifySubscribers();
+        }
+
+        return commandDescriptions;
+    }
+
+    public List<String[]> getAdminCommandDescriptions() {
+        // Lazy loading
+        if (commandDescriptions.isEmpty()) {
+            for (String key: commands.keySet()) {
+                Command currentCommand = commands.get(key);
+                if (!currentCommand.isAdminCommand())
+                    continue;
+
+                StringBuilder description = new StringBuilder(currentCommand.getDescription());
+
+                if (currentCommand.isTextCommand() && !currentCommand.isSlashCommand())
+                    description.append(" [TEXT ONLY]");
+                else if (!currentCommand.isTextCommand() && currentCommand.isSlashCommand())
+                    description.append(" [SLASH ONLY]");
 
                 commandDescriptions.add(new String[]{key, description.toString()});
             }
@@ -192,5 +232,12 @@ public class CommandService {
 
     private void addCommand(Command command) {
         this.commands.put(command.getKeyword(), command);
+    }
+
+    private boolean userIsAdmin(User user) {
+        // TODO: currently only the bot owner is considered an admin
+        // this could be expanded by additional people added by the owner and then persisted
+        ApplicationInfo appInfo = jda.retrieveApplicationInfo().complete();
+        return appInfo.getOwner().getId().equals(user.getId());
     }
 }

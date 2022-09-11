@@ -34,5 +34,10 @@
       "name": "serversocket.port",
       "type": "java.lang.String",
       "description": "Port on which server listens for client connections."
+    },
+    {
+      "name": "traffic-manager.verbose",
+      "type": "java.lang.Boolean",
+      "description": "Log inbound and outbound traffic (only local)."
     }
   ] }

@@ -50,7 +50,7 @@ public class ProcessingService {
         String command = separateWordsMatcher.group().substring(1);
 
         while (separateWordsMatcher.find())
-            arguments.add(separateWordsMatcher.group());
+            arguments.add(separateWordsMatcher.group().replaceAll("[\"']", ""));
 
         return Pair.of(command, arguments);
     }
