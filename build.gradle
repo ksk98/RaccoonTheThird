@@ -23,7 +23,7 @@ dependencies {
 	// JSON parsing
 	implementation 'org.json:json:20220320'
 	// Server and client shared code
-	implementation files("./libs/RacoonShared.jar")
+	implementation files("./libs/RaccoonShared.jar")
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
