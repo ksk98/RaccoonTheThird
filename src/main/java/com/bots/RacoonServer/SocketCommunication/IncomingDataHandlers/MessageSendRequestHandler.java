@@ -1,13 +1,12 @@
 package com.bots.RacoonServer.SocketCommunication.IncomingDataHandlers;
 
-import com.bots.RacoonShared.IncomingDataHandlers.BaseIncomingDataTrafficHandler;
+import com.bots.RacoonShared.Discord.BotMessage;
 import com.bots.RacoonShared.IncomingDataHandlers.IncomingOperationHandler;
 import com.bots.RacoonShared.Logging.Loggers.Logger;
 import com.bots.RacoonShared.SocketCommunication.SocketOperationIdentifiers;
 import com.bots.RacoonShared.Util.SerializationUtil;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.json.JSONObject;
 
@@ -26,15 +25,15 @@ public class MessageSendRequestHandler extends IncomingOperationHandler {
 
     @Override
     public void consume(JSONObject data) {
-        Message message;
+        BotMessage message;
         try {
-            message = (Message) SerializationUtil.fromString(data.getString("message"));
+            message = (BotMessage) SerializationUtil.fromString(data.getString("body"));
         } catch (IOException | ClassNotFoundException e) {
             logger.logError(getClass().getName(), e.toString());
             return;
         }
-        Guild guild = jda.getGuildById(data.getString("guild_id"));
-        TextChannel channel = Objects.requireNonNull(guild).getTextChannelById("channel_id");
-        Objects.requireNonNull(channel).sendMessage(message).queue();
+        Guild guild = jda.getGuildById(message.serverId);
+        TextChannel channel = Objects.requireNonNull(guild).getTextChannelById(message.channelId);
+        Objects.requireNonNull(channel).sendMessage(message.message).queue();
     }
 }
