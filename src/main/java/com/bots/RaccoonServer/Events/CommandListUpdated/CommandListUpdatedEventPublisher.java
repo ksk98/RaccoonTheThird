@@ -1,6 +1,6 @@
 package com.bots.RaccoonServer.Events.CommandListUpdated;
 
-import com.bots.RaccoonServer.Events.Abstractions.BaseGenericPublisher;
+import com.bots.RaccoonShared.Events.Abstractions.BaseGenericPublisher;
 import org.springframework.stereotype.Component;
 
 @Component
