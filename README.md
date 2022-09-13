@@ -5,8 +5,8 @@ Raccoon The Third is a scalable Discord bot platform that I'm developing for per
 
 This project consists of 3 repositories:
 - [Server](https://github.com/ksk98/RaccoonTheThird "Raccoon server") used to host the dockerized bot
-- [Client](https://github.com/ksk98/RaccoonTheThird "Raccoon client") that provides functionalities such as browsing server logs, discord messages and speaking as bot
-- [Shared library](https://github.com/ksk98/RaccoonTheThird "Raccoon shared") that is used both by the server and client
+- [Client](https://github.com/ksk98/RacoonClient "Raccoon client") that provides functionalities such as browsing server logs, discord messages and speaking as bot
+- [Shared library](https://github.com/ksk98/RacoonShared "Raccoon shared") that is used both by the server and client
 
 ## Features
 - Built in example commands used for entertainment and simple command creation
