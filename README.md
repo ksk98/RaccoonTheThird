@@ -33,7 +33,7 @@ This project consists of 3 repositories:
  3. Define command's behavior:
  
     - If command supports text calls, override method **execute** that accepts **MessageReceivedEvent** and a list of String arguments. Arguments list will contain everything that's written after the command call, where words grouped by quotes will count as one string.
-    
     - If command supports slash command calls, override method **execute** that accepts **SlashCommandInteractionEvent**. Additionally, if your command accepts arguments, override method **getCommandData**, which should return instance of **CommandDataImpl** containing information about your commands arguments. This is called when slash commands that the bot supports have changed and need to be synchronised with Discord.
+    - Optionally, change the default value of **CommandBase** flags to alter the command's behavior to your liking
 
 4. Add command to the list of commands in **com.bots.RaccoonServer.Services.CommandService.loadCommands()**
