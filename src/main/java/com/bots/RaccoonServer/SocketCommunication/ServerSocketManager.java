@@ -1,7 +1,7 @@
 package com.bots.RaccoonServer.SocketCommunication;
 
 import com.bots.RaccoonServer.Config;
-import com.bots.RaccoonShared.Logging.Loggers.Logger;
+import com.bots.RaccoonShared.Logging.Loggers.ILogger;
 import com.bots.RaccoonShared.SocketCommunication.SocketCommunicationOperationBuilder;
 import com.bots.RaccoonShared.SocketCommunication.SocketOperationIdentifiers;
 import org.json.JSONObject;
@@ -20,11 +20,11 @@ public class ServerSocketManager extends Thread {
     private boolean running = false;
 
     private final TrafficManager trafficManager;
-    private final Logger logger;
+    private final ILogger logger;
 
     private SSLServerSocket socket = null;
 
-    public ServerSocketManager(Environment environment, Logger logger, TrafficManager trafficManager) {
+    public ServerSocketManager(Environment environment, ILogger logger, TrafficManager trafficManager) {
         String portFromProperties = environment.getProperty("serversocket.port");
         this.port = portFromProperties == null ? Config.defaultPort : Integer.parseInt(portFromProperties);
         this.keystorePath = environment.getProperty("ssl.keystore_path");
@@ -36,9 +36,9 @@ public class ServerSocketManager extends Thread {
     private ServerSocketFactory getServerSocketFactory() {
         SSLServerSocketFactory ssf;
         try {
-            SSLContext ctx = SSLContext.getInstance("TLS");;
-            KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");;
-            KeyStore ks = KeyStore.getInstance("JKS");;
+            SSLContext ctx = SSLContext.getInstance("TLS");
+            KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+            KeyStore ks = KeyStore.getInstance("JKS");
             char[] passphrase = keystorePassword.toCharArray();
 
             ks.load(new FileInputStream(keystorePath), passphrase);
