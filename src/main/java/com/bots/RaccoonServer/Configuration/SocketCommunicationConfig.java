@@ -7,8 +7,8 @@ import com.bots.RaccoonServer.SocketCommunication.IncomingDataHandlers.MessageSe
 import com.bots.RaccoonServer.SocketCommunication.IncomingDataHandlers.ServerChannelRequestHandler;
 import com.bots.RaccoonServer.SocketCommunication.ServerSocketManager;
 import com.bots.RaccoonServer.SocketCommunication.TrafficManager;
-import com.bots.RaccoonShared.IncomingDataHandlers.IncomingDataTrafficHandler;
-import com.bots.RaccoonShared.Logging.Loggers.Logger;
+import com.bots.RaccoonShared.IncomingDataHandlers.IJSONDataHandler;
+import com.bots.RaccoonShared.Logging.Loggers.ILogger;
 import net.dv8tion.jda.api.JDA;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,10 +22,10 @@ public class SocketCommunicationConfig {
     private final ServerSocketManager socketManager;
     private final TrafficManager trafficManager;
     private final Map<String, String> validAuthenticationCredentials;
-    private final Logger logger;
+    private final ILogger logger;
     private final JDA jda;
 
-    public SocketCommunicationConfig(Environment environment, Logger logger,
+    public SocketCommunicationConfig(Environment environment, ILogger logger,
                                      GenericOnCreatePublisher<TrafficManager> trafficManagerOnCreatePublisher, JDA jda) {
         this.logger = logger;
         this.jda = jda;
@@ -48,8 +48,8 @@ public class SocketCommunicationConfig {
         }
     }
 
-    private IncomingDataTrafficHandler getTrafficHandlerChain() {
-        IncomingDataTrafficHandler chain = new MessageSendRequestHandler(jda, logger);
+    private IJSONDataHandler getTrafficHandlerChain() {
+        IJSONDataHandler chain = new MessageSendRequestHandler(jda, logger);
         chain.setNext(new ServerChannelRequestHandler(jda, trafficManager, logger))
                 .setNext(new AuthenticationRequestHandler(trafficManager, this::validateAuthenticationCredentials))
                 .setNext(new DisconnectRequestHandler(trafficManager));

@@ -3,7 +3,8 @@ package com.bots.RaccoonServer.SocketCommunication.IncomingDataHandlers;
 import com.bots.RaccoonServer.SocketCommunication.TrafficManager;
 import com.bots.RaccoonShared.Discord.Channel;
 import com.bots.RaccoonShared.Discord.ServerChannels;
-import com.bots.RaccoonShared.IncomingDataHandlers.IncomingOperationHandler;
+import com.bots.RaccoonShared.IncomingDataHandlers.JSONOperationHandler;
+import com.bots.RaccoonShared.Logging.Loggers.ILogger;
 import com.bots.RaccoonShared.Logging.Loggers.Logger;
 import com.bots.RaccoonShared.SocketCommunication.SocketCommunicationOperationBuilder;
 import com.bots.RaccoonShared.SocketCommunication.SocketOperationIdentifiers;
@@ -16,12 +17,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ServerChannelRequestHandler extends IncomingOperationHandler {
+public class ServerChannelRequestHandler extends JSONOperationHandler {
     private final JDA jda;
     private final TrafficManager trafficManager;
-    private final Logger logger;
+    private final ILogger logger;
 
-    public ServerChannelRequestHandler(JDA jda, TrafficManager trafficManager, Logger logger) {
+    public ServerChannelRequestHandler(JDA jda, TrafficManager trafficManager, ILogger logger) {
         super(SocketOperationIdentifiers.REQUEST_SERVER_CHANNEL_LIST);
         this.jda = jda;
         this.trafficManager = trafficManager;

@@ -1,9 +1,9 @@
 package com.bots.RaccoonServer.SocketCommunication;
 
 import com.bots.RaccoonServer.Events.OnCreate.GenericOnCreatePublisher;
-import com.bots.RaccoonShared.IncomingDataHandlers.BaseIncomingDataTrafficHandler;
-import com.bots.RaccoonShared.IncomingDataHandlers.IncomingDataTrafficHandler;
-import com.bots.RaccoonShared.Logging.Loggers.Logger;
+import com.bots.RaccoonShared.IncomingDataHandlers.IJSONDataHandler;
+import com.bots.RaccoonShared.IncomingDataHandlers.JSONDataHandler;
+import com.bots.RaccoonShared.Logging.Loggers.ILogger;
 import com.bots.RaccoonShared.SocketCommunication.CommunicationUtil;
 import com.bots.RaccoonShared.SocketCommunication.SocketCommunicationOperation;
 import org.json.JSONObject;
@@ -16,7 +16,7 @@ import java.util.*;
 
 public class TrafficManager extends Thread implements OutboundTrafficManager {
     private boolean running = false;
-    private final Logger logger;
+    private final ILogger logger;
 
     private final HashMap<Integer, SocketConnection> connections;
     private int nextSubscriberId = 0;
@@ -28,16 +28,16 @@ public class TrafficManager extends Thread implements OutboundTrafficManager {
 
     private boolean verboseTraffic = false;
 
-    private IncomingDataTrafficHandler trafficHandlerChain;
+    private IJSONDataHandler trafficHandlerChain;
 
-    public TrafficManager(GenericOnCreatePublisher<TrafficManager> trafficManagerOnCreatePublisher, Logger logger) {
+    public TrafficManager(GenericOnCreatePublisher<TrafficManager> trafficManagerOnCreatePublisher, ILogger logger) {
         this.logger = logger;
         this.connections = new HashMap<>();
         this.individualOperations = new HashMap<>();
         this.broadcasts = new LinkedList<>();
         this.individualOperationIdQueue = new LinkedList<>();
         this.individualOperationNextId = 0;
-        this.trafficHandlerChain = new BaseIncomingDataTrafficHandler(){};
+        this.trafficHandlerChain = new JSONDataHandler(){};
 
         trafficManagerOnCreatePublisher.notifySubscribers(this);
     }
@@ -203,7 +203,7 @@ public class TrafficManager extends Thread implements OutboundTrafficManager {
         }
     }
 
-    public void setTrafficHandlerChain(IncomingDataTrafficHandler trafficHandlerChain) {
+    public void setTrafficHandlerChain(IJSONDataHandler trafficHandlerChain) {
         this.trafficHandlerChain = trafficHandlerChain;
     }
 

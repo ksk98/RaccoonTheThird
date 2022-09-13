@@ -1,14 +1,14 @@
 package com.bots.RaccoonServer.SocketCommunication.IncomingDataHandlers;
 
 import com.bots.RaccoonServer.SocketCommunication.TrafficManager;
-import com.bots.RaccoonShared.IncomingDataHandlers.IncomingOperationHandler;
+import com.bots.RaccoonShared.IncomingDataHandlers.JSONOperationHandler;
 import com.bots.RaccoonShared.SocketCommunication.SocketCommunicationOperationBuilder;
 import com.bots.RaccoonShared.SocketCommunication.SocketOperationIdentifiers;
 import org.json.JSONObject;
 
 import java.util.function.BiPredicate;
 
-public class AuthenticationRequestHandler extends IncomingOperationHandler {
+public class AuthenticationRequestHandler extends JSONOperationHandler {
     private final TrafficManager trafficManager;
     private final BiPredicate<String, String> validateCredentials;
 

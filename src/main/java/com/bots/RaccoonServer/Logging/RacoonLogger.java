@@ -6,9 +6,8 @@ import com.bots.RaccoonServer.SocketCommunication.LogBroadcaster;
 import com.bots.RaccoonServer.SocketCommunication.TrafficManager;
 import com.bots.RaccoonShared.Logging.Log;
 import com.bots.RaccoonShared.Logging.Loggers.Logger;
-import com.bots.RaccoonShared.Logging.Loggers.LoggerBase;
 
-public class RacoonLogger extends LoggerBase implements GenericOnCreateListener<TrafficManager> {
+public class RacoonLogger extends Logger implements GenericOnCreateListener<TrafficManager> {
     private final Logger localLogger;
     private Logger remoteLogger = null;
 
