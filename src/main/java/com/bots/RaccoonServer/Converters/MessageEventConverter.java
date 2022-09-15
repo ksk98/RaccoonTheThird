@@ -23,11 +23,10 @@ public class MessageEventConverter {
                 event.getGuild().getId(),
                 event.getChannel().getId(),
                 username, color,
-                event.getMessage().getContentRaw()
+                event.getMessage().getContentRaw(),
+                event.getAuthor().isBot(),
+                !event.getMessage().getEmbeds().isEmpty()
         );
-
-        out.setUserIsBot(event.getAuthor().isBot());
-        out.setHasEmbeds(!event.getMessage().getEmbeds().isEmpty());
 
         return out;
     }

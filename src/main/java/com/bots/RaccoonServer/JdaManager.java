@@ -1,12 +1,11 @@
 package com.bots.RaccoonServer;
 
-import com.bots.RaccoonShared.Logging.Loggers.Logger;
+import com.bots.RaccoonShared.Logging.Loggers.ILogger;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -17,8 +16,7 @@ import javax.security.auth.login.LoginException;
 public class JdaManager {
     private JDA jda;
 
-    public JdaManager(ApplicationContext context, Environment environment) {
-        Logger logger = context.getBean(Logger.class);
+    public JdaManager(ILogger logger, Environment environment) {
         try {
             jda = JDABuilder.createDefault(environment.getProperty("jda.token"))
                     .enableIntents(GatewayIntent.MESSAGE_CONTENT)

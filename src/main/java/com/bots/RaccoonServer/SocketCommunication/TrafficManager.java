@@ -118,11 +118,12 @@ public class TrafficManager extends Thread implements OutboundTrafficManager {
             if (!individualOperationIdQueue.isEmpty()) {
                 Integer idToSend = individualOperationIdQueue.poll();
                 Pair<SocketConnection, SocketCommunicationOperation> individualOperation = individualOperations.get(idToSend);
-                JSONObject request = individualOperation.getSecond().getRequest();
+                JSONObject request = individualOperation.getSecond().getContent();
                 if (individualOperation.getSecond().waitForResponse())
                     request.put("server_operation_id", idToSend);
+                else
+                    removeOperation(idToSend);
 
-                boolean aborted = false;
                 try {
                     CommunicationUtil.sendTo(individualOperation.getFirst().out, request);
                     if (verboseTraffic)
@@ -130,11 +131,7 @@ public class TrafficManager extends Thread implements OutboundTrafficManager {
                 } catch (IOException e) {
                     individualOperation.getSecond().getOnErrorEncountered().accept(e.toString());
                     removeOperation(idToSend);
-                    aborted = true;
                 }
-
-                if (!aborted && !individualOperation.getSecond().waitForResponse())
-                        removeOperation(idToSend);
             }
 
             try {
@@ -183,7 +180,7 @@ public class TrafficManager extends Thread implements OutboundTrafficManager {
                 for (SocketConnection connection: connections.values()) {
                     if (connection.isAuthenticated()) {
                         try {
-                            CommunicationUtil.sendTo(connection.out, message.getRequest());
+                            CommunicationUtil.sendTo(connection.out, message.getContent());
                         } catch (IOException e) {
                             logger.logError(getClass().getName(), e.toString());
                         }
