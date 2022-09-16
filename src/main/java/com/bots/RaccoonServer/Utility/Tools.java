@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+// TODO: this + tests could be moved to RaccoonShared
 public abstract class Tools {
     public static String getChecksumForObject(Serializable object) throws IOException, NoSuchAlgorithmException {
         try (ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
