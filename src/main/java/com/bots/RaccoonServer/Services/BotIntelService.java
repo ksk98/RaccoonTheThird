@@ -41,4 +41,8 @@ public class BotIntelService {
     public void invalidateCache() {
         cacheValid = false;
     }
+
+    public JDA getJda() {
+        return jda;
+    }
 }
