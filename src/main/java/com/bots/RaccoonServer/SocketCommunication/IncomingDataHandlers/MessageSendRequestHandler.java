@@ -8,6 +8,7 @@ import com.bots.RaccoonShared.Util.SerializationUtil;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -39,7 +40,6 @@ public class MessageSendRequestHandler extends JSONOperationHandler {
             return;
         }
 
-
         TextChannel channel;
         try { channel = Objects.requireNonNull(guild).getTextChannelById(message.channelId()); }
         catch (NullPointerException e) {
@@ -47,6 +47,9 @@ public class MessageSendRequestHandler extends JSONOperationHandler {
             return;
         }
 
-        Objects.requireNonNull(channel).sendMessage(message.message()).queue();
+        try { Objects.requireNonNull(channel).sendMessage(message.message()).queue(); }
+        catch (InsufficientPermissionException e) {
+            logger.logInfo(getClass().getName(), "Client tried to send message to server-channel, but bot lacks permissions to do so.");
+        }
     }
 }
