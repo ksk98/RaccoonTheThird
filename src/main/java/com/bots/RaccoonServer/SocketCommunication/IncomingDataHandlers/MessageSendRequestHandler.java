@@ -32,12 +32,17 @@ public class MessageSendRequestHandler extends JSONOperationHandler {
             logger.logError(getClass().getName(), e.toString());
             return;
         }
-        Guild guild = jda.getGuildById(message.serverId());
-        TextChannel channel;
+        Guild guild;
+        try { guild = jda.getGuildById(message.serverId()); }
+        catch (NullPointerException e) {
+            logger.logError(getClass().getName(), "Client tried to send message as bot in a server bot is not in.");
+            return;
+        }
 
+
+        TextChannel channel;
         try { channel = Objects.requireNonNull(guild).getTextChannelById(message.channelId()); }
         catch (NullPointerException e) {
-            // Client tried to send message as bot in a channel bot is no longer in
             logger.logError(getClass().getName(), "Client tried to send message as bot in a channel bot is not in.");
             return;
         }
