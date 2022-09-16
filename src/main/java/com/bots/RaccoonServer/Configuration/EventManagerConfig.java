@@ -1,6 +1,7 @@
 package com.bots.RaccoonServer.Configuration;
 
 import com.bots.RaccoonServer.Controllers.MessageAndInteractionResponseController;
+import com.bots.RaccoonServer.Controllers.ServerChannelAccessibilityChangeController;
 import com.bots.RaccoonServer.Controllers.UpvoteController;
 import com.bots.RaccoonServer.JdaManager;
 import net.dv8tion.jda.api.hooks.AnnotatedEventManager;
@@ -12,7 +13,7 @@ public class EventManagerConfig {
     private final AnnotatedEventManager eventManager;
 
     public EventManagerConfig(JdaManager jdaManager, MessageAndInteractionResponseController commandController,
-                              UpvoteController upvoteController, MessageAndInteractionResponseController accessibilityController) {
+                              UpvoteController upvoteController, ServerChannelAccessibilityChangeController accessibilityController) {
         this.eventManager = new AnnotatedEventManager();
         this.eventManager.register(commandController);
         this.eventManager.register(upvoteController);
