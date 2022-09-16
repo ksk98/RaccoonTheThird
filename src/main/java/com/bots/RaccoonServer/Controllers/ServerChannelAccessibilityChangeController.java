@@ -48,7 +48,6 @@ public class ServerChannelAccessibilityChangeController {
         if (event.getChannelType() != ChannelType.TEXT) return;
 
         // Check if bot still has or has gained access to server and text channel that the event took place in
-        // TODO: doesnt work for revoking access
         Guild server;
         TextChannel channel;
         try {
@@ -57,7 +56,7 @@ public class ServerChannelAccessibilityChangeController {
                 throw new NullPointerException();
 
             channel = event.getChannel().asTextChannel();
-            if (Objects.requireNonNull(channel).)
+            if (!channel.getMembers().contains(server.getSelfMember()))
                 throw new NullPointerException();
         } catch (NullPointerException ignored) {
             // Server or channel no longer accessible by the bot
