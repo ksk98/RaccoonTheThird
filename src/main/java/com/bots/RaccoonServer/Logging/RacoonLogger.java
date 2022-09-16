@@ -2,17 +2,16 @@ package com.bots.RaccoonServer.Logging;
 
 import com.bots.RaccoonServer.Events.OnCreate.GenericOnCreateListener;
 import com.bots.RaccoonServer.Events.OnCreate.GenericOnCreatePublisher;
-import com.bots.RaccoonServer.SocketCommunication.LogBroadcaster;
-import com.bots.RaccoonServer.SocketCommunication.TrafficManager;
+import com.bots.RaccoonServer.SocketCommunication.IOutboundTrafficServiceUtilityWrapper;
 import com.bots.RaccoonShared.Logging.Log;
 import com.bots.RaccoonShared.Logging.Loggers.Logger;
 
-public class RacoonLogger extends Logger implements GenericOnCreateListener<TrafficManager> {
+public class RacoonLogger extends Logger implements GenericOnCreateListener<IOutboundTrafficServiceUtilityWrapper> {
     private final Logger localLogger;
     private Logger remoteLogger = null;
 
-    public RacoonLogger(GenericOnCreatePublisher<TrafficManager> trafficManagerOnCreatePublisher) {
-        trafficManagerOnCreatePublisher.subscribe(this);
+    public RacoonLogger(GenericOnCreatePublisher<IOutboundTrafficServiceUtilityWrapper> trafficServiceWrapperCreationPublisher) {
+        trafficServiceWrapperCreationPublisher.subscribe(this);
         localLogger = new LoggerSimple((log, s) -> {
             // If this logger fails then we won't have any place to log to anyway.
         });
@@ -32,7 +31,7 @@ public class RacoonLogger extends Logger implements GenericOnCreateListener<Traf
     }
 
     @Override
-    public void notify(TrafficManager trafficManager) {
-        this.remoteLogger = new LoggerRemote(this::fallbackLog, new LogBroadcaster(trafficManager));
+    public void notify(IOutboundTrafficServiceUtilityWrapper created) {
+        remoteLogger = new LoggerRemote(this::fallbackLog, created);
     }
 }

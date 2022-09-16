@@ -1,38 +1,27 @@
 package com.bots.RaccoonServer.Services;
 
-import com.bots.RaccoonServer.Events.OnCreate.GenericOnCreateListener;
-import com.bots.RaccoonServer.Events.OnCreate.GenericOnCreatePublisher;
-import com.bots.RaccoonServer.SocketCommunication.MessageBroadcaster;
-import com.bots.RaccoonServer.SocketCommunication.TrafficManager;
-import com.bots.RaccoonShared.Logging.Loggers.Logger;
+import com.bots.RaccoonServer.Converters.MessageEventConverter;
+import com.bots.RaccoonServer.SocketCommunication.IOutboundTrafficServiceUtilityWrapper;
+import com.bots.RaccoonShared.Logging.Loggers.ILogger;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
 @Service
-public class MessageLoggingService implements GenericOnCreateListener<TrafficManager> {
-    private final Logger logger;
-    private MessageBroadcaster messageBroadcaster = null;
+public class MessageLoggingService {
+    private final ILogger logger;
+    private final IOutboundTrafficServiceUtilityWrapper trafficServiceWrapper;
 
-    public MessageLoggingService(GenericOnCreatePublisher<TrafficManager> trafficManagerOnCreatePublisher, Logger logger) {
+    public MessageLoggingService(ILogger logger, IOutboundTrafficServiceUtilityWrapper trafficServiceWrapper) {
         this.logger = logger;
-        trafficManagerOnCreatePublisher.subscribe(this);
+        this.trafficServiceWrapper = trafficServiceWrapper;
     }
 
     public void logMessageReceived(MessageReceivedEvent event) {
-        if (messageBroadcaster == null)
-            return;
-
-        try {
-            messageBroadcaster.broadcast(event);
-        } catch (IOException e) {
+        try { trafficServiceWrapper.queueBroadcast(MessageEventConverter.toMessageLog(event)); }
+        catch (IOException e) {
             logger.logError(getClass().getName(), "Could not remotely log message received event: " + e);
         }
-    }
-
-    @Override
-    public void notify(TrafficManager created) {
-        messageBroadcaster = new MessageBroadcaster(created);
     }
 }

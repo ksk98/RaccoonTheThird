@@ -1,55 +1,36 @@
 package com.bots.RaccoonServer.SocketCommunication.IncomingDataHandlers;
 
-import com.bots.RaccoonServer.SocketCommunication.TrafficManager;
-import com.bots.RaccoonShared.Discord.Channel;
-import com.bots.RaccoonShared.Discord.ServerChannels;
+import com.bots.RaccoonServer.Services.BotIntelService;
+import com.bots.RaccoonServer.SocketCommunication.IOutboundTrafficServiceUtilityWrapper;
 import com.bots.RaccoonShared.IncomingDataHandlers.JSONOperationHandler;
 import com.bots.RaccoonShared.Logging.Loggers.ILogger;
-import com.bots.RaccoonShared.Logging.Loggers.Logger;
-import com.bots.RaccoonShared.SocketCommunication.SocketCommunicationOperationBuilder;
 import com.bots.RaccoonShared.SocketCommunication.SocketOperationIdentifiers;
-import com.bots.RaccoonShared.Util.SerializationUtil;
-import net.dv8tion.jda.api.JDA;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class ServerChannelRequestHandler extends JSONOperationHandler {
-    private final JDA jda;
-    private final TrafficManager trafficManager;
     private final ILogger logger;
+    private final IOutboundTrafficServiceUtilityWrapper trafficServiceWrapper;
+    private final BotIntelService botIntelService;
 
-    public ServerChannelRequestHandler(JDA jda, TrafficManager trafficManager, ILogger logger) {
+    public ServerChannelRequestHandler(ILogger logger, IOutboundTrafficServiceUtilityWrapper trafficServiceWrapper,
+                                       BotIntelService botIntelService) {
         super(SocketOperationIdentifiers.REQUEST_SERVER_CHANNEL_LIST);
-        this.jda = jda;
-        this.trafficManager = trafficManager;
         this.logger = logger;
+        this.trafficServiceWrapper = trafficServiceWrapper;
+        this.botIntelService = botIntelService;
     }
 
     @Override
     public void consume(JSONObject data) {
-        LinkedList<ServerChannels> serverChannelsList = jda.getGuilds().stream().map(guild -> {
-            List<Channel> channels = guild.getTextChannels().stream().map(
-                    textChannel -> new Channel(textChannel.getId(), textChannel.getName())
-            ).toList();
-
-            return new ServerChannels(guild.getId(), guild.getName(), channels);
-        }).collect(Collectors.toCollection(LinkedList::new));
-
-        JSONObject outData;
         try {
-            outData = new JSONObject()
-                    .put("operation", SocketOperationIdentifiers.UPDATE_SERVER_CHANNEL_LIST)
-                    .put("body", SerializationUtil.toString(serverChannelsList));
+            trafficServiceWrapper.queueOperation(
+                    trafficServiceWrapper.getConnectionForId(data.getInt("connection_id")),
+                    botIntelService.getServerChannelList()
+            );
         } catch (IOException e) {
-            logger.logError(getClass().getName(), e.toString());
-            return;
+            logger.logError(getClass().getName(), "Could not send server-channel list to client: " + e);
         }
-
-        SocketCommunicationOperationBuilder builder = new SocketCommunicationOperationBuilder().setData(outData);
-        trafficManager.queueOperation(trafficManager.getConnection(data.getInt("connection_id")), builder.build());
     }
 }

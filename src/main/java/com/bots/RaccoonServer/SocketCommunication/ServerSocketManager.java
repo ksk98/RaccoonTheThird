@@ -2,10 +2,8 @@ package com.bots.RaccoonServer.SocketCommunication;
 
 import com.bots.RaccoonServer.Config;
 import com.bots.RaccoonShared.Logging.Loggers.ILogger;
-import com.bots.RaccoonShared.SocketCommunication.SocketCommunicationOperationBuilder;
-import com.bots.RaccoonShared.SocketCommunication.SocketOperationIdentifiers;
-import org.json.JSONObject;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
 import javax.net.ServerSocketFactory;
 import javax.net.ssl.*;
@@ -19,17 +17,17 @@ public class ServerSocketManager extends Thread {
     private final String keystorePath, keystorePassword;
     private boolean running = false;
 
-    private final TrafficManager trafficManager;
+    private final TrafficService trafficService;
     private final ILogger logger;
 
     private SSLServerSocket socket = null;
 
-    public ServerSocketManager(Environment environment, ILogger logger, TrafficManager trafficManager) {
+    public ServerSocketManager(Environment environment, ILogger logger, TrafficService trafficService) {
         String portFromProperties = environment.getProperty("serversocket.port");
         this.port = portFromProperties == null ? Config.defaultPort : Integer.parseInt(portFromProperties);
         this.keystorePath = environment.getProperty("ssl.keystore_path");
         this.keystorePassword = environment.getProperty("ssl.keystore_password");
-        this.trafficManager = trafficManager;
+        this.trafficService = trafficService;
         this.logger = logger;
     }
 
@@ -82,24 +80,16 @@ public class ServerSocketManager extends Thread {
             try {
                 clientSocket = (SSLSocket) socket.accept();
                 clientSocket.setSoTimeout(Config.clientSocketSOTimeoutMS);
+                trafficService.addConnection(clientSocket);
 
-                // Respond with anything so that the handshake will complete
-                SocketCommunicationOperationBuilder builder = new SocketCommunicationOperationBuilder()
-                        .setData(new JSONObject().put("operation", SocketOperationIdentifiers.SSL_HANDSHAKE_COMPLETE));
-                trafficManager.queueOperation(trafficManager.addConnection(clientSocket), builder.build());
-
-                if (!trafficManager.isRunning()) {
-                    trafficManager.start();
-                } else {
-                    synchronized (trafficManager) {
-                        trafficManager.notify();
-                    }
+                synchronized (trafficService) {
+                    trafficService.notify();
                 }
             } catch (IOException e) {
                 logger.logError(getClass().getName(), e.toString());
                 try {
                     if (clientSocket != null)
-                        trafficManager.removeConnectionForSocket(clientSocket);
+                        trafficService.removeConnectionForSocket(clientSocket);
                     socket.close();
 
                 } catch (IOException ex) {

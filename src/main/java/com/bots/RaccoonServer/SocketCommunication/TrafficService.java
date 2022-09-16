@@ -1,6 +1,5 @@
 package com.bots.RaccoonServer.SocketCommunication;
 
-import com.bots.RaccoonServer.Events.OnCreate.GenericOnCreatePublisher;
 import com.bots.RaccoonShared.IncomingDataHandlers.IJSONDataHandler;
 import com.bots.RaccoonShared.IncomingDataHandlers.JSONDataHandler;
 import com.bots.RaccoonShared.Logging.Loggers.ILogger;
@@ -14,7 +13,7 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.*;
 
-public class TrafficManager extends Thread implements OutboundTrafficManager {
+public class TrafficService extends Thread implements IOutboundTrafficService {
     private boolean running = false;
     private final ILogger logger;
 
@@ -30,16 +29,14 @@ public class TrafficManager extends Thread implements OutboundTrafficManager {
 
     private IJSONDataHandler trafficHandlerChain;
 
-    public TrafficManager(GenericOnCreatePublisher<TrafficManager> trafficManagerOnCreatePublisher, ILogger logger) {
+    public TrafficService(ILogger logger) {
         this.logger = logger;
         this.connections = new HashMap<>();
         this.individualOperations = new HashMap<>();
         this.broadcasts = new LinkedList<>();
         this.individualOperationIdQueue = new LinkedList<>();
         this.individualOperationNextId = 0;
-        this.trafficHandlerChain = new JSONDataHandler(){};
-
-        trafficManagerOnCreatePublisher.notifySubscribers(this);
+        this.trafficHandlerChain = new JSONDataHandler() {};
     }
 
     public void queueOperation(SocketConnection connection, SocketCommunicationOperation operation) {
@@ -72,7 +69,8 @@ public class TrafficManager extends Thread implements OutboundTrafficManager {
         this.running = false;
     }
 
-    public SocketConnection getConnection(int id) {
+    @Override
+    public SocketConnection getConnectionForId(int id) {
         return connections.get(id);
     }
 

@@ -1,6 +1,6 @@
 package com.bots.RaccoonServer.Logging;
 
-import com.bots.RaccoonServer.SocketCommunication.LogBroadcaster;
+import com.bots.RaccoonServer.SocketCommunication.IOutboundTrafficServiceUtilityWrapper;
 import com.bots.RaccoonShared.Logging.Exceptions.LogException;
 import com.bots.RaccoonShared.Logging.Log;
 
@@ -8,17 +8,17 @@ import java.io.IOException;
 import java.util.function.BiConsumer;
 
 public class LoggerRemote extends FallbackOverrideableLogger {
-    private final LogBroadcaster logBroadcaster;
+    private final IOutboundTrafficServiceUtilityWrapper trafficServiceWrapper;
 
-    public LoggerRemote(BiConsumer<Log, String> fallbackConsumer, LogBroadcaster logBroadcaster) {
+    public LoggerRemote(BiConsumer<Log, String> fallbackConsumer, IOutboundTrafficServiceUtilityWrapper trafficServiceWrapper) {
         super(fallbackConsumer);
-        this.logBroadcaster = logBroadcaster;
+        this.trafficServiceWrapper = trafficServiceWrapper;
     }
 
     @Override
     protected void displayLog(Log log) throws LogException {
         try {
-            logBroadcaster.broadcast(log);
+            trafficServiceWrapper.queueBroadcast(log);
         } catch (IOException e) {
             throw new LogException(e.toString());
         }

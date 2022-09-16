@@ -1,12 +1,12 @@
 package com.bots.RaccoonServer.Configuration;
 
 import com.bots.RaccoonServer.Events.OnCreate.GenericOnCreatePublisher;
+import com.bots.RaccoonServer.Services.BotIntelService;
+import com.bots.RaccoonServer.SocketCommunication.*;
 import com.bots.RaccoonServer.SocketCommunication.IncomingDataHandlers.AuthenticationRequestHandler;
 import com.bots.RaccoonServer.SocketCommunication.IncomingDataHandlers.DisconnectRequestHandler;
 import com.bots.RaccoonServer.SocketCommunication.IncomingDataHandlers.MessageSendRequestHandler;
 import com.bots.RaccoonServer.SocketCommunication.IncomingDataHandlers.ServerChannelRequestHandler;
-import com.bots.RaccoonServer.SocketCommunication.ServerSocketManager;
-import com.bots.RaccoonServer.SocketCommunication.TrafficManager;
 import com.bots.RaccoonShared.IncomingDataHandlers.IJSONDataHandler;
 import com.bots.RaccoonShared.Logging.Loggers.ILogger;
 import net.dv8tion.jda.api.JDA;
@@ -19,25 +19,29 @@ import java.util.Map;
 
 @Configuration
 public class SocketCommunicationConfig {
-    private final ServerSocketManager socketManager;
-    private final TrafficManager trafficManager;
+    private final TrafficService trafficService;
+    private final OutboundTrafficServiceUtilityWrapper trafficServiceWrapper;
     private final Map<String, String> validAuthenticationCredentials;
-    private final ILogger logger;
-    private final JDA jda;
+    private final ServerSocketManager serverSocketManager;
 
-    public SocketCommunicationConfig(Environment environment, ILogger logger,
-                                     GenericOnCreatePublisher<TrafficManager> trafficManagerOnCreatePublisher, JDA jda) {
-        this.logger = logger;
-        this.jda = jda;
-        this.validAuthenticationCredentials = new HashMap<>();
-        this.validAuthenticationCredentials.put(environment.getProperty("client.username"), environment.getProperty("client.password"));
+    public SocketCommunicationConfig(Environment environment, ILogger logger, JDA jda, BotIntelService botIntelService,
+                                     GenericOnCreatePublisher<IOutboundTrafficServiceUtilityWrapper> trafficServiceWrapperCreationPublisher) {
 
-        this.trafficManager = new TrafficManager(trafficManagerOnCreatePublisher, logger);
-        this.trafficManager.setTrafficHandlerChain(getTrafficHandlerChain());
-        this.trafficManager.setVerboseTraffic(environment.getProperty("traffic-manager.verbose", Boolean.class, false));
+        validAuthenticationCredentials = new HashMap<>();
+        validAuthenticationCredentials.put(environment.getProperty("client.username"), environment.getProperty("client.password"));
 
-        this.socketManager = new ServerSocketManager(environment, logger, trafficManager);
-        this.socketManager.start();
+        trafficService = new TrafficService(logger);
+        trafficService.setVerboseTraffic(environment.getProperty("traffic-manager.verbose", Boolean.class, false));
+
+        trafficServiceWrapper = new OutboundTrafficServiceUtilityWrapper(trafficService);
+        trafficService.setTrafficHandlerChain(getTrafficHandlerChain(logger, jda, botIntelService));
+
+        trafficServiceWrapperCreationPublisher.notifySubscribers(trafficServiceWrapper);
+
+        serverSocketManager = new ServerSocketManager(environment, logger, trafficService);
+
+        trafficService.start();
+        serverSocketManager.start();
     }
 
     public boolean validateAuthenticationCredentials(String username, String password) {
@@ -48,16 +52,28 @@ public class SocketCommunicationConfig {
         }
     }
 
-    private IJSONDataHandler getTrafficHandlerChain() {
-        IJSONDataHandler chain = new MessageSendRequestHandler(jda, logger);
-        chain.setNext(new ServerChannelRequestHandler(jda, trafficManager, logger))
-                .setNext(new AuthenticationRequestHandler(trafficManager, this::validateAuthenticationCredentials))
-                .setNext(new DisconnectRequestHandler(trafficManager));
+    private IJSONDataHandler getTrafficHandlerChain(ILogger logger, JDA jda, BotIntelService botIntelService) {
+        IJSONDataHandler chain = new MessageSendRequestHandler(logger, jda);
+
+        chain.setNext(new ServerChannelRequestHandler(logger, trafficServiceWrapper, botIntelService))
+                .setNext(new AuthenticationRequestHandler(trafficServiceWrapper, this::validateAuthenticationCredentials))
+                .setNext(new DisconnectRequestHandler(trafficService));
+
         return chain;
     }
 
     @Bean
-    public ServerSocketManager getServerSocketManager() {
-        return socketManager;
+    public IOutboundTrafficService getTrafficService() {
+        return trafficService;
+    }
+
+    @Bean
+    public IOutboundTrafficServiceUtilityWrapper getTrafficServiceWrapper() {
+        return trafficServiceWrapper;
+    }
+
+    @Bean
+    public ServerSocketManager serverSocketManager() {
+        return serverSocketManager;
     }
 }

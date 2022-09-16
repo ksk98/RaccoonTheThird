@@ -11,11 +11,12 @@ import org.springframework.context.annotation.Configuration;
 public class EventManagerConfig {
     private final AnnotatedEventManager eventManager;
 
-    public EventManagerConfig(JdaManager jdaManager,
-                              MessageAndInteractionResponseController commandController, UpvoteController upvoteController) {
+    public EventManagerConfig(JdaManager jdaManager, MessageAndInteractionResponseController commandController,
+                              UpvoteController upvoteController, MessageAndInteractionResponseController accessibilityController) {
         this.eventManager = new AnnotatedEventManager();
         this.eventManager.register(commandController);
         this.eventManager.register(upvoteController);
+        this.eventManager.register(accessibilityController);
 
         jdaManager.getJda().setEventManager(eventManager);
     }

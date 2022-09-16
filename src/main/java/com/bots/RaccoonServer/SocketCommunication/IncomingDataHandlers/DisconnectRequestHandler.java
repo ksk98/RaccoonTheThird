@@ -1,14 +1,14 @@
 package com.bots.RaccoonServer.SocketCommunication.IncomingDataHandlers;
 
-import com.bots.RaccoonServer.SocketCommunication.TrafficManager;
+import com.bots.RaccoonServer.SocketCommunication.TrafficService;
 import com.bots.RaccoonShared.IncomingDataHandlers.JSONOperationHandler;
 import com.bots.RaccoonShared.SocketCommunication.SocketOperationIdentifiers;
 import org.json.JSONObject;
 
 public class DisconnectRequestHandler extends JSONOperationHandler {
-    private final TrafficManager trafficManager;
+    private final TrafficService trafficManager;
 
-    public DisconnectRequestHandler(TrafficManager trafficManager) {
+    public DisconnectRequestHandler(TrafficService trafficManager) {
         super(SocketOperationIdentifiers.CLIENT_DISCONNECT);
         this.trafficManager = trafficManager;
     }

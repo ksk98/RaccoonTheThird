@@ -17,7 +17,7 @@ public class MessageSendRequestHandler extends JSONOperationHandler {
     private final JDA jda;
     private final ILogger logger;
 
-    public MessageSendRequestHandler(JDA jda, ILogger logger) {
+    public MessageSendRequestHandler(ILogger logger, JDA jda) {
         super(SocketOperationIdentifiers.SEND_MESSAGE_AS_BOT);
         this.jda = jda;
         this.logger = logger;
