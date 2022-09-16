@@ -1,4 +1,4 @@
-package com.bots.RaccoonServer.SocketCommunication;
+package com.bots.RaccoonServer.Services.ClientServices;
 
 import com.bots.RaccoonServer.Config;
 

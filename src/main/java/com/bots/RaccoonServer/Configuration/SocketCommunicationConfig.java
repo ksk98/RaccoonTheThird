@@ -1,12 +1,16 @@
 package com.bots.RaccoonServer.Configuration;
 
 import com.bots.RaccoonServer.Events.OnCreate.GenericOnCreatePublisher;
-import com.bots.RaccoonServer.Services.BotIntelService;
-import com.bots.RaccoonServer.SocketCommunication.*;
-import com.bots.RaccoonServer.SocketCommunication.IncomingDataHandlers.AuthenticationRequestHandler;
-import com.bots.RaccoonServer.SocketCommunication.IncomingDataHandlers.DisconnectRequestHandler;
-import com.bots.RaccoonServer.SocketCommunication.IncomingDataHandlers.MessageSendRequestHandler;
-import com.bots.RaccoonServer.SocketCommunication.IncomingDataHandlers.ServerChannelRequestHandler;
+import com.bots.RaccoonServer.Services.ClientServices.ServerSocketManager;
+import com.bots.RaccoonServer.Services.DiscordServices.BotIntelService;
+import com.bots.RaccoonServer.Services.ClientServices.IncomingDataHandlers.AuthenticationRequestHandler;
+import com.bots.RaccoonServer.Services.ClientServices.IncomingDataHandlers.DisconnectRequestHandler;
+import com.bots.RaccoonServer.Services.ClientServices.IncomingDataHandlers.MessageSendRequestHandler;
+import com.bots.RaccoonServer.Services.ClientServices.IncomingDataHandlers.ServerChannelRequestHandler;
+import com.bots.RaccoonServer.Services.ClientServices.SocketIOServices.IOutboundTrafficService;
+import com.bots.RaccoonServer.Services.ClientServices.SocketIOServices.IOutboundTrafficServiceUtilityWrapper;
+import com.bots.RaccoonServer.Services.ClientServices.SocketIOServices.OutboundTrafficServiceUtilityWrapper;
+import com.bots.RaccoonServer.Services.ClientServices.SocketIOServices.TrafficService;
 import com.bots.RaccoonShared.IncomingDataHandlers.IJSONDataHandler;
 import com.bots.RaccoonShared.Logging.Loggers.ILogger;
 import net.dv8tion.jda.api.JDA;

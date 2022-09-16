@@ -1,14 +1,9 @@
 package com.bots.RaccoonServer.Controllers;
 
-import com.bots.RaccoonServer.Services.MessageLoggingService;
-import com.bots.RaccoonServer.Services.ProcessingService;
-import com.bots.RaccoonServer.Services.ReactionAddingService;
+import com.bots.RaccoonServer.Services.DiscordServices.MessageLoggingService;
+import com.bots.RaccoonServer.Services.DiscordServices.ProcessingService;
+import com.bots.RaccoonServer.Services.DiscordServices.ReactionAddingService;
 import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
-import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
-import net.dv8tion.jda.api.events.guild.UnavailableGuildJoinedEvent;
-import net.dv8tion.jda.api.events.guild.UnavailableGuildLeaveEvent;
-import net.dv8tion.jda.api.events.guild.override.GenericPermissionOverrideEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.SubscribeEvent;

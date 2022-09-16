@@ -1,6 +1,6 @@
 package com.bots.RaccoonServer.Logging;
 
-import com.bots.RaccoonServer.SocketCommunication.IOutboundTrafficServiceUtilityWrapper;
+import com.bots.RaccoonServer.Services.ClientServices.SocketIOServices.IOutboundTrafficServiceUtilityWrapper;
 import com.bots.RaccoonShared.Logging.Exceptions.LogException;
 import com.bots.RaccoonShared.Logging.Log;
 

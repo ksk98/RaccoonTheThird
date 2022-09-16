@@ -1,4 +1,4 @@
-package com.bots.RaccoonServer.Services;
+package com.bots.RaccoonServer.Services.DiscordServices;
 
 import com.bots.RaccoonShared.Discord.Channel;
 import com.bots.RaccoonShared.Discord.ServerChannels;

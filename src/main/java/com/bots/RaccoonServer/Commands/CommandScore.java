@@ -1,7 +1,7 @@
 package com.bots.RaccoonServer.Commands;
 
 import com.bots.RaccoonServer.Commands.Abstractions.CommandBase;
-import com.bots.RaccoonServer.Services.UpvoteCounting.UpvoteCountingService;
+import com.bots.RaccoonServer.Services.DiscordServices.UpvoteCounting.UpvoteCountingService;
 import com.bots.RaccoonServer.SpringContext;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.User;

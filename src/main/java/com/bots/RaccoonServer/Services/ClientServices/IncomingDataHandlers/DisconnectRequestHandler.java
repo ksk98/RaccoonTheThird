@@ -1,6 +1,6 @@
-package com.bots.RaccoonServer.SocketCommunication.IncomingDataHandlers;
+package com.bots.RaccoonServer.Services.ClientServices.IncomingDataHandlers;
 
-import com.bots.RaccoonServer.SocketCommunication.TrafficService;
+import com.bots.RaccoonServer.Services.ClientServices.SocketIOServices.TrafficService;
 import com.bots.RaccoonShared.IncomingDataHandlers.JSONOperationHandler;
 import com.bots.RaccoonShared.SocketCommunication.SocketOperationIdentifiers;
 import org.json.JSONObject;

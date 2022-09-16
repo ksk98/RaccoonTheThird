@@ -1,7 +1,7 @@
-package com.bots.RaccoonServer.SocketCommunication.IncomingDataHandlers;
+package com.bots.RaccoonServer.Services.ClientServices.IncomingDataHandlers;
 
-import com.bots.RaccoonServer.Services.BotIntelService;
-import com.bots.RaccoonServer.SocketCommunication.IOutboundTrafficServiceUtilityWrapper;
+import com.bots.RaccoonServer.Services.DiscordServices.BotIntelService;
+import com.bots.RaccoonServer.Services.ClientServices.SocketIOServices.IOutboundTrafficServiceUtilityWrapper;
 import com.bots.RaccoonShared.IncomingDataHandlers.JSONOperationHandler;
 import com.bots.RaccoonShared.Logging.Loggers.ILogger;
 import com.bots.RaccoonShared.SocketCommunication.SocketOperationIdentifiers;

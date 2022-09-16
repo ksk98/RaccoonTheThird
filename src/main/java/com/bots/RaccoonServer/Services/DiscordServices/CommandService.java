@@ -1,4 +1,4 @@
-package com.bots.RaccoonServer.Services;
+package com.bots.RaccoonServer.Services.DiscordServices;
 
 import com.bots.RaccoonServer.Commands.Abstractions.Command;
 import com.bots.RaccoonServer.Commands.Command8Ball;

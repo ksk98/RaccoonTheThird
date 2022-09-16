@@ -1,9 +1,9 @@
-package com.bots.RaccoonServer.SocketCommunication;
+package com.bots.RaccoonServer.Services.ClientServices;
 
 import com.bots.RaccoonServer.Config;
+import com.bots.RaccoonServer.Services.ClientServices.SocketIOServices.TrafficService;
 import com.bots.RaccoonShared.Logging.Loggers.ILogger;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 import javax.net.ServerSocketFactory;
 import javax.net.ssl.*;

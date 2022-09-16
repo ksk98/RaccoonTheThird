@@ -1,7 +1,7 @@
-package com.bots.RaccoonServer.Services;
+package com.bots.RaccoonServer.Services.DiscordServices;
 
 import com.bots.RaccoonServer.Converters.MessageEventConverter;
-import com.bots.RaccoonServer.SocketCommunication.IOutboundTrafficServiceUtilityWrapper;
+import com.bots.RaccoonServer.Services.ClientServices.SocketIOServices.IOutboundTrafficServiceUtilityWrapper;
 import com.bots.RaccoonShared.Logging.Loggers.ILogger;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package com.bots.RaccoonServer.Controllers;
 
-import com.bots.RaccoonServer.Services.BotIntelService;
-import com.bots.RaccoonServer.SocketCommunication.IOutboundTrafficServiceUtilityWrapper;
+import com.bots.RaccoonServer.Services.DiscordServices.BotIntelService;
+import com.bots.RaccoonServer.Services.ClientServices.SocketIOServices.IOutboundTrafficServiceUtilityWrapper;
 import com.bots.RaccoonShared.Discord.Channel;
 import com.bots.RaccoonShared.Discord.ServerChannels;
 import com.bots.RaccoonShared.Logging.Loggers.ILogger;

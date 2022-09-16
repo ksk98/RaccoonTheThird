@@ -1,8 +1,7 @@
-package com.bots.RaccoonServer.SocketCommunication.IncomingDataHandlers;
+package com.bots.RaccoonServer.Services.ClientServices.IncomingDataHandlers;
 
-import com.bots.RaccoonServer.SocketCommunication.IOutboundTrafficServiceUtilityWrapper;
-import com.bots.RaccoonServer.SocketCommunication.SocketConnection;
-import com.bots.RaccoonServer.SocketCommunication.TrafficService;
+import com.bots.RaccoonServer.Services.ClientServices.SocketIOServices.IOutboundTrafficServiceUtilityWrapper;
+import com.bots.RaccoonServer.Services.ClientServices.SocketConnection;
 import com.bots.RaccoonShared.IncomingDataHandlers.JSONOperationHandler;
 import com.bots.RaccoonShared.SocketCommunication.SocketCommunicationOperationBuilder;
 import com.bots.RaccoonShared.SocketCommunication.SocketOperationIdentifiers;

@@ -1,6 +1,6 @@
 package com.bots.RaccoonServer;
 
-import com.bots.RaccoonServer.Services.ProcessingService;
+import com.bots.RaccoonServer.Services.DiscordServices.ProcessingService;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.util.Pair;
 

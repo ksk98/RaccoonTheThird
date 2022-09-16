@@ -1,4 +1,4 @@
-package com.bots.RaccoonServer;
+package com.bots.RaccoonServer.Services.DiscordServices;
 
 import com.bots.RaccoonShared.Logging.Loggers.ILogger;
 import net.dv8tion.jda.api.JDA;
@@ -13,10 +13,10 @@ import org.springframework.stereotype.Component;
 import javax.security.auth.login.LoginException;
 
 @Component
-public class JdaManager {
+public class JDAManagementService {
     private JDA jda;
 
-    public JdaManager(ILogger logger, Environment environment) {
+    public JDAManagementService(ILogger logger, Environment environment) {
         try {
             jda = JDABuilder.createDefault(environment.getProperty("jda.token"))
                     .enableIntents(GatewayIntent.MESSAGE_CONTENT)

@@ -1,4 +1,4 @@
-package com.bots.RaccoonServer.Services.UpvoteCounting;
+package com.bots.RaccoonServer.Services.DiscordServices.UpvoteCounting;
 
 import kotlin.Pair;
 

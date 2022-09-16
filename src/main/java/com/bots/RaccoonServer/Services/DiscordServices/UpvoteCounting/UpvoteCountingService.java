@@ -1,7 +1,7 @@
-package com.bots.RaccoonServer.Services.UpvoteCounting;
+package com.bots.RaccoonServer.Services.DiscordServices.UpvoteCounting;
 
 import com.bots.RaccoonServer.Config;
-import com.bots.RaccoonShared.Logging.Loggers.Logger;
+import com.bots.RaccoonShared.Logging.Loggers.ILogger;
 import com.bots.RaccoonServer.Persistence.UpvotePersistence.UserScore;
 import com.bots.RaccoonServer.Persistence.UpvotePersistence.UserScoreRepository;
 import kotlin.Pair;
@@ -38,9 +38,9 @@ public class UpvoteCountingService {
     private final int cacheLifetimeInSeconds = 60 * 15;
 
     private final JDA jda;
-    private final Logger logger;
+    private final ILogger logger;
 
-    public UpvoteCountingService(UserScoreRepository userScoreRepository, @Lazy JDA jda, Logger logger) {
+    public UpvoteCountingService(UserScoreRepository userScoreRepository, @Lazy JDA jda, ILogger logger) {
         this.userScoreRepository = userScoreRepository;
         this.jda = jda;
         this.logger = logger;

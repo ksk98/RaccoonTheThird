@@ -1,5 +1,6 @@
-package com.bots.RaccoonServer.SocketCommunication;
+package com.bots.RaccoonServer.Services.ClientServices.SocketIOServices;
 
+import com.bots.RaccoonServer.Services.ClientServices.SocketConnection;
 import com.bots.RaccoonShared.IncomingDataHandlers.IJSONDataHandler;
 import com.bots.RaccoonShared.IncomingDataHandlers.JSONDataHandler;
 import com.bots.RaccoonShared.Logging.Loggers.ILogger;

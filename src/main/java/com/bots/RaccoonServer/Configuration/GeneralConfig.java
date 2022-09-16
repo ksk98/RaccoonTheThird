@@ -2,7 +2,7 @@ package com.bots.RaccoonServer.Configuration;
 
 import com.bots.RaccoonServer.Events.OnCreate.GenericOnCreatePublisher;
 import com.bots.RaccoonServer.Logging.RacoonLogger;
-import com.bots.RaccoonServer.SocketCommunication.IOutboundTrafficServiceUtilityWrapper;
+import com.bots.RaccoonServer.Services.ClientServices.SocketIOServices.IOutboundTrafficServiceUtilityWrapper;
 import com.bots.RaccoonShared.Logging.Loggers.ILogger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

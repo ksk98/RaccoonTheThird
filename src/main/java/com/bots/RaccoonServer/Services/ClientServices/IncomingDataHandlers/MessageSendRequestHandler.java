@@ -1,4 +1,4 @@
-package com.bots.RaccoonServer.SocketCommunication.IncomingDataHandlers;
+package com.bots.RaccoonServer.Services.ClientServices.IncomingDataHandlers;
 
 import com.bots.RaccoonShared.Discord.BotMessage;
 import com.bots.RaccoonShared.IncomingDataHandlers.JSONOperationHandler;

@@ -1,7 +1,7 @@
 package com.bots.RaccoonServer.Commands;
 
 import com.bots.RaccoonServer.Commands.Abstractions.CommandBase;
-import com.bots.RaccoonServer.Services.CommandService;
+import com.bots.RaccoonServer.Services.DiscordServices.CommandService;
 import com.bots.RaccoonServer.SpringContext;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;

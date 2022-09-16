@@ -1,6 +1,6 @@
 package com.bots.RaccoonServer.Controllers;
 
-import com.bots.RaccoonServer.Services.UpvoteCounting.UpvoteCountingService;
+import com.bots.RaccoonServer.Services.DiscordServices.UpvoteCounting.UpvoteCountingService;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.SubscribeEvent;

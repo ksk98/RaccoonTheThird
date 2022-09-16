@@ -1,5 +1,6 @@
-package com.bots.RaccoonServer.SocketCommunication;
+package com.bots.RaccoonServer.Services.ClientServices.SocketIOServices;
 
+import com.bots.RaccoonServer.Services.ClientServices.SocketConnection;
 import com.bots.RaccoonShared.SocketCommunication.SocketCommunicationOperation;
 
 public interface IOutboundTrafficService {

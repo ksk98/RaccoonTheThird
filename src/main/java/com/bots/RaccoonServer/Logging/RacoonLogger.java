@@ -2,7 +2,7 @@ package com.bots.RaccoonServer.Logging;
 
 import com.bots.RaccoonServer.Events.OnCreate.GenericOnCreateListener;
 import com.bots.RaccoonServer.Events.OnCreate.GenericOnCreatePublisher;
-import com.bots.RaccoonServer.SocketCommunication.IOutboundTrafficServiceUtilityWrapper;
+import com.bots.RaccoonServer.Services.ClientServices.SocketIOServices.IOutboundTrafficServiceUtilityWrapper;
 import com.bots.RaccoonShared.Logging.Log;
 import com.bots.RaccoonShared.Logging.Loggers.Logger;
 
