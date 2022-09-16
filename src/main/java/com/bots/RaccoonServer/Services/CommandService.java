@@ -12,7 +12,7 @@ import com.bots.RaccoonServer.Commands.MineSweeper.CommandMinesweeper;
 import com.bots.RaccoonServer.Config;
 import com.bots.RaccoonServer.Events.CommandListUpdated.CommandListUpdatedEventPublisher;
 import com.bots.RaccoonServer.Exceptions.UnsupportedCommandExecutionMethod;
-import com.bots.RaccoonShared.Logging.Loggers.Logger;
+import com.bots.RaccoonShared.Logging.Loggers.ILogger;
 import com.bots.RaccoonServer.Persistence.CommandChecksumValidation.CommandChecksum;
 import com.bots.RaccoonServer.Persistence.CommandChecksumValidation.CommandChecksumRepository;
 import com.bots.RaccoonServer.Utility.Tools;
@@ -35,14 +35,14 @@ import java.util.*;
 @Service
 @DependsOn({"spring_context"})
 public class CommandService {
-    private final Logger logger;
+    private final ILogger logger;
     private final Map<String, Command> commands;
     private final List<String[]> commandDescriptions, adminCommandDescriptions;
     private final CommandListUpdatedEventPublisher commandListUpdatedEventPublisher;
     private final CommandChecksumRepository checksumRepository;
     private final JDA jda;
 
-    public CommandService(Logger logger, CommandListUpdatedEventPublisher commandListUpdatedEventPublisher,
+    public CommandService(ILogger logger, CommandListUpdatedEventPublisher commandListUpdatedEventPublisher,
                           CommandChecksumRepository checksumRepository, @Lazy JDA jda) {
         this.logger = logger;
         this.checksumRepository = checksumRepository;
@@ -137,7 +137,7 @@ public class CommandService {
         // If the message contains only the command call, delete it (unless specified otherwise by the command)
         // Works only outside private conversation and if enabled in config
         if (Config.deleteMessagesContainingOnlyValidCommandCall &&
-                !event.isFromType(ChannelType.PRIVATE) &&
+                event.isFromType(ChannelType.TEXT) &&
                 command.deleteMessageAfterUse() &&
                 event.getMessage().getContentRaw().replaceAll("\\s+", "").length() == keyword.length() + 1) {
             try {

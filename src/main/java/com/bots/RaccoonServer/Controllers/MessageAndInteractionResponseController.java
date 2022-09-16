@@ -29,7 +29,7 @@ public class MessageAndInteractionResponseController {
 
     @SubscribeEvent
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        if (!event.getChannelType().equals(ChannelType.PRIVATE))
+        if (event.getChannelType().equals(ChannelType.TEXT))
             messageLoggingService.logMessageReceived(event);
 
         if (event.getAuthor().isBot())
