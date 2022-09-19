@@ -7,19 +7,20 @@ import java.awt.*;
 import java.util.Objects;
 
 public class MessageEventConverter {
+    public final static Color DEFAULT_MEMBER_COLOR = Color.BLACK;
+
     public static MessageLog toMessageLog(MessageReceivedEvent event) {
         String username;
-        try {
-            username = Objects.requireNonNull(event.getMember()).getEffectiveName();
-        } catch (NullPointerException ignored) {
+        try { username = Objects.requireNonNull(event.getMember()).getEffectiveName(); }
+        catch (NullPointerException ignored) {
             username = event.getAuthor().getName();
         }
 
-        Color color = Color.BLACK;
+        Color color = DEFAULT_MEMBER_COLOR;
         if (event.getMember() != null)
             color = Objects.requireNonNullElse(event.getMember().getColor(), Color.BLACK);
 
-        MessageLog out = new MessageLog(
+        return new MessageLog(
                 event.getGuild().getId(),
                 event.getChannel().getId(),
                 username, color,
@@ -27,7 +28,5 @@ public class MessageEventConverter {
                 event.getAuthor().isBot(),
                 !event.getMessage().getEmbeds().isEmpty()
         );
-
-        return out;
     }
 }
