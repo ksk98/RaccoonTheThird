@@ -134,6 +134,9 @@ public class CommandService {
         if (!command.isTextCommand())
             return;
 
+        if (command.isAdminCommand() && !userIsAdmin(event.getAuthor()))
+            return;
+
         // If the message contains only the command call, delete it (unless specified otherwise by the command)
         // Works only outside private conversation and if enabled in config
         if (Config.deleteMessagesContainingOnlyValidCommandCall &&
@@ -170,6 +173,13 @@ public class CommandService {
             );
             return;
         }
+
+        ICommand command = commands.get(keyword);
+        if (!command.isSlashCommand())
+            return;
+
+        if (command.isAdminCommand() && !userIsAdmin(event.getUser()))
+            return;
 
         try {
             commands.get(keyword).execute(event);
@@ -229,5 +239,9 @@ public class CommandService {
         // this could be expanded by additional people added by the owner and then persisted
         ApplicationInfo appInfo = jda.retrieveApplicationInfo().complete();
         return appInfo.getOwner().getId().equals(user.getId());
+    }
+
+    public ICommand getCommandForKeyword(String keyword) {
+        return commands.get(keyword);
     }
 }
