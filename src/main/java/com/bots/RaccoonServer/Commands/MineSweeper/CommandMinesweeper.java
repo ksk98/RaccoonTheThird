@@ -1,6 +1,6 @@
 package com.bots.RaccoonServer.Commands.MineSweeper;
 
-import com.bots.RaccoonServer.Commands.Abstractions.CommandBase;
+import com.bots.RaccoonServer.Commands.Abstractions.Command;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class CommandMinesweeper extends CommandBase {
+public class CommandMinesweeper extends Command {
     private final String BOMB_COUNT_OPTION_NAME = "bomb_count";
 
     // Although printing the game in an embed looks a lot nicer
@@ -48,7 +48,7 @@ public class CommandMinesweeper extends CommandBase {
 
     @Override
     public CommandData getCommandData() {
-        return new CommandDataImpl(keyword, description)
+        return new CommandDataImpl(keyword, info.getSimpleDescription())
                 .addOption(OptionType.INTEGER, BOMB_COUNT_OPTION_NAME,
                         "Amount of bombs between " + MinesweeperGame.BOMBS_MIN + " and " + MinesweeperGame.BOMBS_MAX,
                         false);

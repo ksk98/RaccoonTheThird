@@ -1,7 +1,7 @@
 package com.bots.RaccoonServer.Controllers;
 
 import com.bots.RaccoonServer.Services.DiscordServices.MessageLoggingService;
-import com.bots.RaccoonServer.Services.DiscordServices.ProcessingService;
+import com.bots.RaccoonServer.Services.DiscordServices.CommandRelated.ProcessingService;
 import com.bots.RaccoonServer.Services.DiscordServices.ReactionAddingService;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

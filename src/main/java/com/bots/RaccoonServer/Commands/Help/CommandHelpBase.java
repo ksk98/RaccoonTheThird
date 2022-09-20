@@ -1,6 +1,6 @@
 package com.bots.RaccoonServer.Commands.Help;
 
-import com.bots.RaccoonServer.Commands.Abstractions.CommandBase;
+import com.bots.RaccoonServer.Commands.Abstractions.Command;
 import com.bots.RaccoonServer.Events.CommandListUpdated.CommandListUpdatedEventListener;
 import com.bots.RaccoonServer.Events.CommandListUpdated.CommandListUpdatedEventPublisher;
 import com.bots.RaccoonServer.SpringContext;
@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public abstract class CommandHelpBase extends CommandBase implements CommandListUpdatedEventListener {
+public abstract class CommandHelpBase extends Command implements CommandListUpdatedEventListener {
     protected String output = null;
     protected boolean outputOutdated = true;
 

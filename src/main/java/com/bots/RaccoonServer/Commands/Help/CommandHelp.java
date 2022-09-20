@@ -1,7 +1,8 @@
 package com.bots.RaccoonServer.Commands.Help;
 
 import com.bots.RaccoonServer.Events.CommandListUpdated.CommandListUpdatedEventPublisher;
-import com.bots.RaccoonServer.Services.DiscordServices.CommandService;
+import com.bots.RaccoonServer.Services.DiscordServices.CommandRelated.CommandService;
+import com.bots.RaccoonServer.Services.DiscordServices.CommandRelated.DescriptionListRecord;
 import com.bots.RaccoonServer.SpringContext;
 
 public class CommandHelp extends CommandHelpBase {

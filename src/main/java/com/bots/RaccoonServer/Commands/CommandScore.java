@@ -1,6 +1,6 @@
 package com.bots.RaccoonServer.Commands;
 
-import com.bots.RaccoonServer.Commands.Abstractions.CommandBase;
+import com.bots.RaccoonServer.Commands.Abstractions.Command;
 import com.bots.RaccoonServer.Services.DiscordServices.UpvoteCounting.UpvoteCountingService;
 import com.bots.RaccoonServer.SpringContext;
 import net.dv8tion.jda.api.entities.ChannelType;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class CommandScore extends CommandBase {
+public class CommandScore extends Command {
     private transient final UpvoteCountingService upvoteCountingService;
 
     public CommandScore() {

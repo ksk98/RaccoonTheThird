@@ -1,6 +1,6 @@
 package com.bots.RaccoonServer.Commands;
 
-import com.bots.RaccoonServer.Commands.Abstractions.CommandBase;
+import com.bots.RaccoonServer.Commands.Abstractions.Command;
 import com.bots.RaccoonServer.Config;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Random;
 
-public class CommandDecide extends CommandBase {
+public class CommandDecide extends Command {
     public CommandDecide() {
         super("decide", "", true, false);
         this.description = "Pick between given options. Example: \n\t" +

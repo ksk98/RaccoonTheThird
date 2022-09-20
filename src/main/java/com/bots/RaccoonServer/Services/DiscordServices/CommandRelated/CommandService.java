@@ -1,6 +1,6 @@
-package com.bots.RaccoonServer.Services.DiscordServices;
+package com.bots.RaccoonServer.Services.DiscordServices.CommandRelated;
 
-import com.bots.RaccoonServer.Commands.Abstractions.Command;
+import com.bots.RaccoonServer.Commands.Abstractions.ICommand;
 import com.bots.RaccoonServer.Commands.Command8Ball;
 import com.bots.RaccoonServer.Commands.CommandDecide;
 import com.bots.RaccoonServer.Commands.CommandForceCommandUpdate;
@@ -36,7 +36,7 @@ import java.util.*;
 @DependsOn({"spring_context"})
 public class CommandService {
     private final ILogger logger;
-    private final Map<String, Command> commands;
+    private final Map<String, ICommand> commands;
     private final List<String[]> commandDescriptions, adminCommandDescriptions;
     private final CommandListUpdatedEventPublisher commandListUpdatedEventPublisher;
     private final CommandChecksumRepository checksumRepository;
@@ -130,7 +130,7 @@ public class CommandService {
             return;
         }
 
-        Command command = commands.get(keyword);
+        ICommand command = commands.get(keyword);
         if (!command.isTextCommand())
             return;
 
