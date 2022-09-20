@@ -7,6 +7,9 @@ public record DescriptionListRecord(String keyword, CommandInfo info) implements
 
     @Override
     public int compareTo(@NotNull DescriptionListRecord o) {
-        return this.info().getCategory().compareTo(o.info().getCategory());
+        int categoryCompare = this.info().getCategory().compareTo(o.info().getCategory());
+        if (categoryCompare == 0)
+            return this.keyword().compareTo(o.keyword());
+        else return categoryCompare;
     }
 }
