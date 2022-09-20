@@ -32,11 +32,13 @@ public class CommandInfo implements Serializable {
 
         detailedDescriptionBuilder
                 .append(detailedDescription)
-                .append("\n\n")
-                .append("Examples:\n");
+                .append("\n");
+
+        if (!examples.isEmpty())
+            detailedDescriptionBuilder.append("\nExamples:\n");
 
         for (String example: examples)
-            detailedDescriptionBuilder.append(example).append("\n");
+            detailedDescriptionBuilder.append(" - ").append(example).append("\n");
 
         assembledDetailedDescription = detailedDescriptionBuilder.toString();
     }

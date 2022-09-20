@@ -1,11 +1,14 @@
 package com.bots.RaccoonServer.Commands.Help;
 
 import com.bots.RaccoonServer.Commands.Abstractions.Command;
+import com.bots.RaccoonServer.Commands.Abstractions.CommandCategory;
+import com.bots.RaccoonServer.Config;
 import com.bots.RaccoonServer.Events.CommandListUpdated.CommandListUpdatedEventListener;
 import com.bots.RaccoonServer.Events.CommandListUpdated.CommandListUpdatedEventPublisher;
 import com.bots.RaccoonServer.Services.DiscordServices.CommandRelated.CommandService;
 import com.bots.RaccoonServer.Services.DiscordServices.CommandRelated.DescriptionListRecord;
 import com.bots.RaccoonServer.SpringContext;
+import com.bots.RaccoonServer.Utility.TextFormattingTools;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -14,6 +17,7 @@ import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
@@ -29,10 +33,56 @@ public abstract class CommandHelpBase extends Command implements CommandListUpda
     protected final String buildHelpFromRecords(Set<DescriptionListRecord> records) {
         StringBuilder stringBuilder = new StringBuilder();
 
+        // Determine longest keyword for padding
+        int maxLength = 0;
         for (DescriptionListRecord record: records) {
-            stringBuilder.append(record.keyword());
-            stringBuilder.append(" - ");
-            stringBuilder.append(record.info().getSimpleDescription());
+            int currentLength = record.keyword().length();
+            if (maxLength < currentLength)
+                maxLength = currentLength;
+        }
+
+        stringBuilder
+                .append("HOW TO USE COMMANDS:\n")
+                .append("\tCommands can be called via text or a slash command interaction.\n")
+                .append("\tSome commands can be used by only one of those methods.\n")
+                .append("\tAvailable text prefixes: [");
+
+        for (int i = 0; i < Config.commandPrefixes.length; i++) {
+            stringBuilder.append(Config.commandPrefixes[i]);
+            if (i != Config.commandPrefixes.length - 1)
+                stringBuilder.append(", ");
+        }
+
+        stringBuilder.append("].\n")
+                .append("\tExample text command call:\n")
+                .append("\t - ")
+                .append(Config.commandPrefixes[0])
+                .append("command parameter1 'parameter II' \"Paremeter The Third\"\n")
+                .append("\tYou can try asking for more help about a particular command like this:\n")
+                .append("\t - ")
+                .append(Config.commandPrefixes[0])
+                .append("help some_command\n\n")
+                .append("LIST OF COMMANDS:\n");
+
+        CommandCategory lastCategory = null;
+        for (DescriptionListRecord record: records) {
+            if (!record.info().getCategory().equals(lastCategory)) {
+                lastCategory = record.info().getCategory();
+                stringBuilder
+                        .append("* ")
+                        .append(lastCategory.toString().toUpperCase(Locale.ROOT))
+                        .append(":")
+                        .append("\n");
+            }
+            stringBuilder.append(TextFormattingTools.padTextWithSpacesFromLeft(record.keyword(), maxLength))
+                    .append(" - ")
+                    .append(record.info().getSimpleDescription());
+
+            if (!record.info().isSupportsTextCalls())
+                stringBuilder.append(" [SLASH ONLY]");
+            else if (!record.info().isSupportsInteractionCalls())
+                stringBuilder.append(" [TEXT ONLY]");
+
             stringBuilder.append("\n");
         }
 

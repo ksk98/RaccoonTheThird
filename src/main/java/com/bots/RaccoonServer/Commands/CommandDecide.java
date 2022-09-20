@@ -14,7 +14,7 @@ public class CommandDecide extends Command {
 
         CommandInfoBuilder builder = new CommandInfoBuilder()
                 .setSimpleDescription("Picks between given options.")
-                .setExamples(getKeyword() + "option 'long option' \"other long option\"");
+                .setExamples(getKeyword() + " option 'long option' \"other long option\"");
 
         this.info = builder.build(this);
         this.deleteCallMessage = false;
