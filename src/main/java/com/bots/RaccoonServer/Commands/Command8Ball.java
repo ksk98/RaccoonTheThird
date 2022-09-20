@@ -1,6 +1,6 @@
 package com.bots.RaccoonServer.Commands;
 
-import com.bots.RaccoonServer.Commands.Abstractions.CommandBase;
+import com.bots.RaccoonServer.Commands.Abstractions.Command;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Random;
 
-public class Command8Ball extends CommandBase {
+public class Command8Ball extends Command {
     private final String[] options = new String[] {
             "It is certain.", "It is decidedly so.", "Without a doubt.", "Yes definitely.", "You may rely on it.",
             "As I see it, yes.", "Most likely.", "Outlook good.", "Yes.", "Signs point to yes.",

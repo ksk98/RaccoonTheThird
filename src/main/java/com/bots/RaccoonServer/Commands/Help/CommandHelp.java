@@ -16,10 +16,10 @@ public class CommandHelp extends CommandHelpBase {
         if (outputOutdated) {
             StringBuilder stringBuilder = new StringBuilder();
 
-            for (String[] command: SpringContext.getBean(CommandService.class).getCommandDescriptions()) {
-                stringBuilder.append(command[0]);
+            for (DescriptionListRecord record: SpringContext.getBean(CommandService.class).getCommandDescriptions()) {
+                stringBuilder.append(record.keyword());
                 stringBuilder.append(" - ");
-                stringBuilder.append(command[1]);
+                stringBuilder.append(record.info().getSimpleDescription());
                 stringBuilder.append("\n");
             }
 

@@ -37,7 +37,7 @@ import java.util.*;
 public class CommandService {
     private final ILogger logger;
     private final Map<String, ICommand> commands;
-    private final List<String[]> commandDescriptions, adminCommandDescriptions;
+    private final SortedSet<DescriptionListRecord> commandDescriptions, adminCommandDescriptions;
     private final CommandListUpdatedEventPublisher commandListUpdatedEventPublisher;
     private final CommandChecksumRepository checksumRepository;
     private final JDA jda;
@@ -48,8 +48,8 @@ public class CommandService {
         this.checksumRepository = checksumRepository;
         this.jda = jda;
         this.commands = new HashMap<>();
-        this.commandDescriptions = new LinkedList<>();
-        this.adminCommandDescriptions = new LinkedList<>();
+        this.commandDescriptions = new TreeSet<>();
+        this.adminCommandDescriptions = new TreeSet<>();
         this.commandListUpdatedEventPublisher = commandListUpdatedEventPublisher;
         this.loadCommands();
         this.loadGlobalSlashCommands();
@@ -73,7 +73,7 @@ public class CommandService {
     public void loadGlobalSlashCommands() {
         boolean updateRequired = false;
         for (String keyword: commands.keySet()) {
-            Command command = commands.get(keyword);
+            ICommand command = commands.get(keyword);
             if (!command.isSlashCommand())
                 continue;
 
@@ -184,53 +184,43 @@ public class CommandService {
     /**
      * Get list of pairs consisting of a keyword and a description.
      */
-    public List<String[]> getCommandDescriptions() {
+    public SortedSet<DescriptionListRecord> getCommandDescriptions() {
         // Lazy loading
         if (commandDescriptions.isEmpty()) {
-            for (String key: commands.keySet()) {
-                Command currentCommand = commands.get(key);
-                if (currentCommand.isAdminCommand())
-                    continue;
-
-                StringBuilder description = new StringBuilder(currentCommand.getDescription());
-
-                if (currentCommand.isTextCommand() && !currentCommand.isSlashCommand())
-                    description.append(" [TEXT ONLY]");
-                else if (!currentCommand.isTextCommand() && currentCommand.isSlashCommand())
-                    description.append(" [SLASH ONLY]");
-
-                commandDescriptions.add(new String[]{key, description.toString()});
-            }
+            getCommandDescriptions(commandDescriptions, false);
             commandListUpdatedEventPublisher.notifySubscribers();
         }
 
         return commandDescriptions;
     }
 
-    public List<String[]> getAdminCommandDescriptions() {
+    public SortedSet<DescriptionListRecord> getAdminCommandDescriptions() {
         // Lazy loading
-        if (commandDescriptions.isEmpty()) {
-            for (String key: commands.keySet()) {
-                Command currentCommand = commands.get(key);
-                if (!currentCommand.isAdminCommand())
-                    continue;
-
-                StringBuilder description = new StringBuilder(currentCommand.getDescription());
-
-                if (currentCommand.isTextCommand() && !currentCommand.isSlashCommand())
-                    description.append(" [TEXT ONLY]");
-                else if (!currentCommand.isTextCommand() && currentCommand.isSlashCommand())
-                    description.append(" [SLASH ONLY]");
-
-                commandDescriptions.add(new String[]{key, description.toString()});
-            }
+        if (adminCommandDescriptions.isEmpty()) {
+            getCommandDescriptions(adminCommandDescriptions, true);
             commandListUpdatedEventPublisher.notifySubscribers();
         }
 
         return commandDescriptions;
     }
 
-    private void addCommand(Command command) {
+    /***
+     * Update list of keywords and command info for all commands
+     * @param adminCommands true if list should contain admin commands, false if regular commands
+     */
+    private void getCommandDescriptions(SortedSet<DescriptionListRecord> set, boolean adminCommands) {
+        set.clear();
+
+        for (String key: commands.keySet()) {
+            ICommand currentCommand = commands.get(key);
+            if (currentCommand.isAdminCommand() == adminCommands)
+                continue;
+
+            set.add(new DescriptionListRecord(key, currentCommand.getInfo()));
+        }
+    }
+
+    private void addCommand(ICommand command) {
         this.commands.put(command.getKeyword(), command);
     }
 

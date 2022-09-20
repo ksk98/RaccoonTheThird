@@ -11,7 +11,7 @@ import java.util.Random;
 public class CommandDecide extends Command {
     public CommandDecide() {
         super("decide", "", true, false);
-        this.description = "Pick between given options. Example: \n\t" +
+        this.info = "Pick between given options. Example: \n\t" +
                 Config.commandPrefixes[0] + getKeyword() + " option \"second option\" 'third option'";
         this.deleteCallMessage = false;
     }

@@ -1,6 +1,6 @@
 package com.bots.RaccoonServer.Persistence.CommandChecksumValidation;
 
-import com.bots.RaccoonServer.Commands.Abstractions.Command;
+import com.bots.RaccoonServer.Commands.Abstractions.ICommand;
 import com.bots.RaccoonServer.Utility.Tools;
 
 import javax.persistence.*;
@@ -21,12 +21,12 @@ public class CommandChecksum {
 
     }
 
-    public CommandChecksum(Command command) throws IOException, NoSuchAlgorithmException {
+    public CommandChecksum(ICommand command) throws IOException, NoSuchAlgorithmException {
         this.commandKeyword = command.getKeyword();
         this.checksum = Tools.getChecksumForObject(command);
     }
 
-    public boolean checksumEqualsTo(Command command) throws IOException, NoSuchAlgorithmException {
+    public boolean checksumEqualsTo(ICommand command) throws IOException, NoSuchAlgorithmException {
         return checksum.equals(Tools.getChecksumForObject(command));
     }
 
