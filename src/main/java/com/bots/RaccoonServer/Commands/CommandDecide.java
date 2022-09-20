@@ -1,8 +1,7 @@
 package com.bots.RaccoonServer.Commands;
 
 import com.bots.RaccoonServer.Commands.Abstractions.Command;
-import com.bots.RaccoonServer.Commands.Abstractions.Description.CommandInfoBuilder;
-import com.bots.RaccoonServer.Config;
+import com.bots.RaccoonServer.Commands.Abstractions.Info.CommandInfoBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 

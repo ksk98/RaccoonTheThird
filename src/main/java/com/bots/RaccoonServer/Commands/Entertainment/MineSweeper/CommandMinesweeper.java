@@ -2,7 +2,7 @@ package com.bots.RaccoonServer.Commands.Entertainment.MineSweeper;
 
 import com.bots.RaccoonServer.Commands.Abstractions.Command;
 import com.bots.RaccoonServer.Commands.Abstractions.CommandCategory;
-import com.bots.RaccoonServer.Commands.Abstractions.Description.CommandInfoBuilder;
+import com.bots.RaccoonServer.Commands.Abstractions.Info.CommandInfoBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;

@@ -1,6 +1,6 @@
 package com.bots.RaccoonServer.Commands.Abstractions;
 
-import com.bots.RaccoonServer.Commands.Abstractions.Description.CommandInfo;
+import com.bots.RaccoonServer.Commands.Abstractions.Info.CommandInfo;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;

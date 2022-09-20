@@ -1,8 +1,10 @@
-package com.bots.RaccoonServer.Commands.Abstractions.Description;
+package com.bots.RaccoonServer.Commands.Abstractions.Info;
 
 import com.bots.RaccoonServer.Commands.Abstractions.CommandCategory;
 import com.bots.RaccoonServer.Commands.Abstractions.ICommand;
 import com.bots.RaccoonServer.Config;
+import com.bots.RaccoonServer.SpringContext;
+import com.bots.RaccoonShared.Logging.Loggers.ILogger;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -48,6 +50,14 @@ public class CommandInfoBuilder {
     public CommandInfo build(ICommand referencedCommand) {
         if (simpleDescription == null)
             simpleDescription = "";
+        else if (simpleDescription.length() > 100) {
+            SpringContext.getBean(ILogger.class).logInfo(
+                    getClass().getSimpleName(),
+                    "Simple description for command " + referencedCommand.getKeyword() + " is longer than 100 characters, shortening..."
+            );
+            String tail = "...";
+            simpleDescription = simpleDescription.substring(0, 100 - tail.length()) + tail;
+        }
 
         if (detailedDescription == null)
             detailedDescription = simpleDescription;

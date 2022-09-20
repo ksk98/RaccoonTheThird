@@ -1,12 +1,13 @@
-package com.bots.RaccoonServer.Commands.Abstractions.Description;
+package com.bots.RaccoonServer.Commands.Abstractions.Info;
 
 import com.bots.RaccoonServer.Commands.Abstractions.CommandCategory;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class CommandInfo {
-    public static final CommandInfo defaultInfo =
+public class CommandInfo implements Serializable {
+    public transient static final CommandInfo defaultInfo =
             new CommandInfo("Mega Mind says: No description?", "1 like = 1 description",
                     new LinkedList<>(), CommandCategory.getDefault(), false, false);
 
