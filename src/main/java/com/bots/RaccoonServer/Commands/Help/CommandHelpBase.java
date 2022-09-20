@@ -14,8 +14,10 @@ public abstract class CommandHelpBase extends Command implements CommandListUpda
     protected String output = null;
     protected boolean outputOutdated = true;
 
-    public CommandHelpBase(String keyword, String description, boolean supportsTextCalls, boolean supportsInteractionCalls) {
-        super(keyword, description, supportsTextCalls, supportsInteractionCalls);
+    // TODO: detailed help
+
+    public CommandHelpBase(String keyword, boolean supportsTextCalls, boolean supportsInteractionCalls) {
+        super(keyword, supportsTextCalls, supportsInteractionCalls);
         SpringContext.getBean(CommandListUpdatedEventPublisher.class).subscribe(this);
     }
 

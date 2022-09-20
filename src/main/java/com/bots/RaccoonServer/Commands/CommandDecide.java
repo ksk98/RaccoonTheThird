@@ -1,6 +1,7 @@
 package com.bots.RaccoonServer.Commands;
 
 import com.bots.RaccoonServer.Commands.Abstractions.Command;
+import com.bots.RaccoonServer.Commands.Abstractions.Description.CommandInfoBuilder;
 import com.bots.RaccoonServer.Config;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
@@ -10,9 +11,13 @@ import java.util.Random;
 
 public class CommandDecide extends Command {
     public CommandDecide() {
-        super("decide", "", true, false);
-        this.info = "Pick between given options. Example: \n\t" +
-                Config.commandPrefixes[0] + getKeyword() + " option \"second option\" 'third option'";
+        super("decide", true, false);
+
+        CommandInfoBuilder builder = new CommandInfoBuilder()
+                .setSimpleDescription("Picks between given options.")
+                .setExamples(getKeyword() + "option 'long option' \"other long option\"");
+
+        this.info = builder.build(this);
         this.deleteCallMessage = false;
     }
 

@@ -1,6 +1,8 @@
 package com.bots.RaccoonServer.Commands.MineSweeper;
 
 import com.bots.RaccoonServer.Commands.Abstractions.Command;
+import com.bots.RaccoonServer.Commands.Abstractions.CommandCategory;
+import com.bots.RaccoonServer.Commands.Abstractions.Description.CommandInfoBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -20,7 +22,12 @@ public class CommandMinesweeper extends Command {
     // can make discord lag.
 
     public CommandMinesweeper() {
-        super("minesweeper", "Generates a simple game of minesweeper.", true, true);
+        super("minesweeper", true, true);
+        CommandInfoBuilder builder = new CommandInfoBuilder()
+                .setSimpleDescription("Generates a simple game of minesweeper.")
+                .setCategory(CommandCategory.ENTERTAINMENT);
+
+        this.info = builder.build(this);
     }
 
     @Override

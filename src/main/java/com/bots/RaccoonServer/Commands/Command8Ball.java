@@ -1,6 +1,8 @@
 package com.bots.RaccoonServer.Commands;
 
 import com.bots.RaccoonServer.Commands.Abstractions.Command;
+import com.bots.RaccoonServer.Commands.Abstractions.CommandCategory;
+import com.bots.RaccoonServer.Commands.Abstractions.Description.CommandInfoBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +20,13 @@ public class Command8Ball extends Command {
     };
 
     public Command8Ball() {
-        super("8ball", "Simulates a magic 8-ball styled decision making.", true, true);
+        super("8ball", true, true);
+
+        CommandInfoBuilder builder = new CommandInfoBuilder()
+                .setSimpleDescription("Simulates a magic 8-ball styled decision making.")
+                .setCategory(CommandCategory.ENTERTAINMENT);
+
+        this.info = builder.build(this);
     }
 
     private String decide() {

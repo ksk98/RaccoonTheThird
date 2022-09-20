@@ -1,6 +1,7 @@
 package com.bots.RaccoonServer.Commands;
 
 import com.bots.RaccoonServer.Commands.Abstractions.Command;
+import com.bots.RaccoonServer.Commands.Abstractions.Description.CommandInfoBuilder;
 import com.bots.RaccoonServer.Services.DiscordServices.UpvoteCounting.UpvoteCountingService;
 import com.bots.RaccoonServer.SpringContext;
 import net.dv8tion.jda.api.entities.ChannelType;
@@ -16,7 +17,12 @@ public class CommandScore extends Command {
     private transient final UpvoteCountingService upvoteCountingService;
 
     public CommandScore() {
-        super("score", "Displays your amount of points collected in this server.", true, true);
+        super("score", true, true);
+
+        CommandInfoBuilder builder = new CommandInfoBuilder()
+                .setSimpleDescription("Displays your amount of points collected in this server.");
+
+        this.info = builder.build(this);
         upvoteCountingService = SpringContext.getBean(UpvoteCountingService.class);
     }
 

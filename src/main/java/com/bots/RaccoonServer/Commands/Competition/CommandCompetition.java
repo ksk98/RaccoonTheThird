@@ -3,6 +3,7 @@ package com.bots.RaccoonServer.Commands.Competition;
 import com.bots.RaccoonServer.Commands.Abstractions.Command;
 import com.bots.RaccoonServer.Commands.Abstractions.CommandCategory;
 import com.bots.RaccoonServer.Commands.Abstractions.Description.CommandInfoBuilder;
+import com.bots.RaccoonServer.Config;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
@@ -22,11 +23,9 @@ public class CommandCompetition extends Command {
         CommandInfoBuilder descriptionBuilder =
                 new CommandInfoBuilder()
                         .setSimpleDescription("Simulate a match of hunger games between " + minPlayers + " to " + maxPlayers + " contestants.")
-                        .setExamples(getKeyword() + " 'James Hetfield' Madonna \"Marvin Gaye\"");
-        info = descriptionBuilder.build();
-        category = CommandCategory.ENTERTAINMENT;
-
-        // TODO: do this^ for the rest + detailed description help command
+                        .setExamples(getKeyword() + " 'Dave Mustaine' Madonna \"Rick James\"")
+                        .setCategory(CommandCategory.ENTERTAINMENT);
+        this.info = descriptionBuilder.build(this);
     }
 
     @Override

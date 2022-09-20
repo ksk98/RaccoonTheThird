@@ -2,10 +2,12 @@ package com.bots.RaccoonServer.Commands.Abstractions.Description;
 
 import com.bots.RaccoonServer.Commands.Abstractions.CommandCategory;
 import com.bots.RaccoonServer.Commands.Abstractions.ICommand;
+import com.bots.RaccoonServer.Config;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CommandInfoBuilder {
     private String simpleDescription, detailedDescription;
@@ -32,7 +34,9 @@ public class CommandInfoBuilder {
     }
 
     public CommandInfoBuilder setExamples(String... examples) {
-        this.examples = Arrays.stream(examples).toList();
+        this.examples = Arrays.stream(examples)
+                .map(example -> Config.commandPrefixes[0] + example)
+                .collect(Collectors.toList());
         return this;
     }
 
