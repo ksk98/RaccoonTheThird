@@ -5,6 +5,8 @@ import com.bots.RaccoonServer.Services.DiscordServices.CommandRelated.CommandSer
 import com.bots.RaccoonServer.Services.DiscordServices.CommandRelated.DescriptionListRecord;
 import com.bots.RaccoonServer.SpringContext;
 
+import java.util.Set;
+
 public class CommandHelp extends CommandHelpBase {
     public CommandHelp() {
         super("help", true, true);
@@ -16,22 +18,9 @@ public class CommandHelp extends CommandHelpBase {
         this.info = builder.build(this);
     }
 
+
     @Override
-    protected String getOutput() {
-        // todo: cache
-        if (outputOutdated) {
-            StringBuilder stringBuilder = new StringBuilder();
-
-            for (DescriptionListRecord record: SpringContext.getBean(CommandService.class).getCommandDescriptions()) {
-                stringBuilder.append(record.keyword());
-                stringBuilder.append(" - ");
-                stringBuilder.append(record.info().getSimpleDescription());
-                stringBuilder.append("\n");
-            }
-
-            output = stringBuilder.toString();
-        }
-
-        return output;
+    protected Set<DescriptionListRecord> getRecordsForCommand() {
+        return SpringContext.getBean(CommandService.class).getCommandDescriptions();
     }
 }
