@@ -1,11 +1,8 @@
 package com.bots.RaccoonServer.Services.DiscordServices.CommandRelated;
 
+import com.bots.RaccoonServer.Commands.*;
 import com.bots.RaccoonServer.Commands.Abstractions.ICommand;
-import com.bots.RaccoonServer.Commands.Command8Ball;
-import com.bots.RaccoonServer.Commands.CommandDecide;
-import com.bots.RaccoonServer.Commands.CommandForceCommandUpdate;
 import com.bots.RaccoonServer.Commands.Help.CommandHelp;
-import com.bots.RaccoonServer.Commands.CommandScore;
 import com.bots.RaccoonServer.Commands.Competition.CommandCompetition;
 import com.bots.RaccoonServer.Commands.Help.CommandHelpAdmin;
 import com.bots.RaccoonServer.Commands.MineSweeper.CommandMinesweeper;
@@ -68,6 +65,7 @@ public class CommandService {
         addCommand(new CommandScore());
         addCommand(new CommandCompetition());
         addCommand(new CommandForceCommandUpdate());
+        addCommand(new CommandShutdown());
     }
 
     public void loadGlobalSlashCommands() {
