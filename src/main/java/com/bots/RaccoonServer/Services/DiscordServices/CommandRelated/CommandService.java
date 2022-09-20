@@ -210,7 +210,7 @@ public class CommandService {
             commandListUpdatedEventPublisher.notifySubscribers();
         }
 
-        return commandDescriptions;
+        return adminCommandDescriptions;
     }
 
     /***
@@ -222,7 +222,7 @@ public class CommandService {
 
         for (String key: commands.keySet()) {
             ICommand currentCommand = commands.get(key);
-            if (currentCommand.isAdminCommand() == adminCommands)
+            if (currentCommand.isAdminCommand() != adminCommands)
                 continue;
 
             set.add(new DescriptionListRecord(key, currentCommand.getInfo()));
