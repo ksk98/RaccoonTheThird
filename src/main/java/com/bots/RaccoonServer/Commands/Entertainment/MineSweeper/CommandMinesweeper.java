@@ -1,4 +1,4 @@
-package com.bots.RaccoonServer.Commands.MineSweeper;
+package com.bots.RaccoonServer.Commands.Entertainment.MineSweeper;
 
 import com.bots.RaccoonServer.Commands.Abstractions.Command;
 import com.bots.RaccoonServer.Commands.Abstractions.CommandCategory;

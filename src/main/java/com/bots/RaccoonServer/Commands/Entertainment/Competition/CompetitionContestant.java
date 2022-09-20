@@ -1,4 +1,4 @@
-package com.bots.RaccoonServer.Commands.Competition;
+package com.bots.RaccoonServer.Commands.Entertainment.Competition;
 
 public class CompetitionContestant {
     private final String name;

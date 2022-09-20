@@ -2,10 +2,11 @@ package com.bots.RaccoonServer.Services.DiscordServices.CommandRelated;
 
 import com.bots.RaccoonServer.Commands.*;
 import com.bots.RaccoonServer.Commands.Abstractions.ICommand;
+import com.bots.RaccoonServer.Commands.Entertainment.Command8Ball;
 import com.bots.RaccoonServer.Commands.Help.CommandHelp;
-import com.bots.RaccoonServer.Commands.Competition.CommandCompetition;
+import com.bots.RaccoonServer.Commands.Entertainment.Competition.CommandCompetition;
 import com.bots.RaccoonServer.Commands.Help.CommandHelpAdmin;
-import com.bots.RaccoonServer.Commands.MineSweeper.CommandMinesweeper;
+import com.bots.RaccoonServer.Commands.Entertainment.MineSweeper.CommandMinesweeper;
 import com.bots.RaccoonServer.Config;
 import com.bots.RaccoonServer.Events.CommandListUpdated.CommandListUpdatedEventPublisher;
 import com.bots.RaccoonServer.Exceptions.UnsupportedCommandExecutionMethod;
