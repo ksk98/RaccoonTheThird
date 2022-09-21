@@ -20,6 +20,10 @@ dependencies {
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot:3.0.4'
 	// Discord wrapper
 	implementation 'net.dv8tion:JDA:5.0.0-alpha.17'
+	// JSON parsing
+	implementation 'org.json:json:20220320'
+	// Server and client shared code
+	implementation files("./libs/RaccoonShared.jar")
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

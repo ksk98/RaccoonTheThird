@@ -3,11 +3,41 @@
     {
       "name": "encrypted.jdbcpassword",
       "type": "java.lang.String",
-      "description": "Description for encrypted.jdbcpassword."
+      "description": "Password used to encrypt properties."
     },
     {
       "name": "jda.token",
       "type": "java.lang.String",
-      "description": "Description for jda.token."
+      "description": "Token used to authenticate the bot."
+    },
+    {
+      "name": "ssl.keystore_path",
+      "type": "java.lang.String",
+      "description": "Path to keystore used in SSL socket connection."
+    },
+    {
+      "name": "ssl.keystore_password",
+      "type": "java.lang.String",
+      "description": "Password used to access keystore file content."
+    },
+    {
+      "name": "client.username",
+      "type": "java.lang.String",
+      "description": "Username used to connect to the bot with a client app."
+    },
+    {
+      "name": "client.password",
+      "type": "java.lang.String",
+      "description": "Password used to connect to the bot with a client app."
+    },
+    {
+      "name": "serversocket.port",
+      "type": "java.lang.String",
+      "description": "Port on which server listens for client connections."
+    },
+    {
+      "name": "traffic-manager.verbose",
+      "type": "java.lang.Boolean",
+      "description": "Log inbound and outbound traffic (only local)."
     }
   ] }

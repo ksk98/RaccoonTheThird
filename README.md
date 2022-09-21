@@ -16,7 +16,13 @@ This project consists of 3 repositories:
 - SSLSocket based communication and optional application property encryption with Jasypt
 
 ## Deployment
-**TODO**
+  **TODO**
+  Generate keystore
+  cd %JAVA_HOME%\bin
+  keytool -genkey -alias racoon-server -keyalg RSA -keysize 4096 -keypass changeit -keystore keystore.jks
+  keytool -export -alias racoon-server -keystore keystore.jks -rfc -file racoon.cert
+  Run with parameters
+  client prod default password  encryptedpassword2448!
 
 ## Creating a command
 1. Create a new command class under **com.bots.RaccoonServer.Commands**, command class should extend **com.bots.RaccoonServer.Commands.Abstractions.CommandBase**
