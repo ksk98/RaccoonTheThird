@@ -144,7 +144,7 @@ public class CommandService {
         if (Config.deleteMessagesContainingOnlyValidCommandCall &&
                 event.isFromType(ChannelType.TEXT) &&
                 command.deleteMessageAfterUse() &&
-                event.getMessage().getContentRaw().replaceAll("\\s+", "").length() == keyword.length() + 1) {
+                event.getMessage().getContentRaw().substring(1).startsWith(keyword)) {
             try {
                 event.getMessage().delete().queue();
             } catch (InsufficientPermissionException e) {
