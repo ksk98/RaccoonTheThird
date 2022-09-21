@@ -114,7 +114,7 @@ public class CommandService {
 
     public void syncSlashCommands() {
         List<CommandData> commandData = new ArrayList<>(commands.size());
-        commands.values().forEach(command -> commandData.add(command.getCommandData()));
+        commands.values().stream().filter(ICommand::isSlashCommand).forEach(command -> commandData.add(command.getCommandData()));
 
         logger.logInfo(
                 getClass().getName(),
