@@ -10,6 +10,8 @@ import com.bots.RaccoonServer.Commands.Entertainment.Competition.CommandCompetit
 import com.bots.RaccoonServer.Commands.Admin.CommandHelpAdmin;
 import com.bots.RaccoonServer.Commands.Entertainment.MineSweeper.CommandMinesweeper;
 import com.bots.RaccoonServer.Commands.General.CommandScore;
+import com.bots.RaccoonServer.Commands.MessageDecorators.CommandDecoratorBad;
+import com.bots.RaccoonServer.Commands.MessageDecorators.CommandDecoratorGood;
 import com.bots.RaccoonServer.Config;
 import com.bots.RaccoonServer.Events.CommandListUpdated.CommandListUpdatedEventPublisher;
 import com.bots.RaccoonServer.Exceptions.UnsupportedCommandExecutionMethod;
@@ -61,15 +63,10 @@ public class CommandService {
         this.commandDescriptions.clear();
 
         // Add commands here
-        addCommand(new CommandHelp());
-        addCommand(new CommandHelpAdmin());
-        addCommand(new Command8Ball());
-        addCommand(new CommandDecide());
-        addCommand(new CommandMinesweeper());
-        addCommand(new CommandScore());
-        addCommand(new CommandCompetition());
-        addCommand(new CommandForceCommandUpdate());
-        addCommand(new CommandShutdown());
+        addCommands(new CommandHelp(), new CommandHelpAdmin(), new Command8Ball(), new CommandDecide());
+        addCommands(new CommandMinesweeper(), new CommandScore(), new CommandCompetition());
+        addCommands(new CommandForceCommandUpdate(), new CommandShutdown(), new CommandDecoratorGood());
+        addCommands(new CommandDecoratorBad());
     }
 
     public void loadGlobalSlashCommands() {

@@ -18,6 +18,7 @@ public class CommandHelp extends CommandHelpBase {
                 .setExamples(getKeyword(), getKeyword() + " some_command");
 
         this.info = builder.build(this);
+        this.ephemeral = true;
     }
 
 

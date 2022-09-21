@@ -35,12 +35,12 @@ public class Command8Ball extends Command {
     }
 
     @Override
-    public void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
+    public void executeImpl(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
         event.getChannel().sendMessage(decide()).queue();
     }
 
     @Override
-    public void execute(@NotNull SlashCommandInteractionEvent event) {
-        event.getInteraction().reply(decide()).queue();
+    public void executeImpl(@NotNull SlashCommandInteractionEvent event) {
+        event.getHook().sendMessage(decide()).queue();
     }
 }

@@ -21,7 +21,7 @@ public class CommandShutdown extends Command {
     }
 
     @Override
-    public void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
+    public void executeImpl(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
         SpringContext.getBean(OnApplicationClosePublisher.class).notifySubscribers();
     }
 }

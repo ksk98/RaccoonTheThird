@@ -14,7 +14,7 @@ public abstract class Command implements ICommand {
     protected final String keyword;
     protected CommandInfo info;
     protected final boolean supportsTextCalls, supportsInteractionCalls;
-    protected boolean deleteCallMessage, adminCommand;
+    protected boolean deleteCallMessage, adminCommand, ephemeral;
 
     public Command(String keyword, boolean supportsTextCalls, boolean supportsInteractionCalls) {
         this.keyword = keyword.toLowerCase();
@@ -23,6 +23,7 @@ public abstract class Command implements ICommand {
         this.supportsInteractionCalls = supportsInteractionCalls;
         this.deleteCallMessage = true;
         this.adminCommand = false;
+        this.ephemeral = false;
     }
 
     public void respondPrivatelyTo(@NotNull MessageReceivedEvent event, String message) {
@@ -30,21 +31,30 @@ public abstract class Command implements ICommand {
     }
 
     public void respondPrivatelyTo(@NotNull SlashCommandInteractionEvent event, String message) {
-        event.getInteraction().reply(message).setEphemeral(true).queue();
+        event.getHook().sendMessage(message).setEphemeral(true).queue();
     }
 
-    @Override
-    public void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
+    public void executeImpl(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
         throw new UnsupportedCommandExecutionMethod(
                 "MessageReceivedEvent not supported for command " + getClass().getSimpleName()
         );
     }
 
-    @Override
-    public void execute(@NotNull SlashCommandInteractionEvent event) {
+    public void executeImpl(@NotNull SlashCommandInteractionEvent event) {
         throw new UnsupportedCommandExecutionMethod(
                 "SlashCommandInteractionEvent not supported for command " + getClass().getSimpleName()
         );
+    }
+
+    @Override
+    public final void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
+        executeImpl(event, arguments);
+    }
+
+    @Override
+    public final void execute(@NotNull SlashCommandInteractionEvent event) {
+        event.deferReply().setEphemeral(ephemeral).queue();
+        executeImpl(event);
     }
 
     @Override

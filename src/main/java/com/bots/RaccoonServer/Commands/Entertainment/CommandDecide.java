@@ -31,7 +31,7 @@ public class CommandDecide extends Command {
     }
 
     @Override
-    public void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
+    public void executeImpl(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
         if (arguments.size() == 0)
             return;
 

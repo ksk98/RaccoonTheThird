@@ -30,7 +30,7 @@ public class CommandHelpAdmin extends CommandHelpBase {
     }
 
     @Override
-    public void execute(@NotNull SlashCommandInteractionEvent event) {
+    public void executeImpl(@NotNull SlashCommandInteractionEvent event) {
         throw new UnsupportedCommandExecutionMethod(
                 "SlashCommandInteractionEvent not supported for command " + getClass().getSimpleName()
         );

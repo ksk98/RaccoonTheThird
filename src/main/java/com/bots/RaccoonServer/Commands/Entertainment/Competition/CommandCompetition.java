@@ -28,7 +28,7 @@ public class CommandCompetition extends Command {
     }
 
     @Override
-    public void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
+    public void executeImpl(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
         if (arguments.size() < minPlayers || arguments.size() >= maxPlayers) {
             event.getChannel()
                     .sendMessage("Player amount in a competition must be between " + minPlayers + " and " + maxPlayers + ".")

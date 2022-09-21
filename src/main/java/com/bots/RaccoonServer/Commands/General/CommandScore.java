@@ -23,11 +23,12 @@ public class CommandScore extends Command {
                 .setSimpleDescription("Displays your amount of points collected in this server.");
 
         this.info = builder.build(this);
+        this.ephemeral = true;
         upvoteCountingService = SpringContext.getBean(UpvoteCountingService.class);
     }
 
     @Override
-    public void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
+    public void executeImpl(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
         if (event.getChannelType().equals(ChannelType.PRIVATE)) {
             respondPrivatelyTo(event, "Your current scores are: \n" +
                     upvoteCountingService.getPrintedListOfScoresForAllServers(event.getAuthor().getId()));
@@ -43,7 +44,7 @@ public class CommandScore extends Command {
     }
 
     @Override
-    public void execute(@NotNull SlashCommandInteractionEvent event) {
+    public void executeImpl(@NotNull SlashCommandInteractionEvent event) {
         if (event.getGuild() == null) {
             respondPrivatelyTo(event, "Your current scores are: \n" +
                     upvoteCountingService.getPrintedListOfScoresForAllServers(event.getUser().getId()));
@@ -52,10 +53,7 @@ public class CommandScore extends Command {
 
         User user = event.getUser();
         String serverId = event.getGuild().getId();
-        respondPrivatelyTo(
-                event,
-                "Your current score is " + upvoteCountingService.getPointsFor(user.getId(), serverId) + "."
-        );
+        respondPrivatelyTo(event, "Your current score is " + upvoteCountingService.getPointsFor(user.getId(), serverId) + ".");
     }
 
     @Override

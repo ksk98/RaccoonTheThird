@@ -31,7 +31,7 @@ public class CommandMinesweeper extends Command {
     }
 
     @Override
-    public void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
+    public void executeImpl(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
         int bombs;
 
         try {
@@ -43,14 +43,12 @@ public class CommandMinesweeper extends Command {
     }
 
     @Override
-    public void execute(@NotNull SlashCommandInteractionEvent event) {
-        event.getInteraction().reply(
-                new MinesweeperGame(
-                        event
-                                .getInteraction()
-                                .getOption(BOMB_COUNT_OPTION_NAME, MinesweeperGame.BOMBS_DEFAULT, OptionMapping::getAsInt)
-                ).toString()
-                ).queue();
+    public void executeImpl(@NotNull SlashCommandInteractionEvent event) {
+        MinesweeperGame game = new MinesweeperGame(
+                event.getInteraction().getOption(BOMB_COUNT_OPTION_NAME, MinesweeperGame.BOMBS_DEFAULT, OptionMapping::getAsInt)
+        );
+
+        event.getHook().sendMessage(game.toString()).queue();
     }
 
     @Override

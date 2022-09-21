@@ -109,7 +109,7 @@ public abstract class CommandHelpBase extends Command implements CommandListUpda
     }
 
     @Override
-    public final void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
+    public final void executeImpl(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
         String output;
         try { output = arguments.get(0); }
         catch (IndexOutOfBoundsException ignored) {
@@ -120,7 +120,7 @@ public abstract class CommandHelpBase extends Command implements CommandListUpda
     }
 
     @Override
-    public void execute(@NotNull SlashCommandInteractionEvent event) {
+    public void executeImpl(@NotNull SlashCommandInteractionEvent event) {
         String output;
         try { output = Objects.requireNonNull(event.getOption("command")).getAsString(); }
         catch (NullPointerException ignored) {
