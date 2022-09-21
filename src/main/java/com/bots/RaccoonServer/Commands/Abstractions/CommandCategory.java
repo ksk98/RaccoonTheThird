@@ -3,7 +3,8 @@ package com.bots.RaccoonServer.Commands.Abstractions;
 public enum CommandCategory {
     GENERAL,
     ENTERTAINMENT,
-    MESSAGE_DECORATORS("MESSAGE DECORATORS")
+    MESSAGE_DECORATORS("MESSAGE DECORATORS"),
+    HIDDEN
     ;
 
     private final String label;

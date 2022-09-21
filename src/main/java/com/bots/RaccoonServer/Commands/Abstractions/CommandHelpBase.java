@@ -1,7 +1,6 @@
 package com.bots.RaccoonServer.Commands.Abstractions;
 
-import com.bots.RaccoonServer.Commands.Abstractions.Command;
-import com.bots.RaccoonServer.Commands.Abstractions.CommandCategory;
+import com.bots.RaccoonServer.Commands.Entertainment.CommandCommand;
 import com.bots.RaccoonServer.Config;
 import com.bots.RaccoonServer.Events.CommandListUpdated.CommandListUpdatedEventListener;
 import com.bots.RaccoonServer.Events.CommandListUpdated.CommandListUpdatedEventPublisher;
@@ -56,7 +55,13 @@ public abstract class CommandHelpBase extends Command implements CommandListUpda
                 .append("\tExample text command call:\n")
                 .append("\t - ")
                 .append(Config.commandPrefixes[0])
-                .append("command parameter1 'parameter II' \"Paremeter The Third\"\n")
+                .append("command ")
+                .append(CommandCommand.triggerParameter0)
+                .append(" '")
+                .append(CommandCommand.triggerParameter1)
+                .append("' \"")
+                .append(CommandCommand.triggerParameter2)
+                .append("\"\n")
                 .append("\tYou can try asking for more help about a particular command like this:\n")
                 .append("\t - ")
                 .append(Config.commandPrefixes[0])
@@ -109,7 +114,7 @@ public abstract class CommandHelpBase extends Command implements CommandListUpda
     }
 
     @Override
-    public final void executeImpl(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
+    public void executeImpl(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
         String output;
         try { output = arguments.get(0); }
         catch (IndexOutOfBoundsException ignored) {

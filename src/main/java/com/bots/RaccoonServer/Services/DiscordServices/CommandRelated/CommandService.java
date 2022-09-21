@@ -1,9 +1,11 @@
 package com.bots.RaccoonServer.Services.DiscordServices.CommandRelated;
 
+import com.bots.RaccoonServer.Commands.Abstractions.CommandCategory;
 import com.bots.RaccoonServer.Commands.Abstractions.ICommand;
 import com.bots.RaccoonServer.Commands.Admin.CommandForceCommandUpdate;
 import com.bots.RaccoonServer.Commands.Admin.CommandShutdown;
 import com.bots.RaccoonServer.Commands.Entertainment.Command8Ball;
+import com.bots.RaccoonServer.Commands.Entertainment.CommandCommand;
 import com.bots.RaccoonServer.Commands.Entertainment.CommandDecide;
 import com.bots.RaccoonServer.Commands.General.CommandHelp;
 import com.bots.RaccoonServer.Commands.Entertainment.Competition.CommandCompetition;
@@ -66,7 +68,7 @@ public class CommandService {
         addCommands(new CommandHelp(), new CommandHelpAdmin(), new Command8Ball(), new CommandDecide());
         addCommands(new CommandMinesweeper(), new CommandScore(), new CommandCompetition());
         addCommands(new CommandForceCommandUpdate(), new CommandShutdown(), new CommandDecoratorGood());
-        addCommands(new CommandDecoratorBad());
+        addCommands(new CommandDecoratorBad(), new CommandCommand());
     }
 
     public void loadGlobalSlashCommands() {
@@ -222,7 +224,7 @@ public class CommandService {
 
         for (String key: commands.keySet()) {
             ICommand currentCommand = commands.get(key);
-            if (currentCommand.isAdminCommand() != adminCommands)
+            if (currentCommand.isAdminCommand() != adminCommands || currentCommand.getInfo().getCategory() == CommandCategory.HIDDEN)
                 continue;
 
             set.add(new DescriptionListRecord(key, currentCommand.getInfo()));

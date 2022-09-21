@@ -9,7 +9,7 @@ import java.util.List;
 public class CommandInfo implements Serializable {
     public transient static final CommandInfo defaultInfo =
             new CommandInfo("Mega Mind says: No description?", "1 like = 1 description",
-                    new LinkedList<>(), CommandCategory.getDefault(), false, false);
+                    new LinkedList<>(), CommandCategory.HIDDEN, true, true);
 
     private final String simpleDescription, detailedDescription;
     private final List<String> examples;
