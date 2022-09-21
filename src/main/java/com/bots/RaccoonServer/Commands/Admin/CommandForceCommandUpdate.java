@@ -1,20 +1,20 @@
-package com.bots.RaccoonServer.Commands;
+package com.bots.RaccoonServer.Commands.Admin;
 
 import com.bots.RaccoonServer.Commands.Abstractions.Command;
 import com.bots.RaccoonServer.Commands.Abstractions.Info.CommandInfoBuilder;
-import com.bots.RaccoonServer.Events.OnApplicationClose.OnApplicationClosePublisher;
+import com.bots.RaccoonServer.Services.DiscordServices.CommandRelated.CommandService;
 import com.bots.RaccoonServer.SpringContext;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class CommandShutdown extends Command {
-    public CommandShutdown() {
-        super("shutdown", true, false);
+public class CommandForceCommandUpdate extends Command {
+    public CommandForceCommandUpdate() {
+        super("force_command_update", true, false);
 
         CommandInfoBuilder builder = new CommandInfoBuilder()
-                .setSimpleDescription("Shuts the bot down.");
+                .setSimpleDescription("Forces command synchronisation.");
 
         this.info = builder.build(this);
         this.adminCommand = true;
@@ -22,6 +22,6 @@ public class CommandShutdown extends Command {
 
     @Override
     public void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
-        SpringContext.getBean(OnApplicationClosePublisher.class).notifySubscribers();
+        SpringContext.getBean(CommandService.class).syncSlashCommands();
     }
 }

@@ -1,4 +1,4 @@
-package com.bots.RaccoonServer.Commands.Help;
+package com.bots.RaccoonServer.Commands;
 
 import com.bots.RaccoonServer.Commands.Abstractions.Command;
 import com.bots.RaccoonServer.Commands.Abstractions.CommandCategory;

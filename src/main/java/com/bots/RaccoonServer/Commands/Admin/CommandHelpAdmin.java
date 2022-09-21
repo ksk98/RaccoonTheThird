@@ -1,6 +1,7 @@
-package com.bots.RaccoonServer.Commands.Help;
+package com.bots.RaccoonServer.Commands.Admin;
 
 import com.bots.RaccoonServer.Commands.Abstractions.Info.CommandInfoBuilder;
+import com.bots.RaccoonServer.Commands.CommandHelpBase;
 import com.bots.RaccoonServer.Exceptions.UnsupportedCommandExecutionMethod;
 import com.bots.RaccoonServer.Services.DiscordServices.CommandRelated.CommandService;
 import com.bots.RaccoonServer.Services.DiscordServices.CommandRelated.DescriptionListRecord;

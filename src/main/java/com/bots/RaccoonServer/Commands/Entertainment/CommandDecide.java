@@ -1,6 +1,7 @@
-package com.bots.RaccoonServer.Commands;
+package com.bots.RaccoonServer.Commands.Entertainment;
 
 import com.bots.RaccoonServer.Commands.Abstractions.Command;
+import com.bots.RaccoonServer.Commands.Abstractions.CommandCategory;
 import com.bots.RaccoonServer.Commands.Abstractions.Info.CommandInfoBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +15,7 @@ public class CommandDecide extends Command {
 
         CommandInfoBuilder builder = new CommandInfoBuilder()
                 .setSimpleDescription("Picks between given options.")
+                .setCategory(CommandCategory.ENTERTAINMENT)
                 .setExamples(getKeyword() + " option 'long option' \"other long option\"");
 
         this.info = builder.build(this);
