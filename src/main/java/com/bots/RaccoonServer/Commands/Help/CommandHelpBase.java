@@ -5,7 +5,6 @@ import com.bots.RaccoonServer.Commands.Abstractions.CommandCategory;
 import com.bots.RaccoonServer.Config;
 import com.bots.RaccoonServer.Events.CommandListUpdated.CommandListUpdatedEventListener;
 import com.bots.RaccoonServer.Events.CommandListUpdated.CommandListUpdatedEventPublisher;
-import com.bots.RaccoonServer.Services.DiscordServices.CommandRelated.CommandService;
 import com.bots.RaccoonServer.Services.DiscordServices.CommandRelated.DescriptionListRecord;
 import com.bots.RaccoonServer.SpringContext;
 import com.bots.RaccoonServer.Utility.TextFormattingTools;
@@ -121,7 +120,7 @@ public abstract class CommandHelpBase extends Command implements CommandListUpda
     }
 
     @Override
-    public final void execute(@NotNull SlashCommandInteractionEvent event) {
+    public void execute(@NotNull SlashCommandInteractionEvent event) {
         String output;
         try { output = Objects.requireNonNull(event.getOption("command")).getAsString(); }
         catch (NullPointerException ignored) {

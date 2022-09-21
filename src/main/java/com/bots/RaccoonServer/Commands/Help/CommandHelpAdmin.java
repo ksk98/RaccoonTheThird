@@ -1,9 +1,12 @@
 package com.bots.RaccoonServer.Commands.Help;
 
 import com.bots.RaccoonServer.Commands.Abstractions.Info.CommandInfoBuilder;
+import com.bots.RaccoonServer.Exceptions.UnsupportedCommandExecutionMethod;
 import com.bots.RaccoonServer.Services.DiscordServices.CommandRelated.CommandService;
 import com.bots.RaccoonServer.Services.DiscordServices.CommandRelated.DescriptionListRecord;
 import com.bots.RaccoonServer.SpringContext;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
@@ -20,9 +23,15 @@ public class CommandHelpAdmin extends CommandHelpBase {
         this.adminCommand = true;
     }
 
-
     @Override
     protected Set<DescriptionListRecord> getRecordsForCommand() {
         return SpringContext.getBean(CommandService.class).getAdminCommandDescriptions();
+    }
+
+    @Override
+    public void execute(@NotNull SlashCommandInteractionEvent event) {
+        throw new UnsupportedCommandExecutionMethod(
+                "SlashCommandInteractionEvent not supported for command " + getClass().getSimpleName()
+        );
     }
 }
