@@ -73,7 +73,7 @@ public abstract class CommandHelpBase extends Command implements CommandListUpda
             if (!record.info().getCategory().equals(lastCategory)) {
                 lastCategory = record.info().getCategory();
                 stringBuilder
-                        .append("* ")
+                        .append("\n* ")
                         .append(lastCategory.toString().toUpperCase(Locale.ROOT))
                         .append(":")
                         .append("\n");
