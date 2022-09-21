@@ -1,6 +1,8 @@
-package com.bots.RaccoonServer.Commands;
+package com.bots.RaccoonServer.Commands.Entertainment;
 
-import com.bots.RaccoonServer.Commands.Abstractions.CommandBase;
+import com.bots.RaccoonServer.Commands.Abstractions.Command;
+import com.bots.RaccoonServer.Commands.Abstractions.CommandCategory;
+import com.bots.RaccoonServer.Commands.Abstractions.Info.CommandInfoBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
@@ -8,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Random;
 
-public class Command8Ball extends CommandBase {
+public class Command8Ball extends Command {
     private final String[] options = new String[] {
             "It is certain.", "It is decidedly so.", "Without a doubt.", "Yes definitely.", "You may rely on it.",
             "As I see it, yes.", "Most likely.", "Outlook good.", "Yes.", "Signs point to yes.",
@@ -18,7 +20,13 @@ public class Command8Ball extends CommandBase {
     };
 
     public Command8Ball() {
-        super("8ball", "Simulates a magic 8-ball styled decision making.", true, true);
+        super("8ball", true, true);
+
+        CommandInfoBuilder builder = new CommandInfoBuilder()
+                .setSimpleDescription("Simulates a magic 8-ball styled decision making.")
+                .setCategory(CommandCategory.ENTERTAINMENT);
+
+        this.info = builder.build(this);
     }
 
     private String decide() {
@@ -27,12 +35,12 @@ public class Command8Ball extends CommandBase {
     }
 
     @Override
-    public void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
+    public void executeImpl(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
         event.getChannel().sendMessage(decide()).queue();
     }
 
     @Override
-    public void execute(@NotNull SlashCommandInteractionEvent event) {
-        event.getInteraction().reply(decide()).queue();
+    public void executeImpl(@NotNull SlashCommandInteractionEvent event) {
+        event.getHook().sendMessage(decide()).queue();
     }
 }

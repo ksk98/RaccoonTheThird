@@ -1,4 +1,4 @@
-package com.bots.RaccoonServer.Commands.Competition;
+package com.bots.RaccoonServer.Commands.Entertainment.Competition;
 
 import java.util.List;
 import java.util.Random;

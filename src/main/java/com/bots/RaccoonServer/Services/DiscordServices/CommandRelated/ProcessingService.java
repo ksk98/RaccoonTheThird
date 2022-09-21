@@ -1,4 +1,4 @@
-package com.bots.RaccoonServer.Services.DiscordServices;
+package com.bots.RaccoonServer.Services.DiscordServices.CommandRelated;
 
 import com.bots.RaccoonServer.Config;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

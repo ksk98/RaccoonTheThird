@@ -1,6 +1,8 @@
-package com.bots.RaccoonServer.Commands.Competition;
+package com.bots.RaccoonServer.Commands.Entertainment.Competition;
 
-import com.bots.RaccoonServer.Commands.Abstractions.CommandBase;
+import com.bots.RaccoonServer.Commands.Abstractions.Command;
+import com.bots.RaccoonServer.Commands.Abstractions.CommandCategory;
+import com.bots.RaccoonServer.Commands.Abstractions.Info.CommandInfoBuilder;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
@@ -11,14 +13,29 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class CommandCompetition extends CommandBase {
+public class CommandCompetition extends Command {
+    private final int minPlayers = 2, maxPlayers = 6;
+
     public CommandCompetition() {
-        super("competition", "Simulate a match of hunger games between given contestants.",
-                true, false);
+        super("competition",true, false);
+
+        CommandInfoBuilder descriptionBuilder =
+                new CommandInfoBuilder()
+                        .setSimpleDescription("Simulate a match of hunger games between " + minPlayers + " to " + maxPlayers + " contestants.")
+                        .setExamples(getKeyword() + " 'Dave Mustaine' Madonna \"Rick James\"")
+                        .setCategory(CommandCategory.ENTERTAINMENT);
+        this.info = descriptionBuilder.build(this);
     }
 
     @Override
-    public void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
+    public void executeImpl(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
+        if (arguments.size() < minPlayers || arguments.size() >= maxPlayers) {
+            event.getChannel()
+                    .sendMessage("Player amount in a competition must be between " + minPlayers + " and " + maxPlayers + ".")
+                    .queue();
+            return;
+        }
+
         Random random = new Random();
         List<CompetitionContestant> contestants = arguments.stream().map(CompetitionContestant::new).collect(Collectors.toCollection(LinkedList::new));
         Queue<CompetitionContestant> movementQueue = new LinkedList<>();

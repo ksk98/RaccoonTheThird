@@ -1,4 +1,4 @@
-package com.bots.RaccoonServer.Commands.MineSweeper;
+package com.bots.RaccoonServer.Commands.Entertainment.MineSweeper;
 
 public class MinesweeperField {
     public final int x, y;

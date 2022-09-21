@@ -1,59 +1,94 @@
 package com.bots.RaccoonServer.Commands.Abstractions;
 
+import com.bots.RaccoonServer.Commands.Abstractions.Info.CommandInfo;
+import com.bots.RaccoonServer.Exceptions.UnsupportedCommandExecutionMethod;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
 import java.util.List;
 
-public interface Command extends Serializable {
-    /***
-     * Execute the command in response to a call present in a received message.
-     * @param event message event in which the call was made
-     * @param arguments list of text arguments provided for the command
-     */
-    void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments);
+public abstract class Command implements ICommand {
+    protected final String keyword;
+    protected CommandInfo info;
+    protected final boolean supportsTextCalls, supportsInteractionCalls;
+    protected boolean deleteCallMessage, adminCommand, ephemeral;
 
-    /***
-     * Execute the command in response to a call present in a slash command.
-     * @param event interaction event in which the call was made
-     */
-    void execute(@NotNull SlashCommandInteractionEvent event);
+    public Command(String keyword, boolean supportsTextCalls, boolean supportsInteractionCalls) {
+        this.keyword = keyword.toLowerCase();
+        this.info = CommandInfo.defaultInfo;
+        this.supportsTextCalls = supportsTextCalls;
+        this.supportsInteractionCalls = supportsInteractionCalls;
+        this.deleteCallMessage = true;
+        this.adminCommand = false;
+        this.ephemeral = false;
+    }
 
-    /***
-     * @return command data to be used in publishing slash commands, null if slash command is not supported
-     */
-    CommandData getCommandData();
+    public void respondPrivatelyTo(@NotNull MessageReceivedEvent event, String message) {
+        event.getAuthor().openPrivateChannel().flatMap(channel -> channel.sendMessage(message)).queue();
+    }
 
-    /***
-     * @return a keyword used to call the command
-     */
-    String getKeyword();
+    public void respondPrivatelyTo(@NotNull SlashCommandInteractionEvent event, String message) {
+        event.getHook().sendMessage(message).setEphemeral(true).queue();
+    }
 
-    /***
-     * @return description of the command
-     */
-    String getDescription();
+    public void executeImpl(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
+        throw new UnsupportedCommandExecutionMethod(
+                "MessageReceivedEvent not supported for command " + getClass().getSimpleName()
+        );
+    }
 
-    /***
-     * @return true if command should be callable from a text message via keyword
-     */
-    boolean isTextCommand();
+    public void executeImpl(@NotNull SlashCommandInteractionEvent event) {
+        throw new UnsupportedCommandExecutionMethod(
+                "SlashCommandInteractionEvent not supported for command " + getClass().getSimpleName()
+        );
+    }
 
-    /***
-     * @return true if command should be callable via a slash command interaction
-     */
-    boolean isSlashCommand();
+    @Override
+    public final void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
+        executeImpl(event, arguments);
+    }
 
-    /***
-     * @return true if command is only available to an admin
-     */
-    boolean isAdminCommand();
+    @Override
+    public final void execute(@NotNull SlashCommandInteractionEvent event) {
+        event.deferReply().setEphemeral(ephemeral).queue();
+        executeImpl(event);
+    }
 
-    /***
-     * @return true if text command call message should be deleted
-     */
-    boolean deleteMessageAfterUse();
+    @Override
+    public CommandData getCommandData() {
+        return new CommandDataImpl(keyword, info.getSimpleDescription());
+    }
+
+    @Override
+    public final String getKeyword() {
+        return keyword;
+    }
+
+    @Override
+    public final CommandInfo getInfo() {
+        return info;
+    }
+
+    @Override
+    public final boolean isTextCommand() {
+        return supportsTextCalls;
+    }
+
+    @Override
+    public final boolean isSlashCommand() {
+        return supportsInteractionCalls;
+    }
+
+    @Override
+    public final boolean isAdminCommand() {
+        return adminCommand;
+    }
+
+    @Override
+    public final boolean deleteMessageAfterUse() {
+        return deleteCallMessage;
+    }
 }

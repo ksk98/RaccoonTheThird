@@ -1,14 +1,17 @@
-package com.bots.RaccoonServer.Services.DiscordServices;
+package com.bots.RaccoonServer.Services.DiscordServices.CommandRelated;
 
-import com.bots.RaccoonServer.Commands.Abstractions.Command;
-import com.bots.RaccoonServer.Commands.Command8Ball;
-import com.bots.RaccoonServer.Commands.CommandDecide;
-import com.bots.RaccoonServer.Commands.CommandForceCommandUpdate;
-import com.bots.RaccoonServer.Commands.Help.CommandHelp;
-import com.bots.RaccoonServer.Commands.CommandScore;
-import com.bots.RaccoonServer.Commands.Competition.CommandCompetition;
-import com.bots.RaccoonServer.Commands.Help.CommandHelpAdmin;
-import com.bots.RaccoonServer.Commands.MineSweeper.CommandMinesweeper;
+import com.bots.RaccoonServer.Commands.Abstractions.ICommand;
+import com.bots.RaccoonServer.Commands.Admin.CommandForceCommandUpdate;
+import com.bots.RaccoonServer.Commands.Admin.CommandShutdown;
+import com.bots.RaccoonServer.Commands.Entertainment.Command8Ball;
+import com.bots.RaccoonServer.Commands.Entertainment.CommandDecide;
+import com.bots.RaccoonServer.Commands.General.CommandHelp;
+import com.bots.RaccoonServer.Commands.Entertainment.Competition.CommandCompetition;
+import com.bots.RaccoonServer.Commands.Admin.CommandHelpAdmin;
+import com.bots.RaccoonServer.Commands.Entertainment.MineSweeper.CommandMinesweeper;
+import com.bots.RaccoonServer.Commands.General.CommandScore;
+import com.bots.RaccoonServer.Commands.MessageDecorators.CommandDecoratorBad;
+import com.bots.RaccoonServer.Commands.MessageDecorators.CommandDecoratorGood;
 import com.bots.RaccoonServer.Config;
 import com.bots.RaccoonServer.Events.CommandListUpdated.CommandListUpdatedEventPublisher;
 import com.bots.RaccoonServer.Exceptions.UnsupportedCommandExecutionMethod;
@@ -36,8 +39,8 @@ import java.util.*;
 @DependsOn({"spring_context"})
 public class CommandService {
     private final ILogger logger;
-    private final Map<String, Command> commands;
-    private final List<String[]> commandDescriptions, adminCommandDescriptions;
+    private final Map<String, ICommand> commands;
+    private final SortedSet<DescriptionListRecord> commandDescriptions, adminCommandDescriptions;
     private final CommandListUpdatedEventPublisher commandListUpdatedEventPublisher;
     private final CommandChecksumRepository checksumRepository;
     private final JDA jda;
@@ -48,8 +51,8 @@ public class CommandService {
         this.checksumRepository = checksumRepository;
         this.jda = jda;
         this.commands = new HashMap<>();
-        this.commandDescriptions = new LinkedList<>();
-        this.adminCommandDescriptions = new LinkedList<>();
+        this.commandDescriptions = new TreeSet<>();
+        this.adminCommandDescriptions = new TreeSet<>();
         this.commandListUpdatedEventPublisher = commandListUpdatedEventPublisher;
         this.loadCommands();
         this.loadGlobalSlashCommands();
@@ -60,20 +63,16 @@ public class CommandService {
         this.commandDescriptions.clear();
 
         // Add commands here
-        addCommand(new CommandHelp());
-        addCommand(new CommandHelpAdmin());
-        addCommand(new Command8Ball());
-        addCommand(new CommandDecide());
-        addCommand(new CommandMinesweeper());
-        addCommand(new CommandScore());
-        addCommand(new CommandCompetition());
-        addCommand(new CommandForceCommandUpdate());
+        addCommands(new CommandHelp(), new CommandHelpAdmin(), new Command8Ball(), new CommandDecide());
+        addCommands(new CommandMinesweeper(), new CommandScore(), new CommandCompetition());
+        addCommands(new CommandForceCommandUpdate(), new CommandShutdown(), new CommandDecoratorGood());
+        addCommands(new CommandDecoratorBad());
     }
 
     public void loadGlobalSlashCommands() {
         boolean updateRequired = false;
         for (String keyword: commands.keySet()) {
-            Command command = commands.get(keyword);
+            ICommand command = commands.get(keyword);
             if (!command.isSlashCommand())
                 continue;
 
@@ -112,7 +111,7 @@ public class CommandService {
 
     public void syncSlashCommands() {
         List<CommandData> commandData = new ArrayList<>(commands.size());
-        commands.values().forEach(command -> commandData.add(command.getCommandData()));
+        commands.values().stream().filter(ICommand::isSlashCommand).forEach(command -> commandData.add(command.getCommandData()));
 
         logger.logInfo(
                 getClass().getName(),
@@ -130,8 +129,11 @@ public class CommandService {
             return;
         }
 
-        Command command = commands.get(keyword);
+        ICommand command = commands.get(keyword);
         if (!command.isTextCommand())
+            return;
+
+        if (command.isAdminCommand() && !userIsAdmin(event.getAuthor()))
             return;
 
         // If the message contains only the command call, delete it (unless specified otherwise by the command)
@@ -139,7 +141,7 @@ public class CommandService {
         if (Config.deleteMessagesContainingOnlyValidCommandCall &&
                 event.isFromType(ChannelType.TEXT) &&
                 command.deleteMessageAfterUse() &&
-                event.getMessage().getContentRaw().replaceAll("\\s+", "").length() == keyword.length() + 1) {
+                event.getMessage().getContentRaw().substring(1).startsWith(keyword)) {
             try {
                 event.getMessage().delete().queue();
             } catch (InsufficientPermissionException e) {
@@ -171,6 +173,13 @@ public class CommandService {
             return;
         }
 
+        ICommand command = commands.get(keyword);
+        if (!command.isSlashCommand())
+            return;
+
+        if (command.isAdminCommand() && !userIsAdmin(event.getUser()))
+            return;
+
         try {
             commands.get(keyword).execute(event);
         } catch (UnsupportedCommandExecutionMethod e) {
@@ -184,54 +193,54 @@ public class CommandService {
     /**
      * Get list of pairs consisting of a keyword and a description.
      */
-    public List<String[]> getCommandDescriptions() {
+    public SortedSet<DescriptionListRecord> getCommandDescriptions() {
         // Lazy loading
         if (commandDescriptions.isEmpty()) {
-            for (String key: commands.keySet()) {
-                Command currentCommand = commands.get(key);
-                if (currentCommand.isAdminCommand())
-                    continue;
-
-                StringBuilder description = new StringBuilder(currentCommand.getDescription());
-
-                if (currentCommand.isTextCommand() && !currentCommand.isSlashCommand())
-                    description.append(" [TEXT ONLY]");
-                else if (!currentCommand.isTextCommand() && currentCommand.isSlashCommand())
-                    description.append(" [SLASH ONLY]");
-
-                commandDescriptions.add(new String[]{key, description.toString()});
-            }
+            getCommandDescriptions(commandDescriptions, false);
             commandListUpdatedEventPublisher.notifySubscribers();
         }
 
         return commandDescriptions;
     }
 
-    public List<String[]> getAdminCommandDescriptions() {
+    public SortedSet<DescriptionListRecord> getAdminCommandDescriptions() {
         // Lazy loading
-        if (commandDescriptions.isEmpty()) {
-            for (String key: commands.keySet()) {
-                Command currentCommand = commands.get(key);
-                if (!currentCommand.isAdminCommand())
-                    continue;
-
-                StringBuilder description = new StringBuilder(currentCommand.getDescription());
-
-                if (currentCommand.isTextCommand() && !currentCommand.isSlashCommand())
-                    description.append(" [TEXT ONLY]");
-                else if (!currentCommand.isTextCommand() && currentCommand.isSlashCommand())
-                    description.append(" [SLASH ONLY]");
-
-                commandDescriptions.add(new String[]{key, description.toString()});
-            }
+        if (adminCommandDescriptions.isEmpty()) {
+            getCommandDescriptions(adminCommandDescriptions, true);
             commandListUpdatedEventPublisher.notifySubscribers();
         }
 
-        return commandDescriptions;
+        return adminCommandDescriptions;
     }
 
-    private void addCommand(Command command) {
-        this.commands.put(command.getKeyword(), command);
+    /***
+     * Update list of keywords and command info for all commands
+     * @param adminCommands true if list should contain admin commands, false if regular commands
+     */
+    private void getCommandDescriptions(SortedSet<DescriptionListRecord> set, boolean adminCommands) {
+        set.clear();
+
+        for (String key: commands.keySet()) {
+            ICommand currentCommand = commands.get(key);
+            if (currentCommand.isAdminCommand() != adminCommands)
+                continue;
+
+            set.add(new DescriptionListRecord(key, currentCommand.getInfo()));
+        }
+    }
+
+    private void addCommands(ICommand... commands) {
+        for (ICommand command: commands) {
+            if (this.commands.containsKey(command.getKeyword())) {
+                logger.logInfo(
+                        getClass().getSimpleName(),
+                        "Attempted to add command of keyword " + command.getKeyword() + " but such keyword is already in use. Skipping..."
+                );
+                continue;
+            }
+
+            this.commands.put(command.getKeyword(), command);
+        }
     }
 
     private boolean userIsAdmin(User user) {
@@ -239,5 +248,9 @@ public class CommandService {
         // this could be expanded by additional people added by the owner and then persisted
         ApplicationInfo appInfo = jda.retrieveApplicationInfo().complete();
         return appInfo.getOwner().getId().equals(user.getId());
+    }
+
+    public ICommand getCommandForKeyword(String keyword) {
+        return commands.get(keyword);
     }
 }

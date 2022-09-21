@@ -1,6 +1,7 @@
-package com.bots.RaccoonServer.Commands;
+package com.bots.RaccoonServer.Commands.General;
 
-import com.bots.RaccoonServer.Commands.Abstractions.CommandBase;
+import com.bots.RaccoonServer.Commands.Abstractions.Command;
+import com.bots.RaccoonServer.Commands.Abstractions.Info.CommandInfoBuilder;
 import com.bots.RaccoonServer.Services.DiscordServices.UpvoteCounting.UpvoteCountingService;
 import com.bots.RaccoonServer.SpringContext;
 import net.dv8tion.jda.api.entities.ChannelType;
@@ -12,16 +13,22 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class CommandScore extends CommandBase {
+public class CommandScore extends Command {
     private transient final UpvoteCountingService upvoteCountingService;
 
     public CommandScore() {
-        super("score", "Displays your amount of points collected in this server.", true, true);
+        super("score", true, true);
+
+        CommandInfoBuilder builder = new CommandInfoBuilder()
+                .setSimpleDescription("Displays your amount of points collected in this server.");
+
+        this.info = builder.build(this);
+        this.ephemeral = true;
         upvoteCountingService = SpringContext.getBean(UpvoteCountingService.class);
     }
 
     @Override
-    public void execute(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
+    public void executeImpl(@NotNull MessageReceivedEvent event, @NotNull List<String> arguments) {
         if (event.getChannelType().equals(ChannelType.PRIVATE)) {
             respondPrivatelyTo(event, "Your current scores are: \n" +
                     upvoteCountingService.getPrintedListOfScoresForAllServers(event.getAuthor().getId()));
@@ -37,7 +44,7 @@ public class CommandScore extends CommandBase {
     }
 
     @Override
-    public void execute(@NotNull SlashCommandInteractionEvent event) {
+    public void executeImpl(@NotNull SlashCommandInteractionEvent event) {
         if (event.getGuild() == null) {
             respondPrivatelyTo(event, "Your current scores are: \n" +
                     upvoteCountingService.getPrintedListOfScoresForAllServers(event.getUser().getId()));
@@ -46,10 +53,7 @@ public class CommandScore extends CommandBase {
 
         User user = event.getUser();
         String serverId = event.getGuild().getId();
-        respondPrivatelyTo(
-                event,
-                "Your current score is " + upvoteCountingService.getPointsFor(user.getId(), serverId) + "."
-        );
+        respondPrivatelyTo(event, "Your current score is " + upvoteCountingService.getPointsFor(user.getId(), serverId) + ".");
     }
 
     @Override
