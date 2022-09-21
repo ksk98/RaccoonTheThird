@@ -232,8 +232,18 @@ public class CommandService {
         }
     }
 
-    private void addCommand(ICommand command) {
-        this.commands.put(command.getKeyword(), command);
+    private void addCommands(ICommand... commands) {
+        for (ICommand command: commands) {
+            if (this.commands.containsKey(command.getKeyword())) {
+                logger.logInfo(
+                        getClass().getSimpleName(),
+                        "Attempted to add command of keyword " + command.getKeyword() + " but such keyword is already in use. Skipping..."
+                );
+                continue;
+            }
+
+            this.commands.put(command.getKeyword(), command);
+        }
     }
 
     private boolean userIsAdmin(User user) {
