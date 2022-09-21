@@ -1,7 +1,7 @@
 package com.bots.RaccoonServer.Commands.General;
 
 import com.bots.RaccoonServer.Commands.Abstractions.Info.CommandInfoBuilder;
-import com.bots.RaccoonServer.Commands.CommandHelpBase;
+import com.bots.RaccoonServer.Commands.Abstractions.CommandHelpBase;
 import com.bots.RaccoonServer.Services.DiscordServices.CommandRelated.CommandService;
 import com.bots.RaccoonServer.Services.DiscordServices.CommandRelated.DescriptionListRecord;
 import com.bots.RaccoonServer.SpringContext;
