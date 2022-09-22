@@ -75,6 +75,8 @@ public class ServerSocketManager extends Thread {
             stopRunning();
         }
 
+        logger.logInfo(getClass().getSimpleName(), "Listening for clients at address: " + socket.getLocalSocketAddress());
+
         while (running) {
             SSLSocket clientSocket = null;
             try {
