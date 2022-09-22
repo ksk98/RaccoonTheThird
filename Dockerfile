@@ -1,8 +1,6 @@
 FROM openjdk:17
-VOLUME /var/lib/data
 
-COPY ./artifact /var/lib/data
-WORKDIR /var/lib/data
+COPY ./artifact .
 
 ARG USERNAME=raccoon
 ARG USER_UID=1000
