@@ -16,8 +16,6 @@ dependencies {
 	// Persistence
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'com.h2database:h2:2.1.214'
-	// Used for property encryption
-	implementation 'com.github.ulisesbocchio:jasypt-spring-boot:3.0.4'
 	// Discord wrapper
 	implementation 'net.dv8tion:JDA:5.0.0-alpha.17'
 	// JSON parsing
