@@ -1,5 +1,5 @@
 FROM openjdk:17
-RUN ls -l
+RUN ls -l .
 RUN gradlew.bat bootjar
 
 ARG USERNAME=raccoon
