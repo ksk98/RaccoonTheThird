@@ -1,5 +1,4 @@
 FROM openjdk:17
-VOLUME
 COPY ./artifact/Racoon.jar Racoon.jar
 
 ARG USERNAME=raccoon
