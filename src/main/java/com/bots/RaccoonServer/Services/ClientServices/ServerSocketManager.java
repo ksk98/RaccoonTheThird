@@ -79,13 +79,6 @@ public class ServerSocketManager extends Thread {
             stopRunning();
         }
 
-        try (final DatagramSocket tempSocket = new DatagramSocket()) {
-            tempSocket.connect(InetAddress.getByName("8.8.8.8"), 10002);
-            logger.logInfo(getClass().getSimpleName(), "Listening for clients at address: " + tempSocket.getLocalAddress().getHostAddress());
-        } catch (SocketException | UnknownHostException e) {
-            logger.logError(getClass().getSimpleName(), "Could not determine external address.");
-        }
-
         while (running) {
             SSLSocket clientSocket = null;
             try {
