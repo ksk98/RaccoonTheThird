@@ -1,7 +1,5 @@
 FROM openjdk:17
 RUN /gradlew.bat bootjar
-RUN ls
-COPY ./Raccoon.jar Raccoon.jar
 
 ARG USERNAME=raccoon
 ARG USER_UID=1000
