@@ -4,7 +4,6 @@ import com.bots.RaccoonServer.Events.OnCreate.GenericOnCreatePublisher;
 import com.bots.RaccoonServer.Services.ClientServices.ServerSocketManager;
 import com.bots.RaccoonServer.Services.DiscordServices.BotIntelService;
 import com.bots.RaccoonServer.Services.ClientServices.IncomingDataHandlers.AuthenticationRequestHandler;
-import com.bots.RaccoonServer.Services.ClientServices.IncomingDataHandlers.DisconnectRequestHandler;
 import com.bots.RaccoonServer.Services.ClientServices.IncomingDataHandlers.MessageSendRequestHandler;
 import com.bots.RaccoonServer.Services.ClientServices.IncomingDataHandlers.ServerChannelRequestHandler;
 import com.bots.RaccoonServer.Services.ClientServices.SocketIOServices.IOutboundTrafficService;
@@ -60,8 +59,7 @@ public class SocketCommunicationConfig {
         IJSONDataHandler chain = new MessageSendRequestHandler(logger, jda);
 
         chain.setNext(new ServerChannelRequestHandler(logger, trafficServiceWrapper, botIntelService))
-                .setNext(new AuthenticationRequestHandler(trafficServiceWrapper, this::validateAuthenticationCredentials))
-                .setNext(new DisconnectRequestHandler(trafficService));
+                .setNext(new AuthenticationRequestHandler(trafficServiceWrapper, this::validateAuthenticationCredentials));
 
         return chain;
     }

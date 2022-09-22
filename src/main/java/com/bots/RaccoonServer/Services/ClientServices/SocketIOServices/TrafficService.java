@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.springframework.data.util.Pair;
 
 import javax.net.ssl.SSLSocket;
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.*;
@@ -136,10 +137,7 @@ public class TrafficService extends Thread implements IOutboundTrafficService {
             try {
                 for (SocketConnection connection : connections.values()) {
                     if (connection.isExpiredOrClosed()) {
-                        logger.logInfo(
-                                getClass().getName(),
-                                "Removed expired client connection."
-                        );
+                        logger.logInfo(getClass().getSimpleName(), "Removed expired client connection.");
                         removeConnection(connection.getId());
                         break;
                     }
@@ -151,11 +149,12 @@ public class TrafficService extends Thread implements IOutboundTrafficService {
                             System.out.println("RECEIVING: " + incomingData);
                     } catch (SocketTimeoutException ignored) {
                         continue;
+                    } catch (EOFException e) {
+                        logger.logInfo(getClass().getSimpleName(), "Connection [id: " + connection.getId() + ", " + connection.socket.getRemoteSocketAddress() + "] was closed by client.");
+                        removeConnection(connection.getId());
+                        break;
                     } catch (IOException e) {
-                        logger.logError(
-                                getClass().getName(),
-                                e.toString()
-                        );
+                        logger.logError(getClass().getSimpleName(), e.toString());
                         continue;
                     }
 
