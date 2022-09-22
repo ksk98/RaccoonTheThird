@@ -1,5 +1,5 @@
 FROM openjdk:17
-RUN ./RacoonServer/gradlew.bat bootjar
+RUN gradlew.bat bootjar
 
 ARG USERNAME=raccoon
 ARG USER_UID=1000
