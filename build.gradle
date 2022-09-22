@@ -26,6 +26,11 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
+bootJar {
+	destinationDirectory = projectDir
+	archiveFileName = "Raccoon.jar"
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
