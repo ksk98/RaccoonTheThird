@@ -9,6 +9,10 @@ import javax.net.ServerSocketFactory;
 import javax.net.ssl.*;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.security.KeyStore;
 import java.util.Objects;
 
@@ -75,7 +79,12 @@ public class ServerSocketManager extends Thread {
             stopRunning();
         }
 
-        logger.logInfo(getClass().getSimpleName(), "Listening for clients at address: " + socket.getLocalSocketAddress());
+        try (final DatagramSocket tempSocket = new DatagramSocket()) {
+            tempSocket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+            logger.logInfo(getClass().getSimpleName(), "Listening for clients at address: " + tempSocket.getLocalAddress().getHostAddress());
+        } catch (SocketException | UnknownHostException e) {
+            logger.logError(getClass().getSimpleName(), "Could not determine external address.");
+        }
 
         while (running) {
             SSLSocket clientSocket = null;
