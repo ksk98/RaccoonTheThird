@@ -4,6 +4,7 @@ COPY . /RaccoonServer
 WORKDIR /RaccoonServer
 USER root
 RUN gradlew.bat bootjar
+RUN ls -l
 
 FROM openjdk:17
 
