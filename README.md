@@ -10,6 +10,7 @@ This project consists of 3 repositories:
 
 ## Features
 - Built in example commands used for entertainment along with convenient base for creation of new commands
+- Command invocation both by slash interaction and text calls with customizable, multiple accepted prefixes
 - Ability to use message reactions to upvote or downvote messages with persistent score tracking
 - Scalable method of client-server communication handling
 - Integration with Spring, which provides bean context, profile-specific application properties and potential for addition of web functionalities
@@ -45,7 +46,6 @@ Alternatively, if gradle is not installed on your machine, run the task with gra
    ./gradlew bootjar
    ```
 The jar will be located at `./build/libs`.
-To connect to the app from the client locally, connect to address localhost with a port assigned to property `serversocket.port` in the `application.properties` file (default 3435).
 
 ### Launch parameters
 The project supports overloading of application properties via jar launch parameters.
@@ -65,20 +65,15 @@ Your final jar run command may look like this:
    java -jar Raccoon.jar --spring.profiles.active=prod --jda.token=$jda_token --ssl.keystore_path=/var/lib/data/keystore.jks --ssl.keystore_password=$keystore_password --spring.datasource.url=jdbc:h2:file:/var/lib/data/spring-boot-h2-db-prod
    ```
 It is a preferable practice to inject both `jda.token` and `ssl.keystore_password` from some sort of secret variable.
+Now when the application is up, it will listen for client connections on port specified in property `serversocket.port` (default 3435).
 
 
-## Creating a command
-1. Create a new command class under **com.bots.RaccoonServer.Commands**, command class should extend **com.bots.RaccoonServer.Commands.Abstractions.CommandBase**
-2. Define command's constructor which has to call constructor of the parent class with parameters stating information about created command:
-   - keyword - string alias that the command will be identified from. Keyword has to be a single word that does not contain whitespace or quotation marks (double and single)
-   - description - text description that states what the command does
-   - supportsTextCalls - true if command will support invoking via message received in a text channel that the bot is in
-   - supportsInteractionCalls - true if command will support invoking via a slash command interaction
- 
- 3. Define command's behavior:
- 
-    - If command supports text calls, override method **execute** that accepts **MessageReceivedEvent** and a list of String arguments. Arguments list will contain everything that's written after the command call, where words grouped by quotes will count as one string.
-    - If command supports slash command calls, override method **execute** that accepts **SlashCommandInteractionEvent**. Additionally, if your command accepts arguments, override method **getCommandData**, which should return instance of **CommandDataImpl** containing information about your commands arguments. This is called when slash commands that the bot supports have changed and need to be synchronised with Discord.
-    - Optionally, change the default value of **CommandBase** flags to alter the command's behavior to your liking
+## Commands
+Application supports both text commands (called with a prefix, keyword and optionally arguments) and slash commands (called by typing in / along with a command chosen from the displayed list.
+Some commands will support only one of those methods, for example all commands that accept a number of arguments that is not constant will only be available with text calls. To obtain information about all or one particular command, use the command `help`.
 
-4. Add command to the list of commands in **com.bots.RaccoonServer.Services.CommandService.loadCommands()**
+Application can support multiple prefixes (`!` and `$` by default), editable in `Config.java`. Note that prefixes can only take form of a single character!
+
+To create a new command, extend `Commands.Abstractions.Command.java` and add a new instance of created class in `Services.DiscordServices.CommandRelated.CommandService.java::loadCommands`. 
+
+Created command must override 
