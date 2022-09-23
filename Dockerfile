@@ -2,11 +2,9 @@ FROM gradle:7.5.1-jdk17
 
 COPY . /RaccoonServer
 WORKDIR /RaccoonServer
-USER root
-RUN gradlew.bat bootjar
-RUN ls -l
 
-FROM openjdk:17
+# Create Raccoon.jar
+RUN gradle bootjar
 
 #ARG USERNAME=raccoon
 #ARG USER_UID=1000
@@ -16,5 +14,5 @@ FROM openjdk:17
 #RUN useradd --uid $USER_UID --gid $USER_GID -m $USERNAME
 #RUN chmod +x Raccoon.jar
 
-
+USER root
 ENTRYPOINT ["sh", "-c", "java -jar Raccoon.jar --spring.profiles.active=prod --jda.token=$jda_token --jasypt.encryptor.password=$jasypt_password --ssl.keystore_path=/var/lib/data/keystore.jks --ssl.keystore_password=$keystore_password"]
