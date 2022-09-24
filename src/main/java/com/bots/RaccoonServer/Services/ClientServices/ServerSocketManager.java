@@ -29,8 +29,8 @@ public class ServerSocketManager extends Thread {
     public ServerSocketManager(Environment environment, ILogger logger, TrafficService trafficService) {
         String portFromProperties = environment.getProperty("serversocket.port");
         this.port = portFromProperties == null ? Config.defaultPort : Integer.parseInt(portFromProperties);
-        this.keystorePath = environment.getProperty("ssl.keystore_path");
-        this.keystorePassword = environment.getProperty("ssl.keystore_password");
+        this.keystorePath = environment.getProperty("ssl.keystore.path");
+        this.keystorePassword = environment.getProperty("ssl.keystore.password");
         this.trafficService = trafficService;
         this.logger = logger;
     }

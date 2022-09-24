@@ -11,12 +11,12 @@
       "description": "Token used to authenticate the bot."
     },
     {
-      "name": "ssl.keystore_path",
+      "name": "ssl.keystore.path",
       "type": "java.lang.String",
       "description": "Path to keystore used in SSL socket connection."
     },
     {
-      "name": "ssl.keystore_password",
+      "name": "ssl.keystore.password",
       "type": "java.lang.String",
       "description": "Password used to access keystore file content."
     },
