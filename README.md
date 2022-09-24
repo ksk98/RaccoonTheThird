@@ -74,6 +74,12 @@ Some commands will support only one of those methods, for example all commands t
 
 Application can support multiple prefixes (`!` and `$` by default), editable in `Config.java`. Note that prefixes can only take form of a single character!
 
-To create a new command, extend `Commands.Abstractions.Command.java` and add a new instance of created class in `Services.DiscordServices.CommandRelated.CommandService.java::loadCommands`. 
-
-Created command must override 
+### Command creation
+1. Create a new class that extends `Commands.Abstractions.Command.java`
+2. Place a call to `super()` in the constructor, pass in the keyword and boolean flags stating which invocation methods the command will support
+   - if command supports text calls, `supportsTextCalls` will be `true` and `executeImpl` method that accepts `MessageReceivedEvent` will be overloaded
+   - if command supports interacion calls, `supportsInteractionCalls` will be `true` and `executeImpl` that accepts `SlashCommandInteractionEvent` will be overloaded
+   - additionaly, if the command accepts arguments and supports interaction calls, `getCommandData` will be overloaded and it will return a custom `CommandDataImpl` containing argument requirements in the form of options
+3. Assign a new `Commands.Abstractions.CommandInfo` object to field `info`, create the object with `Commands.Abstractions.CommandInfoBuilder`
+4. Alter the commands behavior to your needs by customizing other built in fields if necessary
+5. Add a new instance of created class in `Services.DiscordServices.CommandRelated.CommandService.java::loadCommands`. 
