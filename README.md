@@ -1,20 +1,19 @@
-# RaccoonTheThird
-**This project is work in progress, everything is subject to change!**
+# Raccoon The Third
 
-Raccoon The Third is a scalable Discord bot platform that I'm developing for personal use.
-
+Raccoon The Third is a scalable Discord bot application that I have developed for personal use. This is a public, base version of the application which I use as a base for the bot that works on my Discord server.
 This project consists of 3 repositories:
 - [Server](https://github.com/ksk98/RaccoonTheThird "Raccoon server") used to host the dockerized bot
 - [Client](https://github.com/ksk98/RacoonClient "Raccoon client") that provides functionalities such as browsing server logs, discord messages and speaking as bot
 - [Shared library](https://github.com/ksk98/RacoonShared "Raccoon shared") that is used both by the server and client
 
 ## Features
-- Built in example commands used for entertainment along with convenient base for creation of new commands
+- Convenient base for creating new commands along with examples
 - Command invocation both by slash interaction and text calls with customizable, multiple accepted prefixes
 - Ability to use message reactions to upvote or downvote messages with persistent score tracking
-- Scalable method of client-server communication handling
+- Scalable and secure client-server communication
 - Integration with Spring, which provides bean context, profile-specific application properties and potential for addition of web functionalities
-- SSLSocket based communication
+- Application property overloading via run parameters
+- Proven to work in dockerized environment (tested on [Mogenius](https://mogenius.com))
 
 ## Deployment
 ### Cryptomaterial
@@ -22,7 +21,7 @@ The application requires a pair of asymmetrical keys to communicate with a remot
    ```
    cd %JAVA_HOME%\bin
    ```
-Next, generate the key pair. Remember to change the value of the parameter `-keypass`, as this is the password that the `keystore.jks` will be secured with:
+Next, generate a key pair. Remember to change the value of the parameter `-keypass`, as this is the password that the `keystore.jks` will be secured with:
    ```
    keytool -genkey -alias raccoon-server -keyalg RSA -keysize 4096 -keypass changeit -keystore keystore.jks
    ```
@@ -32,7 +31,7 @@ Finally, use the generated keystore to generate a self signed certificate file c
    ```
 After creating necessary cryptomaterial, store `keystore.jks` somewhere accessible for the server app and provide its path as a launch parameter of the server app like so:
    ```
-   --ssl.keystore_password=LOCATION_TO_KEYSTORE.JKS
+   --ssl.keystore.password=LOCATION_TO_KEYSTORE.JKS
    ```
 As for `raccoon.cert`, place it in the same directory as the client application.
 
@@ -57,14 +56,15 @@ after calling `java -jar`. Keep in mind that while you can optionally override a
 Those properties are:
    - `spring.profiles.active` - choose either `dev` or `prod`
    - `jda.token` - token of the Discord bot that the app will control
-   - `ssl.keystore_path` - path to `keystore.jks` file mentioned in section [Cryptomaterial](#cryptomaterial)
-   - `ssl.keystore_password` - keystore password
-   - `spring.datasource.url` - path where the database file will be stored (leave blank for `./spring-boot-h2-db-prod`)
+   - `ssl.keystore.path` - path to `keystore.jks` file mentioned in section [Cryptomaterial](#cryptomaterial)
+   - `ssl.keystore.password` - keystore password
+   - `spring.datasource.url` - url for the database file will be stored (skip for `jdbc:h2:file:./spring-boot-h2-db-prod`)
+   
 Your final jar run command may look like this:
    ```
    java -jar Raccoon.jar --spring.profiles.active=prod --jda.token=$jda_token --ssl.keystore_path=/var/lib/data/keystore.jks --ssl.keystore_password=$keystore_password --spring.datasource.url=jdbc:h2:file:/var/lib/data/spring-boot-h2-db-prod
    ```
-It is a preferable practice to inject both `jda.token` and `ssl.keystore_password` from some sort of secret variable.
+It is a preferable practice to inject both `jda.token` and `ssl.keystore.password` from some sort of secret variable.
 Now when the application is up, it will listen for client connections on port specified in property `serversocket.port` (default 3435).
 
 
