@@ -10,7 +10,7 @@ This project consists of 3 repositories:
 - Convenient base for creating new commands along with examples
 - Command invocation both by slash interaction and text calls with customizable, multiple accepted prefixes
 - Ability to use message reactions to upvote or downvote messages with persistent score tracking
-- Scalable and secure client-server communication
+- Scalable and secure JSON based client-server communication
 - Integration with Spring, which provides bean context, profile-specific application properties and potential for addition of web functionalities
 - Application property overloading via run parameters
 - Proven to work in dockerized environment (tested on [Mogenius](https://mogenius.com))
@@ -83,3 +83,11 @@ Application can support multiple prefixes (`!` and `$` by default), editable in 
 3. Assign a new `Commands.Abstractions.CommandInfo` object to field `info`, create the object with `Commands.Abstractions.CommandInfoBuilder`
 4. Alter the commands behavior to your needs by customizing other built in fields if necessary
 5. Add a new instance of created class in `Services.DiscordServices.CommandRelated.CommandService.java::loadCommands`. 
+
+## Client-server communication
+Client connections are accepted inside `Services.ClientServices.ServerSocketManager`. All communication goes trough `Services.ClientServices.SocketIOServices.TrafficService`. If a class will send data to clients, it should request `Services.ClientServices.SocketIOServices.IOutboundTrafficServiceUtilityWrapper` from spring context and use it to either broadcast information to all authorized clients or send data to a particular connection.
+
+### Operation handling
+Both client and the server state intention of their requests with a key `operation` that contains an enum value of `SocketCommunication.SocketOperationIdentifiers` imported from [Raccoon Shared](https://github.com/ksk98/RacoonShared "Raccoon shared") library. Request handling is processed by the handler chain composed of classes that extend `IncomingDataHandlers.JSONOperationHandler`. If a handling class wishes to send back data it is required to include key `client_operation_id` along with its value if one is present in incoming JSONObject. Data can be sent to the client by obtaining connection from previously mentioned `IOutboundTrafficServiceUtilityWrapper` with `connection_id` that will be injected by the `TrafficService` into incoming JSONOBject.
+
+The handler chain is created in `Configuration.SocketCommunicationConfig::getTrafficHandlerChain` and used in `TrafficService`. It is setup by connecting handlers with their `setNext` method. Keep in mind that handlers that will likely be used the most should be placed in the beginning of the chain for better performance.
