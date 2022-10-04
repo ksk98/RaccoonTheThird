@@ -32,7 +32,7 @@ Finally, use the generated keystore to generate a self signed certificate file c
    ```
 After creating necessary cryptomaterial, store `keystore.jks` somewhere accessible for the server app and provide its path as a launch parameter of the server app like so:
    ```
-   --ssl.keystore.password=LOCATION_TO_KEYSTORE.JKS
+   --ssl.keystore.path=LOCATION_TO_KEYSTORE.JKS
    ```
 As for `raccoon.cert`, place it in the same directory as the client application.
 
